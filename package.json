@@ -1,0 +1,42 @@
+{
+  "name": "csm-2000",
+  "version": "0.0.1",
+  "author": "Benny Gebauer",
+  "description": "The Creative Solution Manager 2000 provides a working environment for your Advertising Creatives",
+  "keywords": [
+    "Digital Advertisement",
+    "Creative Builder",
+    "iab",
+    "Xandr"
+  ],
+  "scripts": {
+    "serve": "webpack serve --config webpack.dev.js",
+    "build": "node ./src/tool/cli-build.js"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "css-loader": "^5.2.1",
+    "css-minimizer-webpack-plugin": "^2.0.0",
+    "enquirer": "^2.3.6",
+    "file-loader": "^6.2.0",
+    "glob": "^7.1.6",
+    "html-loader": "^2.1.2",
+    "html-webpack-plugin": "^5.3.1",
+    "image-minimizer-webpack-plugin": "^2.2.0",
+    "imagemin-gifsicle": "^7.0.0",
+    "imagemin-mozjpeg": "^9.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "imagemin-svgo": "^9.0.0",
+    "img-optimize-loader": "^1.0.7",
+    "less": "^4.1.1",
+    "less-loader": "^8.1.0",
+    "mini-css-extract-plugin": "^1.4.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.31.2",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
