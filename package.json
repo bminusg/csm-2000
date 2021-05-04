@@ -20,6 +20,7 @@
     "enquirer": "^2.3.6",
     "file-loader": "^6.2.0",
     "glob": "^7.1.6",
+    "handlebars": "^4.7.7",
     "html-loader": "^2.1.2",
     "html-webpack-plugin": "^5.3.1",
     "image-minimizer-webpack-plugin": "^2.2.0",
@@ -37,6 +38,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "handlebars-loader": "^1.7.1"
   }
 }

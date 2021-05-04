@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Preview</title>
+  </head>
+  <body>
+    <ul>
+      {{#each htmlWebpackPlugin.options.slugs}}
+      <li>
+        <a href="{{this}}.html" target="_blank">
+          {{this}}
+        </a>
+      </li>
+      {{/each}}
+    </ul>
+
+      
+    <!--div id="app" class="app" data-publisher="" data-device="">
+      <div class="creative creative--sitebar creative--sitebar-left"></div>
+      <div class="creative creative--superbanner"></div>
+      <div class="publisher">
+        <nav class="publisher--nav"></nav>
+        <div class="creative creative--billboard"></div>
+        <article class="publisher--article"></article>
+        <aside class="publiser--aside">
+          <div class="creative creative--mrec"></div>
+          <div class="creative creative--halfpage"></div>
+        </aside>
+      </div>
+      <div class="creative creative--sitebar creative--sitebar-right"></div>
+    </div>
+    <div class="app--layer">
+      <div class="app--layer-msg">
+        <p></p>
+      </div>
+      <div class="app--layer-close">
+        <span>&#xd7;</span>
+      </div>
+    </div-->
+  </body>
+</html>

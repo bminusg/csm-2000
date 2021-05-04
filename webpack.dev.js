@@ -14,7 +14,9 @@ module.exports = (env) => {
   // BUILD DEFAULT DEV CONFIG
   let devConfig = {
     mode: "development",
-    entry: {},
+    entry: {
+      preview: "./src/preview/app.js",
+    },
     devServer: {
       host: "localhost",
       publicPath: "/",
@@ -25,7 +27,14 @@ module.exports = (env) => {
         poll: true,
       },
     },
-    plugins: [],
+    plugins: [
+      new HtmlWebpackPlugin({
+        filename: "index.html",
+        template: "src/preview/hbs/index.hbs",
+        chunks: ["preview"],
+        slugs: slugs,
+      }),
+    ],
   };
 
   // ADDING DYNAMIC VALUES TO DEV CONFIG
