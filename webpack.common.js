@@ -15,26 +15,6 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|webp|git|svg|)$/i,
-        use: [
-          {
-            loader: "img-optimize-loader",
-            options: {
-              compress: {
-                mode: "high", // 'high' 'lossless', 'low'
-                disableOnDevelopment: true,
-              },
-            },
-          },
-        ],
-      },
-      /*
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: "asset/resource",
-      },
-      */
-      {
         test: /\.html$/,
         loader: "html-loader",
       },

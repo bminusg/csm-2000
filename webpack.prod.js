@@ -4,6 +4,7 @@ const common = require("./webpack.common.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env) => {
   if (!env.creatives) throw Error("Please define a creative slug");
@@ -16,7 +17,6 @@ module.exports = (env) => {
   let prodConfigs = [];
 
   // MULTI COMPILER
-  // ASSET OPTIMIZING HERE https://github.com/tcoopman/image-webpack-loader
   for (const slug of slugs) {
     const brand = slug.slice(0, slug.indexOf("_"));
     const config = {
@@ -30,6 +30,24 @@ module.exports = (env) => {
         filename: "js/[name].[fullhash].js",
         assetModuleFilename: "img/[name].[hash][ext]",
       },
+      module: {
+        rules: [
+          {
+            test: /\.(png|jpe?g|webp|git|svg|)$/i,
+            use: [
+              {
+                loader: "img-optimize-loader",
+                options: {
+                  compress: {
+                    mode: "high", // 'high' 'lossless', 'low'
+                    disableOnDevelopment: true,
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
       plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -39,7 +57,15 @@ module.exports = (env) => {
         }),
       ],
       optimization: {
-        minimizer: [new CssMinimizerPlugin()],
+        minimize: true,
+        minimizer: [
+          new CssMinimizerPlugin(),
+          new TerserPlugin({
+            terserOptions: {
+              ecma: 5,
+            },
+          }),
+        ],
       },
     };
 

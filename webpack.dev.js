@@ -27,6 +27,14 @@ module.exports = (env) => {
         poll: true,
       },
     },
+    module: {
+      rules: [
+        {
+          test: /\.(png|svg|jpg|jpeg|gif)$/i,
+          type: "asset/resource",
+        },
+      ],
+    },
     plugins: [
       new HtmlWebpackPlugin({
         filename: "index.html",
