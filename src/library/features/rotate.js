@@ -1,18 +1,16 @@
 const rotate = {
   init(config = {}) {
     this.IDX = -1;
+    this.round = 0;
     this.items = document.querySelectorAll(".rotate--item");
     this.container = document.querySelector(".rotate");
 
-    this.loopTime = 4000;
+    // LOOP CONFIG
+    this.loopTime = 2500;
+    this.maxRounds = config.maxRounds || 0; // 0 === infinite
     this.delay = 1000;
 
-    this.loop = setInterval(() => {
-      this.IDX++;
-      if (this.IDX === this.items.length) this.IDX = 0;
-
-      this.update();
-    }, this.loopTime);
+    this.loop = setInterval(this.interval.bind(this), this.loopTime);
 
     // EVENT LISTENERS
     this.items.forEach((item, index) => {
@@ -22,16 +20,26 @@ const rotate = {
         this.IDX = index;
         this.update();
       });
+
       // MOUSEOUT
       item.addEventListener("mouseout", () => {
-        this.loop = setInterval(() => {
-          this.IDX++;
-          if (this.IDX === this.items.length) this.IDX = 0;
-
-          this.update();
-        }, this.loopTime);
+        this.loop = setInterval(this.interval.bind(this), this.loopTime);
       });
     });
+  },
+  interval() {
+    this.IDX++;
+
+    if (this.IDX === this.items.length) {
+      this.round++;
+      if (this.maxRounds === 0 || this.round < this.maxRounds) this.IDX = 0;
+      else {
+        this.reset();
+        return clearInterval(this.loop);
+      }
+    }
+
+    this.update();
   },
   update() {
     this.reset();
