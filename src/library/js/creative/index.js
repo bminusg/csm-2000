@@ -14,6 +14,7 @@ class Creative {
     this.brand = options.brand || "";
     this.campaign = options.campaign || "";
     this.version = options.version || 1;
+    this.container = options.container || document.querySelector(".creative");
     this.params = getURIparams();
     this.slug = `${umlauts(this.brand)}_${umlauts(this.campaign)}_${umlauts(
       this.format
@@ -31,11 +32,11 @@ class Creative {
 
   // INIT CREATIVE
   init() {
-    // TRACKING
-    this.track();
-
     // VALIDATE
     this.validate();
+
+    // TRACKING
+    this.track();
 
     // CONNECT TO OTHER FRAMES
     if (this.crossSite && !this.connected) return this.initLC();
@@ -70,8 +71,16 @@ class Creative {
 
   // VALIDATE CREATIVE
   validate() {
+    // VALIDATE META SETUP
+    if (!this.format) throw new Error("No format defined");
+
+    // VALIDATE CREATIVE CLASSNAME
+    const creativeClassName = "creative--" + this.format;
+    if (this.container.className.indexOf(creativeClassName) === -1)
+      this.container.classList.add(creativeClassName);
+
     // VALIDATE TRACKING
-    if (!this.params.clicktag) console.warn("No clicktag defined");
+    if (!this.params.clicktag) console.warn("No clicktag parameter defined");
 
     // VALIDATE LOCAL CONNECTION
     // IS FRAMES and KEY GIVEN?
@@ -82,7 +91,6 @@ class Creative {
     // DEFINE CLICKOUTS
     // BETTER BE PREPARED FOR MULTIPLE CLICKOUT --> loop through params and connect param:clicktag2 to element:(".creative--clicktag-2")
     const clickoutElem = document.querySelector(".creative--clicktag");
-    console.log(document);
     //clickoutElem.setAttribute("href", this.params.clicktag);
   }
 
