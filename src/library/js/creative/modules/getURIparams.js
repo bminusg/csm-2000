@@ -1,9 +1,9 @@
 const getURIparams = () => {
   const query = window.location.search.substring(1); // FALLBACK FOR HASH?
-  const params = query.split("&");
+  const params = query === "" ? [] : query.split("&");
   let paramObject = {};
 
-  if (params.length <= 0) return;
+  if (params.length < 1) return paramObject;
 
   params.forEach((paramString) => {
     const param = paramString.split("=");

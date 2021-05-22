@@ -1,5 +1,5 @@
-import umlauts from "../utils/umlauts";
-import getURIparams from "../utils/getURIparams";
+import umlauts from "./modules/umlauts";
+import getURIparams from "./modules/getURIparams";
 import LocalConnection from "lib/js/vendor/LocalConnection";
 
 class Creative {
@@ -11,6 +11,7 @@ class Creative {
       width: options.size ? options.size.width : 0,
       height: options.size ? options.size.height : 0,
     };
+    this.adServer = options.adServer || "";
     this.brand = options.brand || "";
     this.campaign = options.campaign || "";
     this.version = options.version || 1;
@@ -27,7 +28,7 @@ class Creative {
     this.connected = false;
 
     // FEATURES
-    this.features = {};
+    this.features = [];
   }
 
   // INIT CREATIVE
@@ -80,7 +81,8 @@ class Creative {
       this.container.classList.add(creativeClassName);
 
     // VALIDATE TRACKING
-    if (!this.params.clicktag) console.warn("No clicktag parameter defined");
+    if (!this.params.clicktag)
+      console.warn("[" + this.slug + "] No clicktag parameter defined");
 
     // VALIDATE LOCAL CONNECTION
     // IS FRAMES and KEY GIVEN?
