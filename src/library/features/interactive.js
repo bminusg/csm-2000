@@ -1,38 +1,37 @@
 class Interactive {
   constructor(options) {
     // REQUIRED
-    this.type = options.type;
     this.triggers = options.triggers;
-    this.target = options.target;
-
-    // OPTIONAL
-    this.crossFrame = options.crossFrame || false;
-    this.autoRotate = options.autoRotate || true;
-    this.delay = options.delay || 1000;
-    this.loopTime = options.loopTime || 4000;
     this.action = options.action;
 
-    // NODE ELEMENTS
+    // OPTIONAL
+    this.target = options.target || document.querySelector(".creative");
+    this.type = options.type || "click";
+    this.autoRotate = options.autoRotate || false;
+    this.delay = options.delay || 1000;
+    this.loopTime = options.loopTime || 4000;
+
+    // INIT INTERACTIVITY
+    this.init();
   }
 
   // INIT FUNCTION
   init() {
-    console.log(this);
     if (!this.type || !this.triggers || !this.target)
       throw new Error("Required options are missing");
 
-    if (this.type === "click") this.clickAction();
+    if (this.type === "click") this.clickEvent();
   }
 
-  // ACTIONS
-  clickAction() {
+  // ADD EVENT LISTENERS
+  clickEvent() {
     for (const trigger of this.triggers) {
       trigger.addEventListener("click", (event) => {
         event.preventDefault();
-        console.log(this.action(this.target, trigger.dataset.value));
+        this.action(trigger, this.target);
       });
     }
   }
 }
 
-export default Interactive;
+export { Interactive };
