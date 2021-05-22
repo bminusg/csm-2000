@@ -13,9 +13,11 @@ The Creative Solution Manager 2000 provides a working environment for your Adver
 3. Install all your dependencies `npm install`
 
 ## Getting started
-The Bundler needs at least 2 entrypoints for recognizing your Creative. Please ensure that following files excist on path `./src/2021/[CREATIVE PATHNAME]`: `index.html`, `main.js`. 
+
+The Bundler needs at least 2 entrypoints for recognizing your Creative. Please ensure that following files excist on path `./src/2021/[CREATIVE PATHNAME]`: `index.html`, `main.js`.
 
 ### main.js
+
 The main Creative file relates all your dependencies from for example default trackinging logic over your custom stylings to your custom actions.
 
 ```JS
@@ -23,17 +25,16 @@ import Creative from "lib/js/creative"; // Init Creative Object
 import "./less/main.less"; // Init your style files
 
 const creative = new Creative({
-  format: "[YOUR FORMAT NAME]",
   brand: "[YOUR BRAND NAME]",
   campaign: "[YOUR CAMPAIGN NAME]",
+  format: "[YOUR FORMAT NAME]",
 });
 
-window.addEventListener("DOMContentLoaded", () => {
-  creative.init();
-});
+window.addEventListener("DOMContentLoaded", creative.init());
 ```
 
 ### index.html
+
 This file is needed for defining your Custom Markup. You can start with your own plain HTML file or you can use following template
 
 ```HTML
@@ -61,20 +62,24 @@ The idea for feature integration is to encapsulate default logic from custom fun
 
 ### Interactiv
 
-The Interactive Feature brings the opportunity to interact with the Creative.
+The Interactive Feature brings the opportunity to interact with the Creative. Your custom action should work with 2 arguments, first argument is the trigger and second is your target which you can modify. For example you can get a value from your trigger data attribute and bring it to your target.
 
 ```JS
 import Interactive from "lib/features/interactiv"; // DEFAULT INTERACTIVE FUNCTIONALITY FROM THE LIBRARY
-import changeColor from "./js/changeColor"; // YOUR CUSTOM ACTION LOCATED ON CREATIVE FOLDER
+import customFunction from "./js/customFunction"; // YOUR CUSTOM ACTION LOCATED ON CREATIVE FOLDER
 
 new Interactive({
-  type: "click",
+  // REQUIRED
   triggers: document.querySelectorAll(".interactive--trigger"),
-  target: document.querySelector(".creative--sitebar"),
-  crossFrame: true,
-  action: changeColor,
+  action: customFunction,
+
+  // OPTIONAL
+  target: document.querySelector(".creative--sitebar"), // Default .creative
+  type: "click", // Default "click"
 })
 ```
+
+### Rotate
 
 ## Ideation
 
