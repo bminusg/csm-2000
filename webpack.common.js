@@ -11,7 +11,8 @@ module.exports = {
     rules: [
       {
         test: /\.less$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+        //use: [MiniCssExtractPlugin.loader, "css-loader", "less-loader"],
+        use: ["style-loader", "css-loader", "less-loader"],
         exclude: /node_modules/,
       },
       {
@@ -24,9 +25,11 @@ module.exports = {
       },
     ],
   },
+  /*
   plugins: [
     new MiniCssExtractPlugin({
       filename: "style.[name].[fullhash].css",
     }),
   ],
+  */
 };
