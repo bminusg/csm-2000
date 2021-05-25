@@ -2,14 +2,10 @@
 // will tell shell enviroment which program it needs execute this, in our case it's node
 "use strict";
 
-const dotenv = require("dotenv");
 const glob = require("glob");
 const { MultiSelect } = require("enquirer");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
-
-// LOAD ENV VARIABLES
-dotenv.config();
 
 // create a new multi select prompt
 const year = process.env.YEAR ? process.env.YEAR : new Date().getFullYear();
