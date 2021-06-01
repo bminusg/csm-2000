@@ -1,12 +1,12 @@
 import umlauts from "./modules/umlauts";
 import getURIparams from "./modules/getURIparams";
-import LocalConnection from "lib/js/vendor/LocalConnection";
+//import LocalConnection from "lib/js/vendor/LocalConnection";
 
 class Creative {
-  constructor(options) {
+  constructor(options = {}) {
     // META SETUP
     this.format = options.format || "";
-    this.publisher = options.publisher || "default";
+    this.publisher = options.publisher || "";
     this.size = {
       width: options.size ? options.size.width : 0,
       height: options.size ? options.size.height : 0,
@@ -15,11 +15,13 @@ class Creative {
     this.brand = options.brand || "";
     this.campaign = options.campaign || "";
     this.version = options.version || 1;
-    this.container = options.container || document.querySelector(".creative");
+    this.container = options.container || "";
     this.params = getURIparams();
     this.slug = `${umlauts(this.brand)}_${umlauts(this.campaign)}_${umlauts(
       this.format
-    )}_${umlauts(this.publisher)}_${this.version.toString().padStart(2, "0")}`;
+    )}${this.publisher === "" ? "" : "_" + this.publisher}_${this.version
+      .toString()
+      .padStart(2, "0")}`;
 
     // LOCAL CONNECTION
     this.key = options.key || `${this.brand}_${this.campaign}`;
@@ -29,6 +31,9 @@ class Creative {
 
     // FEATURES
     this.features = [];
+
+    // INIT CREATIVE
+    window.addEventListener("DOMContentloaded", this.init());
   }
 
   // INIT CREATIVE
@@ -36,17 +41,20 @@ class Creative {
     // VALIDATE
     this.validate();
 
+    // META SETUP
+
     // TRACKING
     this.track();
 
     // CONNECT TO OTHER FRAMES
-    if (this.crossSite && !this.connected) return this.initLC();
+    //if (this.crossSite && !this.connected) return this.initLC();
 
     // START ANIMATION
-    this.startAnimation();
+    window.addEventListener("load", this.startAnimation());
   }
 
   // INIT LOCAL CONNECTION
+  /*
   initLC() {
     const self = this;
     this.features.LocalConnection = new LocalConnection({
@@ -69,11 +77,17 @@ class Creative {
       },
     });
   }
+  */
 
   // VALIDATE CREATIVE
   validate() {
-    // VALIDATE META SETUP
+    // VALIDATE META SETUP Format
     if (!this.format) throw new Error("No format defined");
+
+    // VALIDATE CONTAINER
+    const defaultContainer = document.querySelector(".creative");
+    if (!this.container && defaultContainer) this.container = defaultContainer;
+    if (!this.container) throw new Error("No creative <div> container defined");
 
     // VALIDATE CREATIVE CLASSNAME
     const creativeClassName = "creative--" + this.format;
@@ -81,6 +95,7 @@ class Creative {
       this.container.classList.add(creativeClassName);
 
     // VALIDATE TRACKING
+    // BETTER CHECK FOR ANCHOR TAG?
     if (!this.params.clicktag)
       console.warn("[" + this.slug + "] No clicktag parameter defined");
 
@@ -98,8 +113,8 @@ class Creative {
 
   // START ANIMATION
   startAnimation() {
-    const adElem = document.querySelector(".creative");
-    adElem.classList.add("creative--active");
+    console.log("LOADED AT: " + new Date().getTime());
+    this.container.classList.add("creative--active");
   }
 }
 

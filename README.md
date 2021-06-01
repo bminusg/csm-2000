@@ -21,16 +21,17 @@ The Bundler needs at least 2 entrypoints for recognizing your Creative. Please e
 The main Creative file relates all your dependencies from for example default trackinging logic over your custom stylings to your custom actions.
 
 ```JS
-import Creative from "lib/js/creative"; // Init Creative Object
+import Creative from "src/creative"; // Init Creative Object
 import "./less/main.less"; // Init your style files
 
-const creative = new Creative({
+new Creative({
   brand: "[YOUR BRAND NAME]",
   campaign: "[YOUR CAMPAIGN NAME]",
   format: "[YOUR FORMAT NAME]",
+  // OPTIONAL
+  publisher: "",
 });
 
-window.addEventListener("DOMContentLoaded", creative.init());
 ```
 
 ### index.html

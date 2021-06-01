@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "serve": "webpack serve --config webpack.dev.js",
-    "build": "node ./src/tool/cli-build.js"
+    "build": "node ./src/tool/cli-build.js",
+    "test": "webpack build --config webpack.prod.js --env production creatives=brand_test"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -29,6 +30,7 @@
     "img-optimize-loader": "^1.0.7",
     "less": "^4.1.1",
     "less-loader": "^8.1.1",
+    "mini-css-extract-plugin": "^1.6.0",
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.2",
     "webpack": "^5.37.1",

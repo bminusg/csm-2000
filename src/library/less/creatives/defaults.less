@@ -5,6 +5,7 @@
   overflow: hidden;
 
   * {
+    visibility: hidden;
     position: absolute;
     background-repeat: no-repeat;
     background-position: center center;
@@ -21,5 +22,36 @@
     left: 5px;
     top: 5px;
     color: #afafaf;
+  }
+
+  // PRELOADER
+  &:before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+    position: absolute;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #d4d4d4;
+    border-radius: 50%;
+    animation: preloader 1s linear infinite;
+
+    @keyframes preloader {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  // HIDE PRELOADER IF ANIMATION STARTS
+  &--active {
+    * {
+      visibility: visible;
+    }
+
+    &:before {
+      display: none;
+    }
   }
 }
