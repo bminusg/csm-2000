@@ -6,11 +6,15 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = (env) => {
   // META SETUP
   const year = env.year ? env.year : new Date().getFullYear();
-  const pathChunks = [`./src/${year}/`, "/main.js"];
-  const slugs = glob
+  const creativePaths = glob
     .sync(`./src/${year}/**/main.js`)
-    .map((path) => path.replace(pathChunks[0], "").replace(pathChunks[1], ""));
+    .map((path) => path.replace("/main.js", ""));
+  const slugs = creativePaths.map((path) =>
+    path.substring(path.lastIndexOf("/") + 1)
+  );
 
+  console.log(creativePaths);
+  console.log(slugs);
   // BUILD DEFAULT DEV CONFIG
   let devConfig = {
     mode: "development",
@@ -46,23 +50,25 @@ module.exports = (env) => {
   };
 
   // ADDING DYNAMIC VALUES TO DEV CONFIG
-  for (const slug of slugs) {
+  creativePaths.forEach((path, idx) => {
+    const slug = slugs[idx];
+    console.log(path);
+    console.log(slug);
+
     // ADD HTML Webpack Plugin
     devConfig.plugins.push(
       new HtmlWebpackPlugin({
         filename: slug + ".html",
-        template: `src/${year}/${slug}/index.html`,
+        template: `${path}/index.html`,
         chunks: [slug],
       })
     );
 
     // DEFINE ENTRY POINTS
     Object.assign(devConfig.entry, {
-      [slug]: `./src/${year}/${slug}/main.js`,
+      [slug]: `${path}/main.js`,
     });
-  }
-
-  //
+  });
 
   // MERGE CONFIGS
   return merge(common, devConfig);

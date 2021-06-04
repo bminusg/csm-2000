@@ -1,4 +1,4 @@
-const umlauts = (value) => {
+module.exports = (value) => {
   let umlaut = value.toLowerCase();
 
   return umlaut
@@ -9,5 +9,3 @@ const umlauts = (value) => {
     .replace(/ /g, "-")
     .replace(/(\.|,|\(|\)|\')/g, "");
 };
-
-export default umlauts;

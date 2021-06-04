@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Medium Rectangle",
+    "slug": "mrec",
+    "options": {
+      "default": {
+        "width": 300,
+        "height": 250,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Billboard",
+    "slug": "bb",
+    "options": {
+      "default": {
+        "width": 800,
+        "height": 250,
+        "admark": ""
+      },
+      "aubi": {
+        "width": 1000,
+        "height": 250,
+        "admark": ""
+      },
+      "bild": {
+        "width": 993,
+        "height": 250,
+        "admark": ""
+      },
+      "bz": {
+        "width": 1024,
+        "height": 250,
+        "admark": ""
+      },
+      "businessinsider": {
+        "width": 1230,
+        "height": 250,
+        "admark": ""
+      },
+      "cobi": {
+        "width": 1000,
+        "height": 250,
+        "admark": ""
+      },
+      "welt": {
+        "width": 970,
+        "height": 250,
+        "admark": "ANZEIGE"
+      }
+    }
+  }
+]

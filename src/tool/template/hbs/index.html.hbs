@@ -1,0 +1,22 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="ad.size"
+      content="width={{size.width}}, height={{size.height}}"
+    />
+    <title>{{brand.name}} || {{campaign.name}} || {{name}}</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  </head>
+  <body>
+    <a href="javascript:void(0)" class="creative--clicktag" target="_blank">
+      <div class="creative creative--{{slug}}">
+        {{#if admark}}
+          <span class="creative--admark">{{admark}}</span>
+        {{/if}}
+      </div>
+    </a>
+  </body>
+</html>

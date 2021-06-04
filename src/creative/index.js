@@ -1,4 +1,3 @@
-import umlauts from "./modules/umlauts";
 import getURIparams from "./modules/getURIparams";
 //import LocalConnection from "lib/js/vendor/LocalConnection";
 
@@ -16,12 +15,8 @@ class Creative {
     this.campaign = options.campaign || "";
     this.version = options.version || 1;
     this.container = options.container || "";
+    this.slug = options.slug || "";
     this.params = getURIparams();
-    this.slug = `${umlauts(this.brand)}_${umlauts(this.campaign)}_${umlauts(
-      this.format
-    )}${this.publisher === "" ? "" : "_" + this.publisher}_${this.version
-      .toString()
-      .padStart(2, "0")}`;
 
     // LOCAL CONNECTION
     this.key = options.key || `${this.brand}_${this.campaign}`;
@@ -108,7 +103,7 @@ class Creative {
     // DEFINE CLICKOUTS
     // BETTER BE PREPARED FOR MULTIPLE CLICKOUT --> loop through params and connect param:clicktag2 to element:(".creative--clicktag-2")
     const clickoutElem = document.querySelector(".creative--clicktag");
-    //clickoutElem.setAttribute("href", this.params.clicktag);
+    clickoutElem.setAttribute("href", this.params.clicktag);
   }
 
   // START ANIMATION
