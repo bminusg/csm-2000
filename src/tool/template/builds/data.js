@@ -11,10 +11,11 @@ module.exports = (params) => {
     let value = valuePair[1];
 
     // MODIFY BRAND OPTION
+    // CREATE HERE INTELLIGENT SLUG BUILDER WHO CAN ALLITARTE LOGIC SHORT FORMS FOR LONG STRING VERSION
     if (key === "brand" || key === "campaign") {
       value = {
         name: decodeURIComponent(value),
-        slug: decodeURIComponent(value).toLowerCase().substring(0, 6).trim(),
+        slug: decodeURIComponent(value).toLowerCase().substring(0, 12).trim(),
       };
     }
 

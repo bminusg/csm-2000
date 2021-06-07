@@ -1,4 +1,5 @@
 const path = require("path");
+const glob = require("glob");
 const { merge } = require("webpack-merge");
 const common = require("./webpack.common.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -19,11 +20,21 @@ module.exports = (env) => {
   // MULTI COMPILER
   for (const slug of slugs) {
     const brand = slug.slice(0, slug.indexOf("_"));
+    const pathMainJS = glob.sync(`./src/${year}/**/${slug}/main.js`);
+    const pathIndexHTML = glob.sync(`./src/${year}/**/${slug}/index.html`);
+
+    if (pathIndexHTML.length === 0 || pathMainJS.length === 0)
+      throw new Error("Can't find entry points");
+    if (pathIndexHTML.length > 1 || pathMainJS.length > 1)
+      throw new Error(
+        "Seems there are creative slug duplicate. Please ensure unique creative slugs"
+      );
+
     const config = {
       name: slug,
       mode: "production",
       entry: {
-        [slug]: `./src/${year}/${slug}/main.js`,
+        [slug]: pathMainJS[0],
       },
       output: {
         path: path.join(__dirname, `media/${year}/${brand}/${slug}`),
@@ -52,7 +63,7 @@ module.exports = (env) => {
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
           filename: "index.html",
-          template: `src/${year}/${slug}/index.html`,
+          template: pathIndexHTML[0],
           chunks: [slug],
         }),
       ],

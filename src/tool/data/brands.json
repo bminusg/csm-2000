@@ -3,5 +3,10 @@
     "name": "Samsung",
     "slug": "samsung",
     "iABcategory": 9
+  },
+  {
+    "name": "Bristol Myers Squibb",
+    "slug": "bms",
+    "iABcategory": 7
   }
 ]

@@ -5,8 +5,7 @@ const slugenerator = require("../lib/slugenerator");
 
 /**
  *
- * @param {Array} files - Array of handelbars source files,
- * @param {Object} data - handlebars data
+ * @param {Object} data - handlebars data input
  */
 module.exports = (data) => {
   const templateFiles = ["index.html.hbs", "main.js.hbs"];
@@ -73,12 +72,8 @@ module.exports = (data) => {
 
                 console.log(
                   "\x1b[32m",
-                  "[" +
-                    format.path +
-                    "] : " +
-                    filename +
-                    " : TEMPLATE FILE BUILD SUCCESFULLY",
-                  "\x1b[0m"
+                  "[" + format.path + "] : ",
+                  "\x1b[0m" + filename + " : TEMPLATE FILE BUILD SUCCESFULLY"
                 );
               }
             );
