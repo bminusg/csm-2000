@@ -13,8 +13,6 @@ module.exports = (env) => {
     path.substring(path.lastIndexOf("/") + 1)
   );
 
-  console.log(creativePaths);
-  console.log(slugs);
   // BUILD DEFAULT DEV CONFIG
   let devConfig = {
     mode: "development",
@@ -52,8 +50,6 @@ module.exports = (env) => {
   // ADDING DYNAMIC VALUES TO DEV CONFIG
   creativePaths.forEach((path, idx) => {
     const slug = slugs[idx];
-    console.log(path);
-    console.log(slug);
 
     // ADD HTML Webpack Plugin
     devConfig.plugins.push(
