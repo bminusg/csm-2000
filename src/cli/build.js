@@ -1,12 +1,13 @@
 const inquirer = require("inquirer");
 const glob = require("glob");
+const config = require(process.cwd() + "/config.js");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 // META SETUP
 const year = new Date().getFullYear();
 const creativePaths = glob
-  .sync(`./src/${year}/**/main.js`)
+  .sync(`${config.paths.campaigns}/${year}/**/main.js`)
   .map((path) => path.replace("/main.js", ""));
 const slugs = creativePaths.map((path) =>
   path.substring(path.lastIndexOf("/") + 1)

@@ -12,9 +12,9 @@ inquirer.registerPrompt(
 );
 
 // GET DATA
-const brands = require(process.cwd() + "/src/tool/data/brands.json");
-const formats = require(process.cwd() + "/src/tool/data/formats.json");
-const publishers = require(process.cwd() + "/src/tool/data/publishers.json");
+const brands = require(process.cwd() + "/src/data/brands.json");
+const formats = require(process.cwd() + "/src/data/formats.json");
+const publishers = require(process.cwd() + "/src/data/publishers.json");
 
 // RUN THE CLI
 inquirer
@@ -37,6 +37,9 @@ inquirer
           resolve(results);
         });
       },
+      filter: (input) => {
+        return encodeURIComponent(input);
+      },
     },
     // CAMPAIGN NAME
     // Best practise blog article: https://blog.funnel.io/how-to-name-your-digital-advertising-campaign-like-a-pro
@@ -44,6 +47,9 @@ inquirer
       type: "input",
       message: "What is the Campaign name/product?",
       name: "campaign",
+      filter: (input) => {
+        return encodeURIComponent(input);
+      },
       validate: (input) => {
         if (input === "") return "Please enter campaign name/product";
 
@@ -75,10 +81,16 @@ inquirer
         );
         return formatSlugs.join(",");
       },
+      validate: (input) => {
+        if (input === "") return "Please select at least one format";
+
+        return true;
+      },
     },
   ])
   .then(async (answers) => {
-    const process = `node ./src/tool/template brand=${answers.brand} campaign=${answers.campaign} publisher=${answers.publishers} formats=${answers.formats}`;
+    console.log(answers);
+    const process = `node ./src/template brand=${answers.brand} campaign=${answers.campaign} publisher=${answers.publishers} formats=${answers.formats}`;
     const { stdout, stderr } = await exec(process);
 
     if (stderr) throw stderr;
@@ -86,8 +98,9 @@ inquirer
   })
   .catch((error) => {
     if (error.isTtyError) {
-      console.error("Prompt couldn't be rendered in the current environment");
+      throw new Error("Prompt couldn't be rendered in the current environment");
     } else {
       console.error("Something else went wrong");
+      console.log(error);
     }
   });

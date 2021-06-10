@@ -50,5 +50,60 @@
         "admark": "ANZEIGE"
       }
     }
+  },
+  {
+    "name": "Sitebar",
+    "slug": "sitebar",
+    "options": {
+      "default": {
+        "width": 0,
+        "height": 0,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Superbanner",
+    "slug": "sb",
+    "options": {
+      "default": {
+        "width": 728,
+        "height": 90,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Wide Skyscraper",
+    "slug": "w_sky",
+    "options": {
+      "default": {
+        "width": 160,
+        "height": 600,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Skyscraper",
+    "slug": "sky",
+    "options": {
+      "default": {
+        "width": 120,
+        "height": 600,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Halfpage Ad",
+    "slug": "hp",
+    "options": {
+      "default": {
+        "width": 300,
+        "height": 600,
+        "admark": ""
+      }
+    }
   }
 ]

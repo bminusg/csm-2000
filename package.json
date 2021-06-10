@@ -11,8 +11,8 @@
   ],
   "scripts": {
     "serve": "webpack serve --config webpack.dev.js",
-    "build": "node ./src/tool/cli/build",
-    "template": "node ./src/tool/cli/template"
+    "build": "node ./src/cli/build",
+    "template": "node ./src/cli/template"
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0-alpha.0",
