@@ -75,7 +75,7 @@
   },
   {
     "name": "Wide Skyscraper",
-    "slug": "w_sky",
+    "slug": "wsky",
     "options": {
       "default": {
         "width": 160,
