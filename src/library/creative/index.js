@@ -1,5 +1,5 @@
 import getURIparams from "./modules/getURIparams";
-//import LocalConnection from "lib/js/vendor/LocalConnection";
+import LocalConnection from "lib/vendor/localConnection";
 
 class Creative {
   constructor(options = {}) {
@@ -14,21 +14,25 @@ class Creative {
     this.brand = options.brand || "";
     this.campaign = options.campaign || "";
     this.version = options.version || 1;
-    this.container = options.container || "";
+    this.container = options.container || document.querySelector(".creative");
     this.slug = options.slug || "";
+
+    // TRACKING
     this.params = getURIparams();
+    this.clicktags = options.clicktags || [];
 
     // LOCAL CONNECTION
-    this.key = options.key || `${this.brand}_${this.campaign}`;
-    this.frames = options.frames || [];
-    this.crossSite = options.crossSite || false;
+    this.LocalConnect = options.LocalConnect || [];
     this.connected = false;
 
     // FEATURES
-    this.features = [];
+    this.features = options.features || [];
+
+    // DEFINE EVENTS
+    this.defineEvents();
 
     // INIT CREATIVE
-    window.addEventListener("DOMContentloaded", this.init());
+    this.init();
   }
 
   // INIT CREATIVE
@@ -36,43 +40,52 @@ class Creative {
     // VALIDATE
     this.validate();
 
-    // META SETUP
-
     // TRACKING
     this.track();
 
-    // CONNECT TO OTHER FRAMES
-    //if (this.crossSite && !this.connected) return this.initLC();
+    // LOCAL CONNECTION
+    if (this.LocalConnect.length > 0) return this.initLC();
 
     // START ANIMATION
     window.addEventListener("load", this.startAnimation());
   }
 
   // INIT LOCAL CONNECTION
-  /*
   initLC() {
     const self = this;
-    this.features.LocalConnection = new LocalConnection({
-      key: this.key,
+    new LocalConnection({
+      key: this.campaign,
       name: this.slug,
-      frames: this.frames,
+      frames: this.LocalConnect,
       onConnect() {
         const d = new Date();
         const h = d.getHours();
         const m = d.getMinutes();
         const s = d.getSeconds();
         const ms = d.getMilliseconds();
-        console.warn("CONNECTED ON: " + h + ":" + m + ":" + s + ":" + ms);
+        console.log(
+          "%cCSM-2000" + " CONNECTED ON: " + h + ":" + m + ":" + s + ":" + ms,
+          "color: #80ffdbff;"
+        );
         self.startAnimation();
       },
       timeout: 3,
       onTimeout() {
-        console.warn("Local Connection TIMEOUT");
-        self.startAnimation();
+        const d = new Date();
+        const h = d.getHours();
+        const m = d.getMinutes();
+        const s = d.getSeconds();
+        const ms = d.getMilliseconds();
+        console.log(
+          "%cCSM-2000%c TIMEOUT ON: " + h + ":" + m + ":" + s + ":" + ms,
+          "color: #80ffdbff;"
+        );
+        self.startAnimation({
+          connected: false,
+        });
       },
     });
   }
-  */
 
   // VALIDATE CREATIVE
   validate() {
@@ -90,26 +103,46 @@ class Creative {
       this.container.classList.add(creativeClassName);
 
     // VALIDATE TRACKING
-    // BETTER CHECK FOR ANCHOR TAG?
-    if (!this.params.clicktag)
-      console.warn("[" + this.slug + "] No clicktag parameter defined");
-
-    // VALIDATE LOCAL CONNECTION
-    // IS FRAMES and KEY GIVEN?
+    if (!document.querySelector("a"))
+      throw new Error("Can't find any anchor tag");
   }
 
   // TRACKING CONFIGURATION
   track() {
-    // DEFINE CLICKOUTS
-    // BETTER BE PREPARED FOR MULTIPLE CLICKOUT --> loop through params and connect param:clicktag2 to element:(".creative--clicktag-2")
-    const clickoutElem = document.querySelector(".creative--clicktag");
-    clickoutElem.setAttribute("href", this.params.clicktag);
+    // GET PARAM CLICKTAGS
+    const clicktags = [];
+    for (const param in this.params) {
+      if (param.indexOf("clicktag") === -1) continue;
+      clicktags.push(this.params[param]);
+    }
+
+    // PARAM CLICKTAGS OVERWRITE INLINE CLICKTAGS
+    if (clicktags.length > 0) this.clicktags = clicktags;
+
+    // PARSE ANCHOR TAGS
+    const anchors = document.querySelectorAll("a");
+    anchors.forEach((anchor, idx) => {
+      anchor.setAttribute("href", this.clicktags[idx]);
+      anchor.setAttribute("target", "_blank");
+    });
+  }
+
+  // EVENT BUILDER
+  defineEvents() {
+    // START ANIMATION EVENT
+    this.container.addEventListener("startAnimation", (event) => {
+      this.container.classList.add("creative--active");
+
+      this.features.forEach((feature) => {
+        if (typeof feature.init === "function") feature.init();
+      });
+    });
   }
 
   // START ANIMATION
-  startAnimation() {
-    console.log("LOADED AT: " + new Date().getTime());
-    this.container.classList.add("creative--active");
+  startAnimation(options) {
+    const event = new CustomEvent("startAnimation", { detail: options });
+    this.container.dispatchEvent(event);
   }
 }
 
