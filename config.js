@@ -3,7 +3,7 @@ const config = {
   dev: {
     paths: {
       campaigns: __dirname + "/campaigns",
-      project: __dirname + "/projects",
+      projects: __dirname + "/projects",
       upload: __dirname + "/upload",
     },
   },

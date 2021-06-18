@@ -37,8 +37,6 @@ module.exports = (env) => {
         : `${config.paths.campaigns}/${year}/**/${slug}/index.html`
     );
 
-    console.log(pathIndexHTML);
-
     if (pathIndexHTML.length === 0 || pathMainJS.length === 0)
       throw new Error("Can't find entry points");
     /*
