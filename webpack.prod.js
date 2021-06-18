@@ -9,10 +9,14 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env) => {
-  if (!env.creatives) throw Error("Please define a creative slug");
+  if (!env.creatives && !env.projects)
+    throw Error("Please define a creative/project slug");
+  const buildType = env.projects ? "projects" : "creatives";
 
   // META SETUP
-  const slugs = env.creatives.split(",");
+  const slugs = env.projects
+    ? env.projects.split(",")
+    : env.creatives.split(",");
   const year = env.year ? env.year : new Date().getFullYear();
 
   // PRODUCTION CONFIG
@@ -20,20 +24,29 @@ module.exports = (env) => {
 
   // MULTI COMPILER
   for (const slug of slugs) {
-    const brand = slug.slice(0, slug.indexOf("_"));
+    const brand =
+      buildType === "projects" ? "" : slug.slice(0, slug.indexOf("_"));
     const pathMainJS = glob.sync(
-      `${config.paths.campaigns}/${year}/**/${slug}/main.js`
+      buildType === "projects"
+        ? `${config.paths.projects}/**/main.js`
+        : `${config.paths.campaigns}/${year}/**/${slug}/main.js`
     );
     const pathIndexHTML = glob.sync(
-      `${config.paths.campaigns}/${year}/**/${slug}/index.html`
+      buildType === "projects"
+        ? `${config.paths.projects}/**/index.html`
+        : `${config.paths.campaigns}/${year}/**/${slug}/index.html`
     );
+
+    console.log(pathIndexHTML);
 
     if (pathIndexHTML.length === 0 || pathMainJS.length === 0)
       throw new Error("Can't find entry points");
+    /*
     if (pathIndexHTML.length > 1 || pathMainJS.length > 1)
       throw new Error(
         "Seems there are creative slug duplicate. Please ensure unique creative slugs"
       );
+      */
 
     const creativeConfig = {
       name: slug,
@@ -42,14 +55,17 @@ module.exports = (env) => {
         [slug]: pathMainJS[0],
       },
       output: {
-        path: path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
+        path:
+          buildType === "projects"
+            ? path.join(`${config.paths.upload}/${slug}`)
+            : path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
         filename: "js/[name].[fullhash].js",
         assetModuleFilename: "img/[name].[hash][ext]",
       },
       module: {
         rules: [
           {
-            test: /\.(png|jpe?g|webp|git|svg|)$/i,
+            test: /\.(png|jpe?g|webp|gif|svg|)$/i,
             use: [
               {
                 loader: "img-optimize-loader",

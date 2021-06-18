@@ -49,7 +49,7 @@ module.exports = (env) => {
       }),
       new HtmlWebpackPlugin({
         filename: "preview.html",
-        template: "projects/preview/hbs/index.hbs",
+        template: "projects/preview/index.html",
         chunks: ["preview"],
       }),
     ],
