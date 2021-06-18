@@ -68,6 +68,17 @@ This file is needed for defining your custom Markup. You can use `npm run templa
 
 The idea for feature integration is to encapsulate default logic from custom functionality. Another obstacle is to prevent blowing up the final creative JS filesize. We only want to integrate code which we only need in live environment. The following docs give an instruction how to integrate Features
 
+### Local Connection
+
+If you have multiple frames on one impression you can connect them and run animation synchronisly or you can interact between to frames. You only have to define on every Creative the Creative slugs which you wanna connect.
+
+```JS
+new Creative({
+  LocalConnect: ["slug-creative-2", "slug-creative-3"]
+});
+
+```
+
 ### Rotate
 
 This feature uses markup trigger items that call your custom action on autorotate or mouseover interaction. Usescases can be for example something like Interaction Points on your Creative to show different product features. If one of your trigger is active you can call your custom function
