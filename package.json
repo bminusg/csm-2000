@@ -22,7 +22,7 @@
     "glob": "^7.1.7",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.1",
-    "html-webpack-plugin": "^5.3.1",
+    "html-webpack-plugin": "^5.3.2",
     "img-optimize-loader": "^1.0.7",
     "inquirer": "^8.1.0",
     "inquirer-autocomplete-prompt": "^1.4.0",
