@@ -1,18 +1,17 @@
 @import "../base/reset.less";
 @import "./defaults.less";
 
+// DEFAULT SIZES
+@containerWidth: 728px;
+@containerHeight: 90px;
+
 .creative {
   &--superbanner {
     position: absolute;
     left: 0;
     top: 0;
-    width: 728px;
-    height: 90px;
+    width: @containerWidth;
+    height: @containerHeight;
     overflow: hidden;
-
-    &-cobi {
-      width: 1020px;
-      height: 120px;
-    }
   }
 }

@@ -1,11 +1,11 @@
-import Creative from "lib/creative"; 
-import "lib/less/creatives/{{slug}}.less";
+import Creative from "lib/Creative"; 
+import "./less/main.less";
 
 new Creative({ 
     brand: "{{brand.name}}", 
     campaign: "{{campaign.name}}", 
     format: "{{slug}}",
-    slug : "{{path}}",
-    publisher: "{{publisher}}",
-    version: 1
+    slug : "{{path}}", 
+    publisher: "{{publisher}}", 
+    version: 1 
 });

@@ -8,7 +8,7 @@ const Handlebars = require("handlebars");
  * @param {Object} data - handlebars data input
  */
 module.exports = (data) => {
-  const templateFiles = ["index.html.hbs", "main.js.hbs"];
+  const templateFiles = ["index.html.hbs", "main.js.hbs", "main.less.hbs"];
   const year = new Date().getFullYear().toString();
   const targetFolder = path.join(
     config.paths.campaigns,
@@ -28,7 +28,7 @@ module.exports = (data) => {
       format.publisher,
       "01",
     ];
-    
+
     // MODIFY FORMAT META DATA
     Object.assign(format, {
       campaign: data.campaign,
@@ -54,10 +54,14 @@ module.exports = (data) => {
 
           const template = Handlebars.compile(file);
           const filled = template(format);
+          const assignedPath = (filename === "main.less") ? path.join(filepath, "less") : filepath
+
+          // SUBDIRECTORY FOR LESS TEMPLATE FILE
+          if (!fs.existsSync(assignedPath)) fs.mkdirSync(assignedPath);
 
           // WRITE TEMPLATES
           fs.writeFile(
-            path.join(filepath, filename),
+            path.join(assignedPath, filename),
             filled,
             {
               encoding: "utf8",
