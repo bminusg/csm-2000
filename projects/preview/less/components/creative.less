@@ -10,6 +10,8 @@
     border: 0;
     margin: 0 auto;
     display: block;
+    width: inherit;
+    height: inherit;
   }
 
   &--sitebar {
@@ -33,6 +35,17 @@
 
     &:empty {
       height: 0;
+    }
+  }
+
+  &--sky {
+    position: absolute;
+    top: 0;
+    &-left {
+      right: 0;
+    }
+    &-right {
+      left: 0;
     }
   }
 
