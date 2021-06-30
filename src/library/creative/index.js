@@ -32,11 +32,14 @@ class Creative {
     this.defineEvents();
 
     // INIT CREATIVE
-    this.init();
+    window.addEventListener("DOMContentLoaded", this.init());
   }
 
   // INIT CREATIVE
   init() {
+    // APPEND TO WINDOW OBJECT
+    window.Creative = this;
+
     // VALIDATE
     this.validate();
 
@@ -64,7 +67,7 @@ class Creative {
         const s = d.getSeconds();
         const ms = d.getMilliseconds();
         console.log(
-          "%cCSM-2000" + " CONNECTED ON: " + h + ":" + m + ":" + s + ":" + ms,
+          "%cCSM-2000%c CONNECTED ON: " + h + ":" + m + ":" + s + ":" + ms,
           "color: #80ffdbff;"
         );
         self.startAnimation();
