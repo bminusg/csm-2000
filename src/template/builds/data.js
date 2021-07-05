@@ -1,5 +1,5 @@
 const formats = require("../../data/formats.json");
-const slugify = require(process.cwd() + "/src/library/utils/slugify");
+const shortme = require("shortme");
 
 module.exports = (params) => {
   const inputs = params.splice(2);
@@ -14,7 +14,7 @@ module.exports = (params) => {
     if (key === "brand" || key === "campaign") {
       value = {
         name: decodeURIComponent(value),
-        slug: slugify(value),
+        slug: shortme(value),
       };
     }
 
