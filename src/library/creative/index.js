@@ -1,5 +1,9 @@
 import getURIparams from "./modules/getURIparams";
-import LocalConnection from "lib/vendor/localConnection";
+
+/**
+ * @desc Init your Creative Configuration
+ * @namespace Creative
+ */
 
 class Creative {
   constructor(options = {}) {
@@ -20,10 +24,6 @@ class Creative {
     // TRACKING
     this.params = getURIparams();
     this.clicktags = options.clicktags || [];
-
-    // LOCAL CONNECTION
-    this.LocalConnect = options.LocalConnect || [];
-    this.connected = false;
 
     // FEATURES
     this.features = options.features || [];
@@ -46,48 +46,16 @@ class Creative {
     // TRACKING
     this.track();
 
-    // LOCAL CONNECTION
-    if (this.LocalConnect.length > 0) return this.initLC();
+    // INIT CROSS SITE COMMUNICATION
+    const CS = this.features.find((feat) => feat.name === "CrossSite");
+    if (CS)
+      return CS.load({
+        groupID: this.campaign,
+        frameID: this.slug,
+      });
 
     // START ANIMATION
     window.addEventListener("load", this.startAnimation());
-  }
-
-  // INIT LOCAL CONNECTION
-  initLC() {
-    const self = this;
-    new LocalConnection({
-      key: this.campaign,
-      name: this.slug,
-      frames: this.LocalConnect,
-      onConnect() {
-        const d = new Date();
-        const h = d.getHours();
-        const m = d.getMinutes();
-        const s = d.getSeconds();
-        const ms = d.getMilliseconds();
-        console.log(
-          "%cCSM-2000%c CONNECTED ON: " + h + ":" + m + ":" + s + ":" + ms,
-          "color: #80ffdbff;"
-        );
-        self.startAnimation();
-      },
-      timeout: 3,
-      onTimeout() {
-        const d = new Date();
-        const h = d.getHours();
-        const m = d.getMinutes();
-        const s = d.getSeconds();
-        const ms = d.getMilliseconds();
-        console.log(
-          "%cCSM-2000%c TIMEOUT ON: " + h + ":" + m + ":" + s + ":" + ms,
-          "color: #80ffdbff;"
-        );
-        self.startAnimation({
-          connected: false,
-        });
-      },
-    });
   }
 
   // VALIDATE CREATIVE
@@ -99,6 +67,13 @@ class Creative {
     const defaultContainer = document.querySelector(".creative");
     if (!this.container && defaultContainer) this.container = defaultContainer;
     if (!this.container) throw new Error("No creative <div> container defined");
+
+    // VALIDATE PRELOADER
+    if (!document.querySelector(".creative--preloader")) {
+      const div = document.createElement("div");
+      div.classList.add("creative--preloader");
+      this.container.appendChild(div);
+    }
 
     // VALIDATE CREATIVE CLASSNAME
     const creativeClassName = "creative--" + this.format;
@@ -144,6 +119,8 @@ class Creative {
 
   // START ANIMATION
   startAnimation(options) {
+    const d = new Date();
+    console.log("[" + this.slug + "] START ANIMATION ON: " + d);
     const event = new CustomEvent("startAnimation", { detail: options });
     this.container.dispatchEvent(event);
   }
