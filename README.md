@@ -43,26 +43,7 @@ new Creative({
 
 ### Entrypoint index.html
 
-This file is needed for defining your custom Markup. You can use `npm run template` or use your own HTML file for example:
-
-```HTML
-<!DOCTYPE html>
-<html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="ad.size" content="width=800, height=250" />
-    <title>Creative</title>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-  </head>
-  <body>
-    <a href="javascript:void(0)" class="creative--clicktag" target="_blank">
-      <div class="creative creative--billboard"></div>
-    </a>
-  </body>
-</html>
-```
+This file is needed for defining your custom Markup. You can use `npm run template` creating your HTML Entrypoint dynamicly.
 
 ## Features
 
@@ -73,11 +54,66 @@ The idea for feature integration is to encapsulate default logic from custom fun
 If you have multiple frames on one impression you can connect them and run animation synchronisly or you can interact between frames. You only have to define on every Creative the Creative slugs which you wanna connect.
 
 ```JS
-  import CrossSiteConnection from "lib/features/CrossSiteConnection";
+import CrossSiteConnection from "lib/features/CrossSiteConnection";
+
 new Creative({
   features: [
     new CrossSiteConnection({
-      connect: ["slug-creative-2", "slug-creative-3"]
+      connectWith: ["slug-creative-2", "slug-creative-3"]
+    })
+  ]
+});
+
+```
+
+#### Options `type: Object`
+
+##### connectWith `type: Array[String], required`
+
+String concatination from your Creative frame ID's who should be connected to your Creative.
+
+##### timeout `type: Number, Default: 3000`;
+
+Define a Milisecond value for how long the Creative is allowed to search for a connection.
+
+#### methods `type: Object[function]`
+
+These properties defines your custom cross functions. For initialising you should define your function on the `start` property.
+In case you want to interact with different Creatives you have to call on Creative-A `this.set(options)`. The options object contains your options.targets `type:Array[String]` and a options.method `type: String` identifier which method should be executed on Creative-B
+
+```JS
+// ----- Creative A
+new Creative({
+  slug: "creative_a",
+  features: [
+    new CrossSiteConnection({
+      connectWith: ["creative_b"],
+      methods: {
+        start() {
+          this.set({
+            targets: ["creative_b"],
+            methods: "changeBgColor",
+            data: "purple"
+          })
+        }
+      }
+    })
+  ]
+});
+
+
+// ----- Creative B
+new Creative({
+  slug: "creative_b",
+  features: [
+    new CrossSiteConnection({
+      connectWith: ["creative_a"],
+      methods: {
+        changeBgColor(data) {
+          const container = document.querySelector(".creative");
+          container.style.backgroundColor = data;
+        }
+      }
     })
   ]
 });
@@ -89,7 +125,7 @@ new Creative({
 This feature uses markup trigger items that call your custom action on autorotate or mouseover interaction. Usescases can be for example something like Interaction Points on your Creative to show different product features. If one of your trigger is active you can call your custom function
 
 ```JS
-import Rotate from "lib/features/rotate";
+import Rotate from "lib/features/Rotate";
 
 new Creative({
   features: [
@@ -112,5 +148,4 @@ new Creative({
 
 - VPAID Player
 - Preview
-- Assets Minifier
 - Auto archiving

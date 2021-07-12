@@ -4,41 +4,40 @@ class CrossSiteConnection {
   constructor(options = {}) {
     // META
     this.name = "CrossSite";
-    this.timestamp = new Date().getTime();
 
     // SETUP
     this.timeout = parseInt(options.timeout) || 3000;
     this.timeoutOn = new Date().getTime() + this.timeout;
-    this.connect = options.connect;
+    this.connectWith = options.connectWith;
 
     // CONNECTION
     this.frames = [];
     this.connected = false;
     this.countConnect = 0;
+
+    // CUSTOM METHODS
+    this.methods = options.methods || {};
   }
 
   /**
    *
-   * @param {Object} options Values from Creative
+   * @param {Object} options values depending from Creative initialising
    * @desc If there is no custom configuration use values from main Creative Object
+   * @desc Append postMessage Listeners and starts the Watch Job
    *
    */
   load(options) {
-    this.groupID = options.groupID;
     this.frameID = options.frameID;
 
-    this.events();
-  }
+    // APPEND CROSS SITE COMMUNICATION FUNC TO METHODS
+    Object.assign(this.methods, { set: this.set.bind(this) });
 
-  /**
-   * @desc Append postMessage Listeners and start Watch Job
-   *
-   */
-  events() {
     // DEFINE POST MESSAGE EVENT LISTNERS
     window.addEventListener("message", (event) => {
       const type = event.data.type;
       const origin = event.data.origin;
+      const method = event.data.method;
+      const data = event.data.data;
 
       // DEFINING FRAMES
       if (type === "sayHello") this.defineFrames(origin, event.source);
@@ -48,6 +47,9 @@ class CrossSiteConnection {
 
       // INIT ANIMATION
       if (type === "connected") this.initFrames();
+
+      // EXEC CROSS ACTION METHODS
+      if (type === "action") this.methods[method](data);
     });
 
     // START WATCH JOB
@@ -101,12 +103,12 @@ class CrossSiteConnection {
     if (this.checkFrame(ID)) return this.onLocate();
 
     // FILTER IF ID DOESN'T MATCH
-    if (this.connect.indexOf(ID) === -1) return;
+    if (this.connectWith.indexOf(ID) === -1) return;
 
     // PREVENT DUPLICATE
     if (source === window) return;
 
-    console.log("DEFINE FRAME: " + ID + " on --> " + this.frameID);
+    //console.log("DEFINE FRAME: " + ID + " on --> " + this.frameID);
 
     // PUSH FRAME TO ELEMENTS
     this.frames.push({
@@ -141,6 +143,9 @@ class CrossSiteConnection {
   checkConnection() {
     let check = false;
 
+    // RETURN FALSE IF CREATIVES ARE MISSING
+    if (this.frames.length !== this.connectWith.length) return false;
+
     this.frames.forEach((frame) => {
       if (!frame.connected) return;
       check = true;
@@ -157,6 +162,7 @@ class CrossSiteConnection {
     if (timestamp >= this.timeoutOn) this.onTimeout();
     if (window === window.top) this.onTimeout();
   }
+
   connectFrames(frameID) {
     this.frames.forEach((frame) => {
       if (frame.ID === frameID) frame.connected = true;
@@ -212,7 +218,7 @@ class CrossSiteConnection {
    * @desc Timeout Event
    */
   onTimeout() {
-    //    console.error("[" + this.frameID + "] is timeout");
+    console.error("[" + this.frameID + "] is timeout");
     clearInterval(this.watchJobInterval);
 
     // FALLBACK INIT START ANIMATION WITH TIMEOUT IDENTIFICATION
@@ -228,6 +234,33 @@ class CrossSiteConnection {
   initFrames() {
     clearInterval(this.watchJobInterval);
     window.Creative.startAnimation();
+
+    // START CUSTOM METHOD
+    if (!this.methods || !this.methods.start) return;
+    this.methods.start();
+  }
+
+  /**
+   *
+   * @param {Object} options
+   * @desc funtion provides a shorthand function for interacting between different Creatives
+   *
+   */
+  set(options) {
+    // VALIDATE TARGETS AND EXEC ACTION
+    options.targets.forEach((target) => {
+      const frame = this.frames.find((frame) => frame.ID === target);
+      if (!frame) throw new Error("Can't find frame target: " + target);
+
+      frame.viewport.postMessage(
+        {
+          type: "action",
+          method: options.method,
+          data: options.data,
+        },
+        "*"
+      );
+    });
   }
 }
 
