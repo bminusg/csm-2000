@@ -29,7 +29,7 @@ Furthermore this file defines all your Modules that you need for example Styles 
 
 ```JS
 import Creative from "src/creative"; // Init Creative Object
-import "./less/main.less" // Your Style files
+import "./sass/main.sass" // Your Style files
 
 new Creative({
   brand: "[YOUR BRAND NAME]",
@@ -76,7 +76,7 @@ String concatination from your Creative frame ID's who should be connected to yo
 
 Define a Milisecond value for how long the Creative is allowed to search for a connection.
 
-#### methods `type: Object[function]`
+##### methods `type: Object[function]`
 
 These properties defines your custom cross functions. For initialising you should define your function on the `start` property.
 In case you want to interact with different Creatives you have to call on Creative-A `this.set(options)`. The options object contains your options.targets `type:Array[String]` and a options.method `type: String` identifier which method should be executed on Creative-B

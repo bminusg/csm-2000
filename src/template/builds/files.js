@@ -8,7 +8,7 @@ const Handlebars = require("handlebars");
  * @param {Object} data - handlebars data input
  */
 module.exports = (data) => {
-  const templateFiles = ["index.html.hbs", "main.js.hbs", "main.less.hbs"];
+  const templateFiles = ["index.html.hbs", "main.js.hbs", "main.sass.hbs"];
   const year = new Date().getFullYear().toString();
   const targetFolder = path.join(
     config.paths.campaigns,
@@ -54,7 +54,7 @@ module.exports = (data) => {
 
           const template = Handlebars.compile(file);
           const filled = template(format);
-          const assignedPath = (filename === "main.less") ? path.join(filepath, "less") : filepath
+          const assignedPath = (filename === "main.sass") ? path.join(filepath, "sass") : filepath
 
           // SUBDIRECTORY FOR LESS TEMPLATE FILE
           if (!fs.existsSync(assignedPath)) fs.mkdirSync(assignedPath);

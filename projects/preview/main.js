@@ -1,4 +1,4 @@
-import "./less/main.less";
+import "./sass/main.sass";
 import createIframe from "./modules/iframe.js";
 import getSRC from "./modules/source.js";
 

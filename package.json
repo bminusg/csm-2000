@@ -26,12 +26,13 @@
     "img-optimize-loader": "^1.0.7",
     "inquirer": "^8.1.2",
     "inquirer-autocomplete-prompt": "^1.4.0",
-    "less": "^4.1.1",
-    "less-loader": "^10.0.1",
     "mini-css-extract-plugin": "^2.1.0",
+    "sass": "^1.37.5",
+    "sass-loader": "^12.1.0",
     "shortme": "^1.0.0",
     "terser-webpack-plugin": "^5.1.4",
-    "webpack": "^5.45.1",
+    "tween-sass": "^0.1.0",
+    "webpack": "^5.49.0",
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^3.11.2"
   }
