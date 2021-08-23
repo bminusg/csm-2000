@@ -107,9 +107,18 @@ class Creative {
 
   // EVENT BUILDER
   defineEvents() {
+    // GET ALL ANIMATED ELEMENTS
+    const animatedElements = document.querySelectorAll(".creative *");
+
     // START ANIMATION EVENT
     this.container.addEventListener("startAnimation", (event) => {
+      // SETTING GLOBAL ACTIVE VAR
       this.container.classList.add("creative--active");
+
+      // SETTING ANIMATION VARS
+      animatedElements.forEach((node) => {
+        node.classList.add("is--tweening");
+      });
 
       this.features.forEach((feature) => {
         if (typeof feature.init === "function") feature.init();
