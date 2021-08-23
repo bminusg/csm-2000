@@ -9,28 +9,61 @@ const year = new Date().getFullYear();
 const creativePaths = glob
   .sync(`${config.paths.campaigns}/${year}/**/main.js`)
   .map((path) => path.replace("/main.js", ""));
-const slugs = creativePaths.map((path) =>
-  path.substring(path.lastIndexOf("/") + 1)
-);
+const projectPaths = glob
+  .sync(`${config.paths.projects}/**/main.js`)
+  .map((path) => path.replace("/main.js", ""));
+
+const slugs = {
+  Creatives: creativePaths.map((path) =>
+    path.substring(path.lastIndexOf("/") + 1)
+  ),
+  Projects: projectPaths.map((path) =>
+    path.substring(path.lastIndexOf("/") + 1)
+  ),
+};
 
 // RUN THE CLI
 inquirer
   .prompt([
     {
       type: "checkbox",
+      name: "type",
+      message: "Which type do you wanna build?",
+      choices: ["Creatives", "Projects"],
+    },
+    {
+      type: "checkbox",
       message:
         "Ready for the customer feedback loop of hell? 🤘 Select your creative slugs in order to run the build proces.",
-      name: "buildSlugs",
-      choices: slugs,
+      name: "slugs",
+      choices: slugs.Creatives,
+      when: (answersSoFar) => {
+        if (answersSoFar.type[0] === "Creatives") return true;
+        return false;
+      },
+    },
+    {
+      type: "checkbox",
+      message: "Select your project slugs in order to run the build process",
+      name: "slugs",
+      choices: slugs.Projects,
+      when: (answersSoFar) => {
+        if (answersSoFar.type[0] === "Projects") return true;
+        return false;
+      },
     },
   ])
   .then(async (answers) => {
-    const slugsString = answers.buildSlugs.join();
+    const slugsString = answers.slugs.join();
+    const type = answers.type[0].toLowerCase();
+
     const { stdout, stderr } = await exec(
-      "webpack build --config webpack.prod.js --env production creatives=" +
+      "webpack build --config webpack.prod.js --env production " +
+        type +
+        "=" +
         slugsString
     );
 
     if (stderr) throw stderr;
     console.log(stdout);
-  });
+  }); 
