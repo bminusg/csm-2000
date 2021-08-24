@@ -24,21 +24,9 @@ module.exports = (env) => {
     },
     devServer: {
       host: "localhost",
-      publicPath: "/",
       open: true,
       liveReload: true,
       port: 8080,
-      watchOptions: {
-        poll: true,
-      },
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(png|svg|jpg|jpeg|gif)$/i,
-          type: "asset/resource",
-        },
-      ],
     },
     plugins: [
       new HtmlWebpackPlugin({

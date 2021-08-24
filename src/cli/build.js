@@ -26,7 +26,7 @@ const slugs = {
 inquirer
   .prompt([
     {
-      type: "checkbox",
+      type: "list",
       name: "type",
       message: "Which type do you wanna build?",
       choices: ["Creatives", "Projects"],
@@ -38,7 +38,7 @@ inquirer
       name: "slugs",
       choices: slugs.Creatives,
       when: (answersSoFar) => {
-        if (answersSoFar.type[0] === "Creatives") return true;
+        if (answersSoFar.type === "Creatives") return true;
         return false;
       },
     },
@@ -48,14 +48,14 @@ inquirer
       name: "slugs",
       choices: slugs.Projects,
       when: (answersSoFar) => {
-        if (answersSoFar.type[0] === "Projects") return true;
+        if (answersSoFar.type === "Projects") return true;
         return false;
       },
     },
   ])
   .then(async (answers) => {
     const slugsString = answers.slugs.join();
-    const type = answers.type[0].toLowerCase();
+    const type = answers.type.toLowerCase();
 
     const { stdout, stderr } = await exec(
       "webpack build --config webpack.prod.js --env production " +
@@ -66,4 +66,4 @@ inquirer
 
     if (stderr) throw stderr;
     console.log(stdout);
-  }); 
+  });

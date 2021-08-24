@@ -58,25 +58,6 @@ module.exports = (env) => {
             ? path.join(`${config.paths.upload}/${slug}`)
             : path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
         filename: "js/[name].[fullhash].js",
-        assetModuleFilename: "img/[name].[hash][ext]",
-      },
-      module: {
-        rules: [
-          {
-            test: /\.(png|jpe?g|webp|gif|svg|)$/i,
-            use: [
-              {
-                loader: "img-optimize-loader",
-                options: {
-                  compress: {
-                    mode: "high", // 'high' 'lossless', 'low'
-                    disableOnDevelopment: true,
-                  },
-                },
-              },
-            ],
-          },
-        ],
       },
       plugins: [
         new CleanWebpackPlugin(),
