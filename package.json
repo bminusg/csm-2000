@@ -27,7 +27,7 @@
     "inquirer": "^8.1.2",
     "inquirer-autocomplete-prompt": "^1.4.0",
     "mini-css-extract-plugin": "^2.1.0",
-    "sass": "^1.38.0",
+    "sass": "^1.38.1",
     "sass-loader": "^12.1.0",
     "shortme": "^1.0.0",
     "terser-webpack-plugin": "^5.1.4",
