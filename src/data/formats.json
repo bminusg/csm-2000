@@ -105,5 +105,38 @@
         "admark": ""
       }
     }
+  },
+  {
+    "name": "Mobile Leaderboard",
+    "slug": "ml",
+    "options": {
+      "default": {
+        "width": 320,
+        "height": 50,
+        "admark": "-w-"
+      }
+    }
+  },
+  {
+    "name": "Mobile Leaderboard 4:1",
+    "slug": "ml4-1",
+    "options": {
+      "default": {
+        "width": 320,
+        "height": 75,
+        "admark": "-w-"
+      }
+    }
+  },
+  {
+    "name": "Mobile Leaderboard 2:1",
+    "slug": "ml2-1",
+    "options": {
+      "default": {
+        "width": 320,
+        "height": 150,
+        "admark": "-w-"
+      }
+    }
   }
 ]
