@@ -23,9 +23,7 @@ module.exports = (env) => {
       preview: "./projects/preview/main.js",
     },
     devServer: {
-      host: "localhost",
-      open: true,
-      liveReload: true,
+      watchFiles: ["campaigns/**/*", "projects/**/*", "src/library/**/*"],
       port: 8080,
     },
     plugins: [
