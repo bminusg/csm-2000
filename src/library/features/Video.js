@@ -1,13 +1,64 @@
 class Video {
   constructor(options = {}) {
-    this.fileURL = options.fileURL || ["media/spot.mp4"];
-    this.type = options.type || "static";
-    this.parent = options.parent || document.querySelector(".creative");
+    this.video = options.video || document.querySelector("video") || null;
+    this.isAutoplay = options.isAutoplay || false;
+
+    // BUTTONS
+    this.btns = {
+      play: options.btnPlay || null,
+      pause: options.btnPause || null,
+      soundon: options.btnSoundOn || null,
+      soundoff: options.btnSoundOff || null,
+    };
   }
 
   init() {
-    const player = this.buildPlayer();
-    this.parent.appendChild(player);
+    if (!this.video) throw new Error("MISSING VIDEO ELEMENT");
+
+    // PARSE
+
+    // APPEND EVENT LISTENERS
+    this.addListeners();
+  }
+
+  addListeners() {
+    const container =
+      window.Creative.container || document.querySelector("body");
+    // PAUSE
+    this.video.addEventListener("pause", (e) => {
+      container.dataset.playing = "0";
+    });
+
+    // CAN PLAY
+    this.video.addEventListener("canplay", (e) => {
+      if (this.isAutoplay) this.video.play();
+    });
+
+    // PLAY
+    this.video.addEventListener("play", (e) => {
+      container.dataset.playing = "1";
+    });
+
+    // VOLUME CHANGE
+    this.video.addEventListener("volumechange", (event) => {
+      const value = this.video.muted ? 0 : 1;
+      container.dataset.muted = value;
+    });
+
+    // BUTTONS
+    for (const btn in this.btns) {
+      if (!this.btns[btn]) continue;
+
+      this.btns[btn].addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (btn === "play" || btn === "pause") this.video[btn]();
+
+        if (btn === "soundoff") this.video.muted = true;
+
+        if (btn === "soundon") this.video.muted = false;
+      });
+    }
   }
 
   buildPlayer() {
@@ -19,7 +70,7 @@ class Video {
     const source = document.createElement("source");
     //source.type = options.mimeType;
     source.type = "video/mp4";
-    source.src = this.fileURL;
+    source.src = this.fileURLs;
 
     video.appendChild(source);
 
