@@ -107,19 +107,12 @@ class Creative {
 
   // EVENT BUILDER
   defineEvents() {
-    // GET ALL ANIMATED ELEMENTS
-    const animatedElements = document.querySelectorAll(".creative *");
-
     // START ANIMATION EVENT
     this.container.addEventListener("startAnimation", (event) => {
       // SETTING GLOBAL ACTIVE VAR
-      this.container.classList.add("creative--active");
+      this.container.classList.add("is--tweening");
 
-      // SETTING ANIMATION VARS
-      animatedElements.forEach((node) => {
-        node.classList.add("is--tweening");
-      });
-
+      // INIT FEATURES
       this.features.forEach((feature) => {
         if (typeof feature.init === "function") feature.init();
       });
@@ -128,8 +121,6 @@ class Creative {
 
   // START ANIMATION
   startAnimation(options) {
-    const d = new Date();
-    console.log("[" + this.slug + "] START ANIMATION ON: " + d);
     const event = new CustomEvent("startAnimation", { detail: options });
     this.container.dispatchEvent(event);
   }

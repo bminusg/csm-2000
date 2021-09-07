@@ -3,7 +3,7 @@
 $width: 100% !default
 $height: 100% !default
 
-.creative 
+.creative
     background-color: #fff
     position: relative
     left: 0
@@ -12,18 +12,18 @@ $height: 100% !default
     width: $width
     height: $height
 
-    * 
+    *
         position: absolute
         background-repeat: no-repeat
         background-position: center center
-        background-size: contain  
+        background-size: contain
 
     // AD MARK
-    &--admark 
+    &--admark
         font-family: "Arial Narrow", Arial, sans-serif
         font-stretch: condensed
         font-size: 10px
-        font-smooth: never
+        -webkit-font-smoothing: none
         text-transform: uppercase
         position: absolute
         left: 5px
@@ -32,16 +32,16 @@ $height: 100% !default
         z-index: 100
 
     // PRELOADER
-    &--preloader 
+    &--preloader
         position: absolute
-        top:0
-        left:0
-        width:100%
-        height:100%
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
         background-color: #fff
         z-index: 99
 
-        &:before 
+        &:before
             content: ""
             width: 40px
             height: 40px
@@ -54,15 +54,12 @@ $height: 100% !default
             animation: preloader 1s linear infinite
 
             @keyframes preloader
-                to 
+                to
                     transform: rotate(360deg)
 
-
     // HIDE PRELOADER IF ANIMATION STARTS
-    &--active 
-        .creative--preloader 
+    &.is--tweening
+
+        .creative--preloader
             visibility: hidden
             transition: visibility 0s linear 0s
-
-  
-
