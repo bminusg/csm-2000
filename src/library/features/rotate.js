@@ -1,7 +1,8 @@
 class Rotate {
   constructor(config = {}) {
     // REQUIRED CONFIG
-    this.triggers = config.triggers;
+    this.triggerClassName = config.triggers;
+    this.triggers = document.querySelectorAll(this.triggerClassName);
     this.action = config.action;
     this.target = config.target || document.querySelector(".creative");
 
@@ -10,6 +11,7 @@ class Rotate {
     this.autoRotate = config.autoRotate || false;
     this.loopTime = config.loopTime || [2500];
     this.delay = config.delay || 600;
+    this.datasets = config.datasets || [];
 
     // LOOP CONFIG
     this.IDX = -1;
@@ -17,6 +19,12 @@ class Rotate {
   }
 
   init() {
+    // RETURN IF NO MARKUP TRIGGERS DEFINED
+    if (this.triggers.length === 0)
+      return console.error(
+        "Can't find any markup elements for " + this.triggerClassName + ""
+      );
+
     // DEFINE AUTOROTATE IF MAXROUNDS DEFINED
     if (this.maxRounds > 0) this.autoRotate = true;
 
@@ -42,7 +50,7 @@ class Rotate {
         (event) => {
           // PREVENT BUBBLING
           const e = event.toElement || event.relatedTarget;
-          if (e.parentNode == item || e == item) return;
+          if (!e || e.parentNode == item || e == item) return;
 
           this.autoRotate = true;
           this.update();
@@ -70,7 +78,7 @@ class Rotate {
 
   update() {
     this.reset();
-    this.triggers[this.IDX].classList.add("active");
+    this.triggers[this.IDX].classList.add("is--active");
     this.action(this.triggers[this.IDX], this.target);
 
     // INIT NEXT INTERVAL
@@ -83,7 +91,14 @@ class Rotate {
   }
 
   reset() {
-    this.triggers.forEach((item) => item.classList.remove("active"));
+    this.triggers.forEach((item) => item.classList.remove("is--active"));
+
+    // RESET DATASETS
+    this.datasets.forEach((data) => {
+      if (!data) return;
+
+      this.target.dataset[data] = "";
+    });
   }
 }
 
