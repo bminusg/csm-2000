@@ -17,6 +17,9 @@ class CrossSiteConnection {
 
     // CUSTOM METHODS
     this.methods = options.methods || {};
+
+    // CONFIG
+    this.hasDefaultEvent = options.hasDefaultEvent || false;
   }
 
   /**
@@ -221,9 +224,40 @@ class CrossSiteConnection {
     console.error("[" + this.frameID + "] is timeout");
     clearInterval(this.watchJobInterval);
 
+    // APPEND FALLBACK CLASS
+    window.Creative.container.classList.add("is--timeout");
+
     // FALLBACK INIT START ANIMATION WITH TIMEOUT IDENTIFICATION
     window.Creative.startAnimation({
       connected: false,
+    });
+  }
+
+  /**
+   *
+   * @desc Append a custom event listener and send set
+   */
+  appendCustomEvent() {
+    const container = window.Creative.container;
+    container.addEventListener("crossSiteCommunication", (e) => {
+      // RETURN IF METHOD IS MISSING
+
+      if (!e.detail || !e.detail.method)
+        return console.error(
+          "Missing detail method params. Please append a detail.method param when you are dispatchig the crossSiteCommuniction event"
+        );
+
+      // DEFINE OPTIONS
+
+      const options = {
+        targets: e.detail.targets || this.connectWith,
+        method: e.detail.method,
+        data: e.detail.data || { ...container.dataset } || null,
+      };
+
+      // TRIGGER CROSS SITE COMMUNICATION FUNC
+
+      this.set(options);
     });
   }
 
@@ -234,6 +268,9 @@ class CrossSiteConnection {
   initFrames() {
     clearInterval(this.watchJobInterval);
     window.Creative.startAnimation();
+
+    // APPEND DATASET EVENT LISTENER ON CREATIVE CONTAINER
+    if (this.hasDefaultEvent) this.appendCustomEvent();
 
     // START CUSTOM METHOD
     if (!this.methods || !this.methods.start) return;
