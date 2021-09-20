@@ -14,6 +14,7 @@ class CrossSiteConnection {
     this.frames = [];
     this.connected = false;
     this.countConnect = 0;
+    this.targetOrigin = window.location.origin;
 
     // CUSTOM METHODS
     this.methods = options.methods || {};
@@ -90,7 +91,7 @@ class CrossSiteConnection {
           origin: this.frameID,
           type: "sayHello",
         },
-        "*"
+        this.targetOrigin
       );
     }
   }
@@ -191,7 +192,7 @@ class CrossSiteConnection {
           type: "connected",
           origin: this.frameID,
         },
-        "*"
+        this.targetOrigin
       );
     });
   }
@@ -211,7 +212,7 @@ class CrossSiteConnection {
           type: "located",
           origin: this.frameID,
         },
-        "*"
+        this.targetOrigin
       );
     }
   }
@@ -295,7 +296,7 @@ class CrossSiteConnection {
           method: options.method,
           data: options.data,
         },
-        "*"
+        this.targetOrigin
       );
     });
   }
