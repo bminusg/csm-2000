@@ -24,7 +24,7 @@
     "handlebars-loader": "^1.7.1",
     "html-webpack-plugin": "^5.3.2",
     "img-optimize-loader": "^1.0.7",
-    "inquirer": "^8.1.2",
+    "inquirer": "^8.1.5",
     "inquirer-autocomplete-prompt": "^1.4.0",
     "mini-css-extract-plugin": "^2.2.2",
     "sass": "^1.41.1",
