@@ -31,7 +31,7 @@
     "sass-loader": "^12.1.0",
     "shortme": "^1.0.0",
     "terser-webpack-plugin": "^5.2.4",
-    "tween-sass": "^0.5.0",
+    "tween-sass": "^0.5.1",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.2.1"
