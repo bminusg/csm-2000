@@ -1,7 +1,7 @@
 const getSRC = (slug) => {
   const host = window.location.host;
   const protocol = window.location.protocol;
-  const brand = slug.split("-")[0];
+  const brand = (slug.indexOf("-") === -1) ? slug.split("_")[0] : slug.split("-")[0];
   const year = new Date().getFullYear();
 
   const uri =
