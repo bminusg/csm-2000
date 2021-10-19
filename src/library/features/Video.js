@@ -19,6 +19,9 @@ class Video {
 
     // APPEND EVENT LISTENERS
     this.addListeners();
+
+    // AUTOPLAY
+    if (this.isAutoplay) this.video.play();
   }
 
   addListeners() {
@@ -52,7 +55,14 @@ class Video {
       this.btns[btn].addEventListener("click", (e) => {
         e.preventDefault();
 
-        if (btn === "play" || btn === "pause") this.video[btn]();
+        if (btn === "play") {
+          this.video.muted = false;
+          this.video.play();
+        }
+
+        if (btn === "pause") {
+          this.video.pause();
+        }
 
         if (btn === "soundoff") this.video.muted = true;
 
