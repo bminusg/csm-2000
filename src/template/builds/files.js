@@ -33,7 +33,7 @@ module.exports = (data) => {
     Object.assign(format, {
       campaign: data.campaign,
       brand: data.brand,
-      path: creativePath.join("-"),
+      path: creativePath.join("_"),
     });
 
     // CREATE FOLDERS
