@@ -2,6 +2,7 @@
 
 $width: 100% !default
 $height: 100% !default
+$format: "" !default
 
 .creative
     background-color: #fff
@@ -19,17 +20,25 @@ $height: 100% !default
         background-size: contain
 
     // AD MARK
+
     &--admark
-        font-family: "Arial Narrow", Arial, sans-serif
-        font-stretch: condensed
         font-size: 10px
-        -webkit-font-smoothing: none
         text-transform: uppercase
-        position: absolute
-        left: 5px
-        top: 5px
         color: #afafaf
         z-index: 100
+        font-stretch: condensed
+        -webkit-font-smoothing: none
+
+        @if $format == "sitebar"
+            background-color: #d4d4d4
+            color: #7d7d7d
+            width: 100%
+            bottom: 0
+            padding: 3px 0
+            text-align: center
+        @else
+            left: 5px
+            top: 5px
 
     // PRELOADER
     &--preloader
