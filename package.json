@@ -26,7 +26,7 @@
     "img-optimize-loader": "^1.0.7",
     "inquirer": "^8.1.5",
     "inquirer-autocomplete-prompt": "^1.4.0",
-    "mini-css-extract-plugin": "^2.4.1",
+    "mini-css-extract-plugin": "^2.4.3",
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
     "shortme": "^1.0.0",
