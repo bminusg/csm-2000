@@ -1,12 +1,351 @@
 [
   {
-    "name": "Samsung",
-    "slug": "samsung",
-    "iABcategory": 9
-  },
-  {
     "name": "Bristol Myers Squibb",
     "slug": "bms",
     "iABcategory": 7
+  },
+  {
+    "name": "LEDVANCE",
+    "slug": "ledvance",
+    "iABcategory": 10
+  },
+  {
+    "name": "Roku",
+    "slug": "roku",
+    "iABcategory": 10
+  },
+  {
+    "name": "Apple",
+    "slug": "apple",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Google",
+    "slug": "google",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Microsoft",
+    "slug": "microsoft",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Amazon",
+    "slug": "amazon",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Facebook",
+    "slug": "facebook",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  { "name": "Coca-Cola", "slug": "coca-cola", "industry": "Beverages" },
+  { "name": "Disney", "slug": "walt-disney", "industry": "Leisure" },
+  {
+    "name": "Samsung",
+    "slug": "samsung-electronics",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  { "name": "Louis Vuitton", "slug": "louis-vuitton", "industry": "Luxury" },
+  { "name": "McDonald's", "slug": "mcdonalds", "industry": "Restaurants" },
+  {
+    "name": "Toyota",
+    "slug": "toyota-motor",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "Kia",
+    "slug": "kia",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "Intel",
+    "slug": "intel",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  { "name": "NIKE", "slug": "nike", "industry": "Apparel" },
+  { "name": "AT&T", "slug": "att", "industry": "Telecom" },
+  {
+    "name": "Cisco",
+    "slug": "cisco-systems",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Oracle",
+    "slug": "oracle",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Verizon",
+    "slug": "verizon-communications",
+    "industry": "Telecom"
+  },
+  { "name": "Visa", "slug": "visa", "industry": "Financial Services" },
+  { "name": "Walmart", "slug": "walmart", "industry": "Retail" },
+  { "name": "GE", "slug": "general-electric", "industry": "Diversified" },
+  { "name": "Budweiser", "slug": "budweiser", "industry": "Alcohol" },
+  { "name": "SAP", "slug": "sap", "industry": "Technology", "iABcategory": 9 },
+  {
+    "name": "Mercedes-Benz",
+    "slug": "mercedes-benz",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  { "name": "IBM", "slug": "ibm", "industry": "Technology", "iABcategory": 9 },
+  { "name": "Marlboro", "slug": "marlboro", "industry": "Tobacco" },
+  {
+    "name": "Netflix",
+    "slug": "netflix",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "BMW",
+    "slug": "bmw-group",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "American Express",
+    "slug": "american-express",
+    "industry": "Financial Services"
+  },
+  {
+    "name": "Honda",
+    "slug": "honda-motor",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "L'Oréal",
+    "slug": "loreal",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "Gucci", "slug": "gucci", "industry": "Luxury" },
+  { "name": "Hermès", "slug": "hermes-international", "industry": "Luxury" },
+  { "name": "Nescafe", "slug": "nescafe", "industry": "Beverages" },
+  { "name": "Home Depot", "slug": "home-depot", "industry": "Retail" },
+  {
+    "name": "Accenture",
+    "slug": "accenture",
+    "industry": "Business Services"
+  },
+  { "name": "Pepsi", "slug": "pepsi", "industry": "Beverages" },
+  { "name": "Starbucks", "slug": "starbucks", "industry": "Restaurants" },
+  {
+    "name": "Mastercard",
+    "slug": "mastercard",
+    "industry": "Financial Services"
+  },
+  {
+    "name": "Frito-Lay",
+    "slug": "frito-lay",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "IKEA", "slug": "ikea", "industry": "Retail" },
+  { "name": "Zara", "slug": "zara", "industry": "Retail" },
+  {
+    "name": "Gillette",
+    "slug": "gillette",
+    "industry": "Consumer Packaged Goods"
+  },
+  {
+    "name": "HSBC",
+    "slug": "hsbc-holdings",
+    "industry": "Financial Services"
+  },
+  {
+    "name": "Audi",
+    "slug": "audi",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "J.P. Morgan",
+    "slug": "jp-morgan",
+    "industry": "Financial Services"
+  },
+  { "name": "Deloitte", "slug": "deloitte", "industry": "Business Services" },
+  {
+    "name": "Sony",
+    "slug": "sony",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "UPS",
+    "slug": "united-parcel-service",
+    "industry": "Transportation"
+  },
+  {
+    "name": "Bank of America",
+    "slug": "bank-of-america",
+    "industry": "Financial Services"
+  },
+  { "name": "Chase", "slug": "chase", "industry": "Financial Services" },
+  { "name": "Adidas", "slug": "adidas", "industry": "Apparel" },
+  { "name": "Chanel", "slug": "chanel", "industry": "Luxury" },
+  { "name": "Siemens", "slug": "siemens", "industry": "Diversified" },
+  {
+    "name": "Nestle",
+    "slug": "nestle",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "CVS", "slug": "cvs-health", "industry": "Retail" },
+  { "name": "Cartier", "slug": "cartier", "industry": "Luxury" },
+  {
+    "name": "Porsche",
+    "slug": "porsche-automobil-holding",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  { "name": "ESPN", "slug": "espn", "industry": "Media" },
+  { "name": "Citi", "slug": "citigroup", "industry": "Financial Services" },
+  {
+    "name": "Wells Fargo",
+    "slug": "wells-fargo",
+    "industry": "Financial Services"
+  },
+  {
+    "name": "Adobe",
+    "slug": "adobe",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Pampers",
+    "slug": "pampers",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "Corona", "slug": "corona", "industry": "Alcohol" },
+  { "name": "T-Mobile", "slug": "t-mobile", "industry": "Telecom" },
+  {
+    "name": "Ebay",
+    "slug": "ebay",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Chevrolet",
+    "slug": "chevrolet",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "PayPal",
+    "slug": "paypal",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Ford",
+    "slug": "ford-motor",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  { "name": "Red Bull", "slug": "red-bull", "industry": "Beverages" },
+  {
+    "name": "PwC",
+    "slug": "pricewaterhousecoopers",
+    "industry": "Business Services"
+  },
+  { "name": "HP", "slug": "hp", "industry": "Technology", "iABcategory": 9 },
+  {
+    "name": "Colgate",
+    "slug": "colgate-palmolive",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "Fox", "slug": "fox", "industry": "Media" },
+  { "name": "Lowe's", "slug": "lowes", "industry": "Retail" },
+  {
+    "name": "Lancôme",
+    "slug": "lancome",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "H&M", "slug": "hm-hennes-mauritz", "industry": "Retail" },
+  {
+    "name": "Lexus",
+    "slug": "lexus",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "Santander",
+    "slug": "santander",
+    "industry": "Financial Services"
+  },
+  { "name": "Costco", "slug": "costco-wholesale", "industry": "Retail" },
+  { "name": "Rolex", "slug": "rolex", "industry": "Luxury" },
+  {
+    "name": "Hyundai",
+    "slug": "hyundai-motor",
+    "industry": "Automotive",
+    "iABcategory": 2
+  },
+  {
+    "name": "Danone",
+    "slug": "danone",
+    "industry": "Consumer Packaged Goods"
+  },
+  { "name": "Heineken", "slug": "heineken", "industry": "Alcohol" },
+  { "name": "Uniqlo", "slug": "uniqlo", "industry": "Apparel" },
+  {
+    "name": "Goldman Sachs",
+    "slug": "goldman-sachs-group",
+    "industry": "Financial Services"
+  },
+  { "name": "Hennessy", "slug": "hennessy", "industry": "Alcohol" },
+  {
+    "name": "Nintendo",
+    "slug": "nintendo",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  { "name": "AXA", "slug": "axa-group", "industry": "Financial Services" },
+  { "name": "Allianz", "slug": "allianz", "industry": "Financial Services" },
+  {
+    "name": "Dell",
+    "slug": "dell-technologies",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "Caterpillar",
+    "slug": "caterpillar",
+    "industry": "Heavy Equipment"
+  },
+  { "name": "LEGO", "slug": "lego-group", "industry": "Leisure" },
+  {
+    "name": "Huawei",
+    "slug": "huawei",
+    "industry": "Technology",
+    "iABcategory": 9
+  },
+  {
+    "name": "John Deere",
+    "slug": "john-deere",
+    "industry": "Heavy Equipment"
+  },
+  { "name": "UBS", "slug": "ubs", "industry": "Financial Services" },
+  { "name": "KFC", "slug": "kfc", "industry": "Restaurants" },
+  { "name": "Burger King", "slug": "burger-king", "industry": "Restaurants" },
+  { "name": "EY", "slug": "ernst-young", "industry": "Business Services" },
+  { "name": "FedEx", "slug": "fedex", "industry": "Transportation" },
+  {
+    "name": "Volkswagen",
+    "slug": "volkswagen-group",
+    "industry": "Automotive",
+    "iABcategory": 2
   }
 ]
