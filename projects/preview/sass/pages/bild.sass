@@ -2,6 +2,9 @@
   grid-template-columns: 1fr minmax(320px, 1024px) 1fr
   background-color: #fff
 
+  @media screen and (max-width: 1440px)
+    grid-template-columns: 0fr minmax(320px, 1024px) 1fr
+
   // CUSTOM PUBLISHER SETTINGS
   .publisher
     background-color: #fff
@@ -26,3 +29,12 @@
         min-height: 90px
         max-height: 120px
         height: 100%
+
+  // COMPILATION ADS
+  &[data-ad-compilation="Bridge Ad"],
+  &[data-ad-compilation="Fireplace"]
+    .creative
+      &--sky
+        &-iframe
+          width: 120px
+          height: 954px

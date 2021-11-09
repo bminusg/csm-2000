@@ -1,23 +1,15 @@
-const getSRC = (slug) => {
+const getSRC = (slug, optionalDir = "/index.html") => {
   const host = window.location.host;
   const protocol = window.location.protocol;
-  const brand = (slug.indexOf("-") === -1) ? slug.split("_")[0] : slug.split("-")[0];
+  const brand =
+    slug.indexOf("-") === -1 ? slug.split("_")[0] : slug.split("-")[0];
   const year = new Date().getFullYear();
 
-  const uri =
+  let uri =
     host.indexOf("localhost") > -1
-      ? protocol + "//localhost:8080/" + slug + ".html"
-      : protocol +
-        "//" +
-        host +
-        "/media/" +
-        year +
-        "/" +
-        brand +
-        "/" +
-        slug +
-        "/index.html";
+      ? protocol + "//localhost:8080/" + slug
+      : protocol + "//" + host + "/media/" + year + "/" + brand + "/" + slug;
 
-  return uri;
+  return uri + optionalDir;
 };
 export default getSRC;

@@ -4,9 +4,45 @@
   &:empty
     display: none
 
+  &--interstitial
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 100%
+
+    &-layer
+      position: fixed
+      background-color: rgba(0,0,0,0.95)
+      width: 100%
+      height: 100%
+      z-index: 200
+      display: none
+
+  &--videowall
+    background-color: #000
+    position: absolute
+    width: 100%
+    height: 100%
+    z-index: 0
+    cursor: pointer
+    display: none
+
+    video
+      position: fixed
+      z-index: -5630
+      top: 0
+      object-fit: cover
+      opacity: 0.8
+      width: 100%
+      height: 100%
+
   &--sitebar
     &-left
       grid-area: SITEBAR-LEFT
+
+      iframe
+        @media screen and (max-width: 1340px)
+          display: none
 
     &-right
       grid-area: SITEBAR-RIGHT
@@ -14,7 +50,7 @@
     &-iframe
       border: 0
       width: 100%
-      height: 100vh
+      height: 100%
 
   &--superbanner
     grid-area: SUPERBANNER
@@ -46,3 +82,16 @@
     grid-area: HALFPAGE
     width: 300px
     height: 600px
+
+[data-ad-compilation="Video Wall"]
+  .creative
+    &--videowall
+      display: block
+    &--sitebar
+      display: none
+
+[data-interstitial="true"]
+  .creative
+    &--interstitial
+      &-layer
+        display: block
