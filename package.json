@@ -6,8 +6,7 @@
   "keywords": [
     "Digital Advertisement",
     "Creative Builder",
-    "iab",
-    "Xandr"
+    "iab"
   ],
   "scripts": {
     "template": "node ./src/cli/template",
@@ -15,6 +14,10 @@
     "build": "node ./src/cli/build"
   },
   "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "babel-loader": "^8.2.3",
+    "babel-preset-minify": "^0.5.1",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.3.0",
     "css-minimizer-webpack-plugin": "^3.1.1",
@@ -30,9 +33,8 @@
     "sass": "^1.42.1",
     "sass-loader": "^12.1.0",
     "shortme": "^1.0.0",
-    "terser-webpack-plugin": "^5.2.4",
     "tween-sass": "^0.5.1",
-    "webpack": "^5.57.1",
+    "webpack": "^5.62.1",
     "webpack-cli": "^4.8.0",
     "webpack-dev-server": "^4.3.1"
   }

@@ -1,4 +1,5 @@
 const glob = require("glob");
+const fs = require("fs");
 const { merge } = require("webpack-merge");
 const config = require("./config.js");
 const common = require("./webpack.common");
@@ -26,6 +27,25 @@ module.exports = (env) => {
       watchFiles: ["campaigns/**/*", "projects/**/*", "src/library/**/*"],
       port: 8080,
     },
+    module: {
+      rules: [
+        {
+          test: /\.(png|jpe?g|webp|git|svg|)$/i,
+          type: "asset/resource",
+        },
+        {
+          test: /\.mp4$/,
+          use: [
+            {
+              loader: "file-loader",
+              options: {
+                name: "[folder]/[name].[ext]",
+              },
+            },
+          ],
+        },
+      ],
+    },
     plugins: [
       new HtmlWebpackPlugin({
         filename: "index.html",
@@ -42,23 +62,26 @@ module.exports = (env) => {
   };
 
   // ADDING DYNAMIC VALUES TO DEV CONFIG
-  creativePaths.forEach((path, idx) => {
+  for (const idx in creativePaths) {
     const slug = slugs[idx];
-
-    // ADD HTML Webpack Plugin
-    devConfig.plugins.push(
-      new HtmlWebpackPlugin({
-        filename: slug + ".html",
-        template: `${path}/index.html`,
-        chunks: [slug],
-      })
-    );
+    const path = creativePaths[idx];
 
     // DEFINE ENTRY POINTS
     Object.assign(devConfig.entry, {
       [slug]: `${path}/main.js`,
     });
-  });
+
+    if (!fs.existsSync(path + "/index.html")) continue;
+
+    // ADD HTML Webpack Plugin
+    devConfig.plugins.push(
+      new HtmlWebpackPlugin({
+        filename: slug + "/index.html",
+        template: `${path}/index.html`,
+        chunks: [slug],
+      })
+    );
+  }
 
   // MERGE CONFIGS
   return merge(common, devConfig);

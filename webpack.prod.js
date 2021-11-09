@@ -6,7 +6,6 @@ const config = require("./config.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env) => {
   if (!env.creatives && !env.projects)
@@ -59,6 +58,56 @@ module.exports = (env) => {
             : path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
         filename: "js/[name].[fullhash].js",
       },
+      module: {
+        rules: [
+          {
+            test: /\.(png|jpe?g|webp|git|svg|)$/i,
+            use: [
+              {
+                loader: "img-optimize-loader",
+                options: {
+                  name: "img/[name].[hash].[ext]",
+                  compress: {
+                    // This will take more time and get smaller images.
+                    mode: "high", // 'lossless', 'low'
+                    disableOnDevelopment: true,
+                  },
+                },
+              },
+            ],
+            type: "javascript/auto",
+          },
+          {
+            test: /\.mp4$/,
+            use: [
+              {
+                loader: "file-loader",
+                options: {
+                  name: "video/[name].[ext]",
+                },
+              },
+            ],
+          },
+          {
+            test: /\.m?js$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: "babel-loader",
+              options: {
+                comments: false,
+                presets: [
+                  [
+                    "minify",
+                    {
+                      removeConsole: true,
+                    },
+                  ],
+                ],
+              },
+            },
+          },
+        ],
+      },
       plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
@@ -69,14 +118,7 @@ module.exports = (env) => {
       ],
       optimization: {
         minimize: true,
-        minimizer: [
-          new CssMinimizerPlugin(),
-          new TerserPlugin({
-            terserOptions: {
-              ecma: 5,
-            },
-          }),
-        ],
+        minimizer: [new CssMinimizerPlugin()],
       },
     };
 
