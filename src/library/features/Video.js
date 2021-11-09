@@ -1,21 +1,25 @@
 class Video {
   constructor(options = {}) {
-    this.video = options.video || document.querySelector("video") || null;
+    this.video = options.video || undefined;
+    this.fileURLs = options.fileURLs || [];
+    this.parentContainer =
+      options.parentContainer || document.querySelector("body");
+
+    // VIDEO CONFIG
     this.isAutoplay = options.isAutoplay || false;
+    this.isLooped = options.isLooped || false;
 
     // BUTTONS
     this.btns = {
-      play: options.btnPlay || null,
-      pause: options.btnPause || null,
-      soundon: options.btnSoundOn || null,
-      soundoff: options.btnSoundOff || null,
+      play: options.btnPlay || undefined,
+      pause: options.btnPause || undefined,
+      soundon: options.btnSoundOn || undefined,
+      soundoff: options.btnSoundOff || undefined,
     };
   }
 
   init() {
-    if (!this.video) throw new Error("MISSING VIDEO ELEMENT");
-
-    // PARSE
+    if (!this.video) this.buildPlayer();
 
     // APPEND EVENT LISTENERS
     this.addListeners();
@@ -25,8 +29,10 @@ class Video {
   }
 
   addListeners() {
-    const container =
-      window.Creative.container || document.querySelector("body");
+    const container = window.Creative
+      ? window.Creative.container
+      : this.parentContainer;
+
     // PAUSE
     this.video.addEventListener("pause", (e) => {
       container.dataset.playing = "0";
@@ -34,7 +40,7 @@ class Video {
 
     // CAN PLAY
     this.video.addEventListener("canplay", (e) => {
-      if (this.isAutoplay) this.video.play();
+      //if (this.isAutoplay) this.video.play();
     });
 
     // PLAY
@@ -74,32 +80,35 @@ class Video {
   buildPlayer() {
     const video = document.createElement("video");
 
-    // ASSET
-
     // SRC TYPE
-    const source = document.createElement("source");
-    //source.type = options.mimeType;
-    source.type = "video/mp4";
-    source.src = this.fileURLs;
 
-    video.appendChild(source);
+    this.fileURLs.forEach((fileURL) => {
+      const source = document.createElement("source");
+      //source.type = options.mimeType;
+      //source.type = "video/mp4";
+      source.src = fileURL;
+
+      video.appendChild(source);
+    });
 
     // DEFINE VIDEO ATTRIBUTES
-    //video.style.width = "100%";
-    //video.style.height = widget.HEIGHT + "px";
-    video.id = "creative--video";
+
+    video.id = "creativeVideo";
     video.muted = true;
     video.playsInline = true;
-    video.autoplay = true;
+    video.autoplay = this.isAutoplay;
+    video.loop = this.isLooped;
     video.controls = false;
+    video.disablePictureInPicture = false;
     //video.bitrate = options.bitrate;
 
-    video.setAttribute("muted", true);
-    video.setAttribute("autoplay", true);
-    video.setAttribute("playsInline", true);
-    video.setAttribute("disablePictureInPicture", false);
+    video.setAttribute("playsinline", true);
+    video.setAttribute("preload", "auto");
 
-    return video;
+    // APPEND VIDEO CONTAINER
+
+    this.video = video;
+    this.parentContainer.appendChild(video);
   }
 }
 

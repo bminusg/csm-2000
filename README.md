@@ -44,11 +44,62 @@ new Creative({
 
 ### Entrypoint index.html
 
-This file is needed for defining your custom Markup. You can use `npm run template` to create your HTML Entrypoint dynamically.
+This file defines your custom Markup. You can use `npm run template` to create your HTML Entrypoint dynamically.
 
 ## Features
 
-The idea for feature integration is to encapsulate default logic from custom functionality. Another obstacle is to prevent blowing up the final creative JS file size. We only want to integrate code which we only need in the live environment. The following docs give an instruction how to integrate Features
+The idea for feature integration is to encapsulate default logic from custom functionality. Another obstacle is to prevent blowing up the final creative JS file size. We only want to integrate code which we only need in the live environment. The following docs give an instruction how to use the features
+
+### Video Player
+
+Generates a plain video player
+
+```JS
+import Video from "lib/features/Video";
+
+new Creative({
+  features: [
+    new Video({
+      isAutoplay: true,
+      fileURLs: ["http://example.com/media/spot.mp4", "http://example.com/media/spot.webm"]
+    })
+  ]
+});
+```
+
+#### Options `type: Object`
+
+##### isAutoplay `type: Boolean, Default: false`
+
+##### isLooped `type: Boolean, Default: false`
+
+##### fileURLs `type: Array[String], required`
+
+List of URL paths pointing to the video media file
+
+##### video `type: NodeElement, Default: undefined`
+
+You can use an excisting <video></video> Element as Video container. In default case the feature will build a video element
+
+##### parentContainer `type: NodeElement, Default: <body>`
+
+The video event listeners send feedback to the parent container as data attributes.
+
+###### btnPlay `type: NodeElement, Default: undefined`
+
+Append click event listener to Node Element for playing the video
+
+###### btnPause `type: NodeElement, Default: undefined`
+
+Append click event listener to Node Element for pausing the video
+
+###### btnSoundOn `type: NodeElement, Default: undefined`
+
+Append click event listener to Node Element for unmuting the video
+
+###### btnSoundOff `type: NodeElement, Default: undefined`
+
+Append click event listener to Node Element for muting the video
 
 ### Cross Site Connection
 
@@ -163,9 +214,9 @@ new Creative({
 
       // OPTIONAL
       target: document.querySelector(".creative"),  // NodeElement, default div.creative
-      maxRounds = 0,                                // number of rounds, 0 means infinite
-      loopTime = [2500],                            // Array:number millisecond timeoffset between trigger change
-      autoRotate = false,                           // boolean that indicates if rotating starts automatic
+      maxRounds: 0,                                // number of rounds, 0 means infinite
+      loopTime: [2500],                            // Array:number millisecond timeoffset between trigger change
+      autoRotate: false,                           // boolean that indicates if rotating starts automatic
       delay: 600
     })
   ]
