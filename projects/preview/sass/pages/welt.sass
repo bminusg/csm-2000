@@ -3,15 +3,30 @@
   background-color: #f9f9f8
 
   .publisher
-    background-color: #edece8
 
     &--nav
       background: url("../img/welt-nav.jpg") no-repeat top center
       height: 150px
       width: 100%
 
+    &--article
+      background-color: #edece8
+      height: 100%
+
   // CUSTOM PUBLISHER BANNER SETTINGS
   .creative
+    &--interstitial
+      &-btn
+        &__close
+          position: absolute
+          background-image: url("../img/welt--close.png")
+          background-size: contain
+          width: 25px
+          height: 25px
+          top: 10px
+          left: 10px
+          cursor: pointer
+
     &--billboard
       &-iframe
         width: 970px

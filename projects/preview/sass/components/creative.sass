@@ -27,7 +27,7 @@
     cursor: pointer
     display: none
 
-    video
+    &-video
       position: fixed
       z-index: -5630
       top: 0
@@ -35,6 +35,11 @@
       opacity: 0.8
       width: 100%
       height: 100%
+
+      &__expanded
+        width: 100%
+        object-fit: contain
+        cursor: pointer
 
   &--sitebar
     &-left
@@ -85,6 +90,8 @@
 
 [data-ad-compilation="Video Wall"]
   .creative
+    &--interstitial
+      cursor: pointer
     &--videowall
       display: block
     &--sitebar

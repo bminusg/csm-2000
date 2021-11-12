@@ -100,6 +100,39 @@ window.PREVIEW = {
     // BUILD
     this.buildCreativeContainers(paramKeys);
   },
+  buildCreativeContainers(creativeFormats) {
+    if (!creativeFormats) creativeFormats = Object.keys(this.formats);
+
+    // LOOP CREATIVE FORMATS
+    for (const format of creativeFormats) {
+      const containers = document.querySelectorAll(".creative--" + format);
+
+      // SKIP PARAM IN CASE THERE IS NO MATCHING CREATIVE DIV CONTAINER
+      if (containers.length === 0) continue;
+
+      containers.forEach((container, idx) => {
+        // LEFT IS THE FIRST CONTAINER
+        if (container.className.indexOf("right") > -1) idx = 0;
+
+        // RIGHT IS SECOND CONTAINER
+        if (container.className.indexOf("left") > -1) idx = 1;
+
+        // BILLDBOARD BILD EDGE CASE
+        if (
+          format === "billboard" &&
+          this.publisher === "bild" &&
+          this.adCompilationType !== "Bridge Ad"
+        )
+          container = document.querySelector(".creative--superbanner");
+
+        const slug = this.formats[format][idx];
+        const src = getSRC(slug);
+        const iframe = createIframe("creative--" + format + "-iframe", src);
+
+        container.appendChild(iframe);
+      });
+    }
+  },
   videowall() {
     // VALIDATE
     if (!this.formats.billboard)
@@ -116,6 +149,7 @@ window.PREVIEW = {
       isAutoplay: true,
       isLooped: true,
       fileURLs: [this.videoWallSource],
+      classNames: "creative--videowall-video",
     }).init();
 
     // BUILD BILLBOARDS
@@ -136,11 +170,18 @@ window.PREVIEW = {
       const iframeAnchor =
         iframe.contentWindow.document.body.querySelector("a");
 
-      iframeAnchor.addEventListener("click", this.expandVideowall.bind(this));
+      iframeAnchor.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        this.videowallClickoutSrc = iframeAnchor.getAttribute("href");
+        this.expandVideowall();
+      });
     };
 
-    const layer = document.querySelector(".creative--interstitial-layer");
-    layer.addEventListener("click", this.collapseVideowall.bind(this));
+    const closeBtn = document.querySelector(
+      ".creative--interstitial-btn__close"
+    );
+    closeBtn.addEventListener("click", this.collapseVideowall.bind(this));
   },
   expandVideowall() {
     const videoNodeOrigin = document.querySelector(
@@ -150,17 +191,37 @@ window.PREVIEW = {
       ".creative--interstitial"
     );
 
-    this.app.dataset.interstitial = true;
+    // MODIFY EXPANDED VIDEO
 
     const videoNode = videoNodeOrigin.cloneNode();
     videoNode.src = this.videoWallSource;
     videoNode.controls = true;
     videoNode.loop = false;
+    videoNode.classList.add("creative--videowall-video__expanded");
+    videoNode.removeAttribute("id");
 
+    // COLLAPSE IF VIDEO ENDED
+    videoNode.addEventListener("ended", () => this.collapseVideowall());
+
+    // BRING IT TO THE DOM
+
+    this.app.dataset.interstitial = true;
     interstitialContainer.appendChild(videoNode);
     videoNodeOrigin.parentElement.remove();
+
+    // APPEND CLICKOUT
+
+    if (!this.videowallClickoutSrc) return;
+
+    interstitialContainer.addEventListener("click", (event) => {
+      this.collapseVideowall();
+      window.open(this.videowallClickoutSrc, "_blank").focus();
+    });
   },
   collapseVideowall() {
+    const billboardSrc = this.formats.billboard[1]
+      ? this.formats.billboard[1]
+      : this.formats.billboard[0];
     const videoNode = document.querySelector(".creative--interstitial video");
     const billboardIframe = document.querySelector(
       ".creative--billboard-iframe"
@@ -169,41 +230,7 @@ window.PREVIEW = {
     videoNode.pause();
     this.app.dataset.interstitial = false;
 
-    billboardIframe.src = getSRC(this.formats.billboard[1]);
-  },
-  buildCreativeContainers(creativeFormats) {
-    if (!creativeFormats) creativeFormats = Object.keys(this.formats);
-
-    // LOOP CREATIVE FORMATS
-    for (const format of creativeFormats) {
-      const containers = document.querySelectorAll(".creative--" + format);
-
-      // SKIP PARAM IN CASE THERE IS NO MATCHING CREATIVE DIV CONTAINER
-      if (containers.length === 0) continue;
-
-      containers.forEach((container, idx) => {
-        // LEFT IS THE FIRST CONTAINER
-        if (container.className.indexOf("left") > -1) idx = 0;
-
-        // RIGHT IS SECOND CONTAINER
-        if (container.className.indexOf("right") > -1) idx = 1;
-
-        // BILLDBOARD BILD EDGE CASE
-        if (
-          (format === "billboard" &&
-            this.publisher === "bild" &&
-            this.adCompilationType !== "Bridge Ad") ||
-          this.adCompilationType === "Video Wall"
-        )
-          container = document.querySelector(".creative--superbanner");
-
-        const slug = this.formats[format][idx];
-        const src = getSRC(slug);
-        const iframe = createIframe("creative--" + format + "-iframe", src);
-
-        container.appendChild(iframe);
-      });
-    }
+    billboardIframe.src = getSRC(billboardSrc);
   },
   toggleInterstitial() {
     const app = document.querySelector(".app");
