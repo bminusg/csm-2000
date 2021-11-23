@@ -1,6 +1,7 @@
 import "./sass/main.sass";
 import createIframe from "./modules/iframe.js";
 import getSRC from "./modules/source.js";
+import expandListener from "./modules/expand.js";
 import Video from "lib/features/Video";
 
 window.PREVIEW = {
@@ -20,6 +21,9 @@ window.PREVIEW = {
 
     // BUILD CREATIVE CONTAINERS
     this.initCreativeContainers();
+
+    // APPEND EXPAND LISTENER USING OVK STANDARDS
+    expandListener();
   },
   parameterSetup() {
     const query = window.location.search.substring(1);
