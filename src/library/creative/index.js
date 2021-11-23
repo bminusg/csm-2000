@@ -46,6 +46,9 @@ class Creative {
     // TRACKING
     this.track();
 
+    // BRING FRAMEID TO FEATURES
+    this.features.forEach(feat => feat.frameID = this.slug)
+
     // INIT CROSS SITE COMMUNICATION
     const CS = this.features.find((feat) => feat.name === "CrossSite");
     if (CS)
@@ -53,6 +56,7 @@ class Creative {
         groupID: this.campaign,
         frameID: this.slug,
       });
+
 
     // START ANIMATION
     window.addEventListener("load", this.startAnimation());
