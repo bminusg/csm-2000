@@ -9,6 +9,8 @@ class Video {
     this.isAutoplay = options.isAutoplay || false;
     this.isLooped = options.isLooped || false;
 
+    this.classNames = options.classNames || "creative--video";
+
     // BUTTONS
     this.btns = {
       play: options.btnPlay || undefined,
@@ -91,9 +93,6 @@ class Video {
       video.appendChild(source);
     });
 
-    // DEFINE VIDEO ATTRIBUTES
-
-    video.id = "creativeVideo";
     video.muted = true;
     video.playsInline = true;
     video.autoplay = this.isAutoplay;
@@ -102,8 +101,13 @@ class Video {
     video.disablePictureInPicture = false;
     //video.bitrate = options.bitrate;
 
+    // DEFINE VIDEO ATTRIBUTES
+    video.setAttribute("class", this.classNames);
     video.setAttribute("playsinline", true);
-    video.setAttribute("preload", "auto");
+    video.setAttribute("preload", "metadata");
+
+    if (this.isAutoplay) video.setAttribute("muted", true);
+    if (this.isAutoplay) video.setAttribute("autoplay", true);
 
     // APPEND VIDEO CONTAINER
 
