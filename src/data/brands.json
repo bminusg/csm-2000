@@ -45,6 +45,7 @@
     "iABcategory": 9
   },
   { "name": "Coca-Cola", "slug": "coca-cola", "industry": "Beverages" },
+  { "name": "OBI", "slug": "obi", "industry": "Home & Garden", "iABcategory": 10 },
   { "name": "Disney", "slug": "walt-disney", "industry": "Leisure" },
   {
     "name": "Samsung",

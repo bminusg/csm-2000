@@ -28,6 +28,10 @@
     "slug": "bi"
   },
   {
+    "name": "Sport 1",
+    "slug": "sport1"
+  },
+  {
     "name": "default",
     "slug": ""
   }
