@@ -35,8 +35,6 @@ new Creative({
   brand: "[YOUR BRAND NAME]",
   campaign: "[YOUR CAMPAIGN NAME]",
   format: "[YOUR FORMAT SLUG]",
-  // OPTIONAL
-  publisher: "",
   features: []
 });
 
@@ -67,37 +65,39 @@ new Creative({
 });
 ```
 
-#### Options `type: Object`
+#### Options `Type: Object`
 
-##### isAutoplay `type: Boolean, Default: false`
+##### isAutoplay `Type: Boolean, Default: false`
 
-##### isLooped `type: Boolean, Default: false`
+##### isLooped `Type: Boolean, Default: false`
 
-##### fileURLs `type: Array[String], required`
+##### fileURLs `Type: Array[String], required`
 
 List of URL paths pointing to the video media file
 
-##### video `type: NodeElement, Default: undefined`
+##### classNames `Type: String, Default: "creative--video"`
+
+##### video `Type: NodeElement, Default: undefined`
 
 You can use an excisting <video></video> Element as Video container. In default case the feature will build a video element
 
-##### parentContainer `type: NodeElement, Default: <body>`
+##### parentContainer `Type: NodeElement, Default: <body>`
 
 The video event listeners send feedback to the parent container as data attributes.
 
-###### btnPlay `type: NodeElement, Default: undefined`
+###### btnPlay `Type: NodeElement, Default: undefined`
 
 Append click event listener to Node Element for playing the video
 
-###### btnPause `type: NodeElement, Default: undefined`
+###### btnPause `Type: NodeElement, Default: undefined`
 
 Append click event listener to Node Element for pausing the video
 
-###### btnSoundOn `type: NodeElement, Default: undefined`
+###### btnSoundOn `Type: NodeElement, Default: undefined`
 
 Append click event listener to Node Element for unmuting the video
 
-###### btnSoundOff `type: NodeElement, Default: undefined`
+###### btnSoundOff `Type: NodeElement, Default: undefined`
 
 Append click event listener to Node Element for muting the video
 
@@ -118,17 +118,17 @@ new Creative({
 
 ```
 
-#### Options `type: Object`
+#### Options `Type: Object`
 
-##### connectWith `type: Array[String], required`
+##### connectWith `Type: Array[String], required`
 
 String concatenation from your Creative frame ID's which you want to connect.
 
-##### timeout `type: Number, Default: 3000`;
+##### timeout `Type: Number, Default: 3000`;
 
 Define a Millisecond value for how long the Creative is allowed to search for a connection.
 
-##### hasDefaultEvent `type: Boolean, Default: false`
+##### hasDefaultEvent `Type: Boolean, Default: false`
 
 This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container.
 
@@ -149,16 +149,16 @@ window.Creative.container.dispatchEvent(event);
 
 ```
 
-##### methods `type: Object[function]`
+##### methods `Type: Object[function]`
 
 On this property, you can define your custom methods that are executable from external creatives. 2 methods are defined already:
 
 1. `start(): function` method executes every creative after the connection is successful.
 2. `set(options: Object): function` method will call the target creatives
 
-- targets `type: Array[String]` list of creative ID's
-- method `type: String` target method that should be executed
-- data `type: any` your arguments on your target method
+- targets `Type: Array[String]` list of creative ID's
+- method `Type: String` target method that should be executed
+- data `Type: any` your arguments on your target method
 
 ```JS
 // ----- Creative A
@@ -201,7 +201,7 @@ new Creative({
 
 ### Rotate
 
-This feature uses markup trigger items that call your custom action on autorotate or mouseover interaction. Use cases can be something like Interaction Points on your Creative to show different product features. If one of your triggers is active you can call your custom function
+This feature uses markup trigger items that call your custom action on autorotate or mouseover interaction. Use cases can be something like Interaction Points on your Creative to show different product features. If one of your triggers is activated you can call your custom function
 
 ```JS
 import Rotate from "lib/features/Rotate";
@@ -209,23 +209,52 @@ import Rotate from "lib/features/Rotate";
 new Creative({
   features: [
     new Rotate({
-      triggers: ".creative--triggers",              // Class name of markup trigger node elements
-      action: () => {},                             // function(trigger:NodeElement, target: NodeElement)
-
-      // OPTIONAL
-      target: document.querySelector(".creative"),  // NodeElement, default div.creative
-      maxRounds: 0,                                // number of rounds, 0 means infinite
-      loopTime: [2500],                            // Array:number millisecond timeoffset between trigger change
-      autoRotate: false,                           // boolean that indicates if rotating starts automatic
-      delay: 600
-    })
+      triggers: ".creative--triggers",
   ]
 });
 
 ```
 
+#### Options `Type: Object`
+
+##### triggers `Type: String, required`
+
+Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.
+
+##### action `Type: function(trigger: nodeElement, target: nodeElement)`
+
+This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS.
+This
+
+##### target `Type: String, Default: document.querySelector("body")`
+
+The target nodeElement can change Styling via data-attribute stages
+
+##### maxRounds: `Type: Number, Default: 0`
+
+The number of loop rounds. 0 means infinite loop
+
+##### loopTime: `Array: [Number], Default: [2500]`
+
+Defining the offset time between every trigger change. It is number of milliseconds in an array. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]`
+
+##### autoRotate: `Type: Boolean, Default: false`
+
+If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`
+
+##### delay: `Type: Number, Default: 600`
+
+Wait time before auto rotate will be initiated
+
+##### mouseoverEvent: `Type: Boolean, Default: true`
+
+Append a mouseover event listener to every trigger element
+
+##### clickControllers: `Type: String, Default: ""`
+
+If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous || next"` to the node element
+
 ## Ideation
 
 - VPAID Player
-- Preview
 - Auto archiving
