@@ -14,7 +14,7 @@
     "build": "node ./src/cli/build"
   },
   "devDependencies": {
-    "@babel/core": "^7.16.0",
+    "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.4",
     "babel-loader": "^8.2.3",
     "babel-preset-minify": "^0.5.1",
