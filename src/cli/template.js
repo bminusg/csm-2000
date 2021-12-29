@@ -89,7 +89,6 @@ inquirer
     },
   ])
   .then(async (answers) => {
-    console.log(answers);
     const process = `node ./src/template brand=${answers.brand} campaign=${answers.campaign} publisher=${answers.publishers} formats=${answers.formats}`;
     const { stdout, stderr } = await exec(process);
 

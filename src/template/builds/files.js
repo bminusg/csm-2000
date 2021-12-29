@@ -1,5 +1,6 @@
 const path = require("path");
 const config = require(process.cwd() + "/config.js");
+const shortme = require("shortme");
 const fs = require("fs");
 const Handlebars = require("handlebars");
 
@@ -18,22 +19,20 @@ module.exports = (data) => {
   );
 
   // DATA-LOOP
-  const files = [];
-  const formats = [];
   for (let format of data.formats) {
-    const creativePath = [
-      data.brand.slug,
-      data.campaign.slug,
-      format.slug,
-      format.publisher,
-      "01",
-    ];
+    const creativePath = shortme(
+      `${data.brand.slug} ${data.campaign.slug} ${format.slug} ${format.publisher} 01`,
+      {
+        maxCharLength: 128,
+        protect: [format.slug, format.publisher, "01"],
+      }
+    );
 
     // MODIFY FORMAT META DATA
     Object.assign(format, {
       campaign: data.campaign,
       brand: data.brand,
-      path: creativePath.join("_"),
+      path: creativePath,
     });
 
     // CREATE FOLDERS
@@ -54,7 +53,8 @@ module.exports = (data) => {
 
           const template = Handlebars.compile(file);
           const filled = template(format);
-          const assignedPath = (filename === "main.sass") ? path.join(filepath, "sass") : filepath
+          const assignedPath =
+            filename === "main.sass" ? path.join(filepath, "sass") : filepath;
 
           // SUBDIRECTORY FOR LESS TEMPLATE FILE
           if (!fs.existsSync(assignedPath)) fs.mkdirSync(assignedPath);

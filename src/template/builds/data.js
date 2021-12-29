@@ -14,7 +14,9 @@ module.exports = (params) => {
     if (key === "brand" || key === "campaign") {
       value = {
         name: decodeURIComponent(value),
-        slug: shortme(value),
+        slug: shortme(value, {
+          maxCharLength: 64,
+        }),
       };
     }
 
