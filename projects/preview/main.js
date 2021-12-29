@@ -109,18 +109,20 @@ window.PREVIEW = {
 
     // LOOP CREATIVE FORMATS
     for (const format of creativeFormats) {
-      const containers = document.querySelectorAll(".creative--" + format);
+      const containerNodeList = document.querySelectorAll(
+        ".creative--" + format
+      );
+      const containers = Array.prototype.slice
+        .call(containerNodeList, 0)
+        .sort((a, b) => {
+          if (a.className.indexOf("left") > -1) return 1;
+          return 0;
+        });
 
       // SKIP PARAM IN CASE THERE IS NO MATCHING CREATIVE DIV CONTAINER
       if (containers.length === 0) continue;
 
       containers.forEach((container, idx) => {
-        // LEFT IS THE FIRST CONTAINER
-        if (container.className.indexOf("right") > -1) idx = 0;
-
-        // RIGHT IS SECOND CONTAINER
-        if (container.className.indexOf("left") > -1) idx = 1;
-
         // BILLDBOARD BILD EDGE CASE
         if (
           format === "billboard" &&
