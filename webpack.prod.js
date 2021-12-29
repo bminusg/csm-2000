@@ -57,36 +57,45 @@ module.exports = (env) => {
             ? path.join(`${config.paths.upload}/${slug}`)
             : path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
         filename: "js/[name].[fullhash].js",
+        assetModuleFilename: "assets/[name].[hash][ext]",
       },
       module: {
         rules: [
           {
-            test: /\.(png|jpe?g|webp|git|svg|)$/i,
-            use: [
-              {
-                loader: "img-optimize-loader",
-                options: {
-                  name: "img/[name].[hash].[ext]",
-                  compress: {
-                    // This will take more time and get smaller images.
-                    mode: "high", // 'lossless', 'low'
-                    disableOnDevelopment: true,
-                  },
+            test: /\.(png|gif)$/,
+            type: "asset",
+          },
+          {
+            test: /\.(jpg|png|gif|svg)$/,
+            enforce: "pre",
+            use: {
+              loader: "image-webpack-loader",
+              options: {
+                mozjpeg: {
+                  progressive: true,
+                  maxMemory: 100,
+                  quality: 66,
+                },
+                optipng: {
+                  enabled: true,
+                },
+                pngquant: {
+                  quality: [0.65, 0.9],
+                  speed: 4,
+                },
+                gifsicle: {
+                  interlaced: false,
+                },
+                // the webp option will enable WEBP
+                webp: {
+                  quality: 66,
                 },
               },
-            ],
-            type: "javascript/auto",
+            },
           },
           {
             test: /\.mp4$/,
-            use: [
-              {
-                loader: "file-loader",
-                options: {
-                  name: "video/[name].[ext]",
-                },
-              },
-            ],
+            type: "asset/resource",
           },
           {
             test: /\.m?js$/,
