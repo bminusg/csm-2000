@@ -2,7 +2,7 @@ const glob = require("glob");
 const fs = require("fs");
 const { merge } = require("webpack-merge");
 const config = require("./config.js");
-const common = require("./webpack.common");
+const common = require("./_webpack.common");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env) => {

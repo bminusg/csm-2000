@@ -1,7 +1,7 @@
 const path = require("path");
 const glob = require("glob");
 const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
+const common = require("./_webpack.common.js");
 const config = require("./config.js");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -10,6 +10,7 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = (env) => {
   if (!env.creatives && !env.projects)
     throw Error("Please define a creative/project slug");
+
   const buildType = env.projects ? "projects" : "creatives";
 
   // META SETUP

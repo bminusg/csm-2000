@@ -34,7 +34,7 @@ inquirer
     {
       type: "checkbox",
       message:
-        "Ready for the customer feedback loop of hell? 🤘 Select your creative slugs in order to run the build proces.",
+        "Ready for the customer feedback loop of hell? 🤘 \n Select your creative slugs in order to run the build proces.",
       name: "slugs",
       choices: slugs.Creatives,
       when: (answersSoFar) => {
