@@ -10,6 +10,7 @@ window.PREVIEW = {
   publisher: "default",
   device: "desktop",
   formats: {},
+  year: new Date().getFullYear(),
 
   init() {
     // DEFINE APP CONTAINER
@@ -34,7 +35,7 @@ window.PREVIEW = {
       const key = paramPair[0];
       const value = paramPair[1];
 
-      if (key === "publisher" || key === "device") {
+      if (key === "publisher" || key === "device" || key === "year") {
         this[key] = value;
         continue;
       }
@@ -109,20 +110,17 @@ window.PREVIEW = {
 
     // LOOP CREATIVE FORMATS
     for (const format of creativeFormats) {
+      let formatIDX = 0;
       const containerNodeList = document.querySelectorAll(
         ".creative--" + format
       );
-      const containers = Array.prototype.slice
-        .call(containerNodeList, 0)
-        .sort((a, b) => {
-          if (a.className.indexOf("left") > -1) return 1;
-          return 0;
-        });
 
       // SKIP PARAM IN CASE THERE IS NO MATCHING CREATIVE DIV CONTAINER
-      if (containers.length === 0) continue;
+      if (containerNodeList.length === 0) continue;
 
-      containers.forEach((container, idx) => {
+      for (let i = containerNodeList.length - 1; i >= 0; i--) {
+        const container = containerNodeList[i];
+
         // BILLDBOARD BILD EDGE CASE
         if (
           format === "billboard" &&
@@ -131,12 +129,15 @@ window.PREVIEW = {
         )
           container = document.querySelector(".creative--superbanner");
 
-        const slug = this.formats[format][idx];
-        const src = getSRC(slug);
+        const slug = this.formats[format][formatIDX];
+        if (!slug) return;
+
+        const src = getSRC(slug, { year: this.year });
         const iframe = createIframe("creative--" + format + "-iframe", src);
 
         container.appendChild(iframe);
-      });
+        formatIDX++;
+      }
     }
   },
   videowall() {
@@ -148,7 +149,10 @@ window.PREVIEW = {
       return this.log("Billboard Reminder Component is missing", "error");
 
     // CREATE VIDEO CONTAINER
-    this.videoWallSource = getSRC(this.formats.videowall[0], "/spot.mp4");
+    this.videoWallSource = getSRC(this.formats.videowall[0], {
+      year: this.year,
+      dir: "/spot.mp4",
+    });
 
     new Video({
       parentContainer: document.querySelector(".creative--videowall"),
@@ -236,7 +240,7 @@ window.PREVIEW = {
     videoNode.pause();
     this.app.dataset.interstitial = false;
 
-    billboardIframe.src = getSRC(billboardSrc);
+    billboardIframe.src = getSRC(billboardSrc, { year: this.year });
   },
   toggleInterstitial() {
     const app = document.querySelector(".app");

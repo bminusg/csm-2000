@@ -1,4 +1,4 @@
-const getSRC = (slug, optionalDir = "/index.html") => {
+const getSRC = (slug, options = {}) => {
   const host = window.location.host;
   const protocol = window.location.protocol;
   const delimiter =
@@ -6,7 +6,8 @@ const getSRC = (slug, optionalDir = "/index.html") => {
       ? "_"
       : "-";
   const brand = slug.split(delimiter)[0];
-  const year = new Date().getFullYear();
+  const optionalDir = options.dir ? options.dir : "/index.html"
+  const year = options.year ? options.year : new Date().getFullYear();
 
   let uri =
     host.indexOf("localhost") > -1
