@@ -7,7 +7,7 @@ const exec = util.promisify(require("child_process").exec);
 // META SETUP
 const year = new Date().getFullYear();
 const creativePaths = glob
-  .sync(`${config.paths.campaigns}/${year}/**/main.js`)
+  .sync(`${config.paths.campaigns}/**/main.js`)
   .map((path) => path.replace("/main.js", ""));
 const projectPaths = glob
   .sync(`${config.paths.projects}/**/main.js`)
