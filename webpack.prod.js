@@ -28,12 +28,12 @@ module.exports = (env) => {
     const pathMainJS = glob.sync(
       buildType === "projects"
         ? `${config.paths.projects}/**/main.js`
-        : `${config.paths.campaigns}/${year}/**/${slug}/main.js`
+        : `${config.paths.campaigns}/**/${slug}/main.js`
     );
     const pathIndexHTML = glob.sync(
       buildType === "projects"
         ? `${config.paths.projects}/**/index.html`
-        : `${config.paths.campaigns}/${year}/**/${slug}/index.html`
+        : `${config.paths.campaigns}/**/${slug}/index.html`
     );
 
     if (pathIndexHTML.length === 0 || pathMainJS.length === 0)
@@ -66,7 +66,7 @@ module.exports = (env) => {
             type: "asset",
           },
           {
-            test: /\.(jpg|png|gif|svg)$/,
+            test: /\.(jpe?g|png|gif|svg)$/,
             enforce: "pre",
             use: {
               loader: "image-webpack-loader",
@@ -86,7 +86,6 @@ module.exports = (env) => {
                 gifsicle: {
                   interlaced: false,
                 },
-                // the webp option will enable WEBP
                 webp: {
                   quality: 66,
                 },

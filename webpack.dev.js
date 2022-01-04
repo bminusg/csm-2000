@@ -9,7 +9,7 @@ module.exports = (env) => {
   // META SETUP
   const year = env.year ? env.year : new Date().getFullYear();
   const creativePaths = glob
-    .sync(`${config.paths.campaigns}/${year}/**/main.js`)
+    .sync(`${config.paths.campaigns}/**/**/main.js`)
     .map((path) => path.replace("/main.js", ""));
 
   const slugs = creativePaths.map((path) =>
@@ -26,6 +26,7 @@ module.exports = (env) => {
     devServer: {
       watchFiles: ["campaigns/**/*", "projects/**/*", "src/library/**/*"],
       port: 8080,
+      open: true,
     },
     module: {
       rules: [
@@ -35,14 +36,7 @@ module.exports = (env) => {
         },
         {
           test: /\.mp4$/,
-          use: [
-            {
-              loader: "file-loader",
-              options: {
-                name: "[folder]/[name].[ext]",
-              },
-            },
-          ],
+          type: "asset/resource",
         },
       ],
     },
