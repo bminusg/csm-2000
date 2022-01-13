@@ -119,7 +119,8 @@ dist
 
 
 # FTP FOLDER
-upload/
+upload/*
 
-# CREATIVE FOLDER
-campaigns/
+# PROJECTS
+projects/*
+src/data/projects.json

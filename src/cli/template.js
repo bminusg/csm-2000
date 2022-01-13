@@ -2,19 +2,20 @@
 
 // INIT CHILD PROCESS RUNNER
 const util = require("util");
-const exec = util.promisify(require("child_process").exec);
-
-// INIT INQUIRER
 const inquirer = require("inquirer");
+const shortme = require("shortme");
+const exec = util.promisify(require("child_process").exec);
+const createProject = require("./modules/createProject");
+
+// GET DATA
+const brandData = require(process.cwd() + "/src/data/brands.json");
+const formatData = require(process.cwd() + "/src/data/formats.json");
+
+// REGISTER INQUIRER PLUGIN
 inquirer.registerPrompt(
   "autocomplete",
   require("inquirer-autocomplete-prompt")
 );
-
-// GET DATA
-const brands = require(process.cwd() + "/src/data/brands.json");
-const formats = require(process.cwd() + "/src/data/formats.json");
-const publishers = require(process.cwd() + "/src/data/publishers.json");
 
 // RUN THE CLI
 inquirer
@@ -29,7 +30,7 @@ inquirer
         input = input || "";
 
         return new Promise((resolve) => {
-          const results = brands.filter(
+          const results = brandData.filter(
             (brand) =>
               brand.name.indexOf(input) > -1 || brand.slug.indexOf(input) > -1
           );
@@ -38,7 +39,16 @@ inquirer
         });
       },
       filter: (input) => {
-        return encodeURIComponent(input);
+        const brand = brandData.find((brand) => brand.name === input);
+
+        return {
+          name: brand ? brand.name : input,
+          slug: brand ? brand.slug : shortme(input),
+        };
+      },
+      validate: (input) => {
+        if (input === "") return "Please enter brand name";
+        return true;
       },
     },
     // CAMPAIGN NAME
@@ -48,48 +58,69 @@ inquirer
       message: "What is the Campaign name/product?",
       name: "campaign",
       filter: (input) => {
-        return encodeURIComponent(input);
+        return {
+          name: input,
+          slug: shortme(input),
+        };
       },
       validate: (input) => {
         if (input === "") return "Please enter campaign name/product";
-
         return true;
       },
     },
-    // SELECT PUBLISHER
+    // CAPTION
+    // IDEA: LOAD META TITLE FROM URL AND USE IT AS DEFAULT VALUE FOR CAMPAIGN NAME
     {
-      type: "checkbox",
-      message: "Do you you need a specific publisher setup?",
-      name: "publishers",
-      choices: publishers,
-      filter: (input) => {
-        const publisherSlugs = input.map(
-          (publisher) => publishers.find((p) => p.name === publisher).slug
-        );
-        return publisherSlugs.join(",");
+      type: "input",
+      message: "Paste the URI of the landingpage",
+      name: "caption",
+      validate: (input) => {
+        if (input.indexOf("http") > -1) return true;
+        return "Please enter a valid URL starting with http";
       },
     },
-    // SELECT FORMATS
     {
       type: "checkbox",
       message: "Select your campaign formats",
-      name: "formats",
-      choices: formats,
-      filter: (input) => {
-        const formatSlugs = input.map(
-          (format) => formats.find((f) => f.name === format).slug
-        );
-        return formatSlugs.join(",");
-      },
-      validate: (input) => {
-        if (input === "") return "Please select at least one format";
+      name: "creatives",
+      choices: () => {
+        const creatives = [];
 
+        for (const creative of formatData) {
+          creatives.push(new inquirer.Separator(creative.name));
+
+          for (const option in creative.options) {
+            creatives.push({
+              name: option,
+              value: {
+                name: creative.name,
+                slug: creative.slug,
+                ...creative.options[option],
+              },
+            });
+          }
+        }
+
+        return creatives;
+      },
+
+      validate: (input) => {
+        if (input === "") return "Please select at least one creative";
         return true;
       },
     },
   ])
   .then(async (answers) => {
-    const process = `node ./src/template brand=${answers.brand} campaign=${answers.campaign} publisher=${answers.publishers} formats=${answers.formats}`;
+    // UPDATE CAMPAIGN DATA
+    const createdProject = await createProject(answers);
+    return createdProject;
+  })
+  .then(async (project) => {
+    const creativeIDs = project.creatives
+      .map((creative) => creative.id)
+      .join(",");
+
+    const process = `node ./src/template project=${project.id} creatives=${creativeIDs}`;
     const { stdout, stderr } = await exec(process);
 
     if (stderr) throw stderr;

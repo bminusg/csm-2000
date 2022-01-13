@@ -1,11 +1,12 @@
-import Creative from "lib/Creative"; 
-import "./sass/main.sass";
+{{#equal format.slug "ra"}}
+  import PLISTA from "lib/vendor/plista"; import "./sass/main.sass"; import
+  "./markup.html";
 
-new Creative({ 
-    brand: "{{brand.name}}", 
-    campaign: "{{campaign.name}}", 
-    format: "{{slug}}",
-    slug : "{{path}}", 
-    publisher: "{{publisher}}", 
-    version: 1 
-});
+{{else}}
+  import Creative from "lib/Creative"; import "./sass/main.sass"; import
+  "./markup.html"; new Creative({ slug: "{{slug}}", caption: "{{caption}}",
+  version: "{{version}}", brand: { name: "{{brand.name}}", slug: "{{brand.slug}}",
+  }, campaign: { name: "{{campaign.name}}", slug: "{{campaign.slug}}", },
+  format: { "name": "{{format.name}}", "slug": "{{format.slug}}", }, });
+
+{{/equal}}

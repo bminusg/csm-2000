@@ -1,9 +1,18 @@
 // BUILD MODULES
-const files = require("./builds/files");
-const data = require("./builds/data");
+const buildFiles = require("./builds/files");
+const projectData = require("../data/projects.json");
 
-// META SETUP
-const query = data(process.argv);
+function getProject() {
+  const projectParamId = process.argv
+    .find((param) => param.indexOf("project=") > -1)
+    .split("=")[1];
+  const findProject = projectData.find(
+    (project) => project.id === projectParamId
+  );
 
-// RUN TEMPLATE BUILD
-files(query);
+  if (!findProject) throw new Error("Can't find project ID: " + projectParamId);
+  return findProject;
+}
+
+const project = getProject();
+buildFiles(project);

@@ -1,22 +1,52 @@
 <html>
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="ad.size"
-      content="width={{size.width}}, height={{size.height}}"
-    />
-    <title>{{brand.name}} || {{campaign.name}} || {{name}}</title>
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    {{> header}}    
   </head>
   <body>
+    {{#equal creative.format.slug "ra"}}
+    <script>
+      {{#equal environment "development"}}
+      var item = { 
+        adoptions: {
+          resources: "{{{ creative.slug }}}",
+          markup: `{{{ markup }}}`,
+          caption: "{{{ creative.caption }}}",
+          options: { 
+            type: 1,
+          },
+        }
+      };
+      {{else}}
+      var adoptions = {
+          resources: "{{{ creative.slug }}}",
+          markup: `{{{ markup }}}`,
+          caption: "{{{ creative.caption }}}",
+          options: { 
+            type: 1,
+          },
+      };
+      {{/equal}}
+    
+    {{#equal environment "development"}}
+    var PLISTA = {debug: true, noCache: true, fc: false, require: ['xhr'], publickey: "f9be9872bb27f6cf063c943e4069a5c44ff3d33e", widgets: [{"name": "flyad", "items": [item]}]};
+    (function(){var n='script',d=document,s=d.createElement(n),s0=d.getElementsByTagName(n)[0];s.async='async';s.type='text/javascript';s.src=(d.location.protocol==='https:'?'https:':'http:')+'//static.plista.com/async.js';s0.parentNode.insertBefore(s,s0)}());
+    {{/equal}}
+    </script>
+
+    {{#equal environment "development"}}
+    <script src="https://static.plista.com/upload/videos/demo/preview.js"></script>
+    {{/equal}}
+
+    {{else}}
     <a href="javascript:void(0)" class="creative--clicktag" target="_blank">
-      <div class="creative creative--{{slug}}">
-        {{#if admark}}
-          <span class="creative--admark">{{admark}}</span>
+      <div class="creative creative--{{creative.format.slug}}">
+        {{{markup}}}
+        <div class="creative--preloader"></div>
+        {{#if creative.format.admark}}
+          <span class="creative--admark">{{creative.format.admark}}</span>
         {{/if}}
       </div>
     </a>
+    {{/equal}}
   </body>
 </html>
