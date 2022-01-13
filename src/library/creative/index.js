@@ -1,25 +1,20 @@
-import getURIparams from "./modules/getURIparams";
+"use strict";
 
-/**
- * @desc Init your Creative Configuration
- * @namespace Creative
- */
+import getURIparams from "./modules/getURIparams";
 
 class Creative {
   constructor(options = {}) {
-    // META SETUP
-    this.format = options.format || "";
-    this.publisher = options.publisher || "";
-    this.size = {
-      width: options.size ? options.size.width : 0,
-      height: options.size ? options.size.height : 0,
-    };
-    this.adServer = options.adServer || "";
-    this.brand = options.brand || "";
-    this.campaign = options.campaign || "";
-    this.version = options.version || 1;
-    this.container = options.container || document.querySelector(".creative");
-    this.slug = options.slug || "";
+    this.format =
+      typeof options.format === "object" ? options.format : undefined;
+    this.brand = typeof options.brand === "object" ? options.brand : undefined;
+    this.campaign =
+      typeof options.campaign === "object" ? options.campaign : undefined;
+    this.version = typeof options.version === "number" ? options.version : null;
+    this.container =
+      typeof options.container === "object"
+        ? options.container
+        : document.querySelector(".creative");
+    this.slug = typeof options.slug === "string" ? options.slug : undefined;
 
     // TRACKING
     this.params = getURIparams();
@@ -47,16 +42,15 @@ class Creative {
     this.track();
 
     // BRING FRAMEID TO FEATURES
-    this.features.forEach(feat => feat.frameID = this.slug)
+    this.features.forEach((feat) => (feat.frameID = this.slug));
 
     // INIT CROSS SITE COMMUNICATION
     const CS = this.features.find((feat) => feat.name === "CrossSite");
     if (CS)
       return CS.load({
-        groupID: this.campaign,
+        groupID: this.campaign.slug,
         frameID: this.slug,
       });
-
 
     // START ANIMATION
     window.addEventListener("load", this.startAnimation());
@@ -80,7 +74,7 @@ class Creative {
     }
 
     // VALIDATE CREATIVE CLASSNAME
-    const creativeClassName = "creative--" + this.format;
+    const creativeClassName = "creative--" + this.format.slug;
     if (this.container.className.indexOf(creativeClassName) === -1)
       this.container.classList.add(creativeClassName);
 

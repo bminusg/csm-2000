@@ -1,12 +1,31 @@
 {{#equal format.slug "ra"}}
-  import PLISTA from "lib/vendor/plista"; import "./sass/main.sass"; import
-  "./markup.html";
-
+import PLISTA from "lib/vendor/plista"; 
+import "./sass/main.sass"; 
+import "./markup.html";
 {{else}}
-  import Creative from "lib/Creative"; import "./sass/main.sass"; import
-  "./markup.html"; new Creative({ slug: "{{slug}}", caption: "{{caption}}",
-  version: "{{version}}", brand: { name: "{{brand.name}}", slug: "{{brand.slug}}",
-  }, campaign: { name: "{{campaign.name}}", slug: "{{campaign.slug}}", },
-  format: { "name": "{{format.name}}", "slug": "{{format.slug}}", }, });
+import Creative from "lib/creative"; 
+import "./sass/main.sass"; 
+import "./markup.html";
+
+const creative = new Creative({ 
+  id: "{{ creative.id }}",
+  slug: "{{ creative.slug }}",
+  caption: "{{ creative.caption }}",
+  version: {{ creative.version }},
+  brand: { 
+    name: "{{ project.brand.name }}",
+    slug: "{{ project.brand.slug }}",
+  },
+  campaign: {
+    name: "{{ project.campaign.name }}",
+    slug: "{{ project.campaign.slug }}",
+  },
+  format: { 
+    name: "{{ creative.format.name }}",
+    slug: "{{ creative.format.slug }}",
+  },
+});
+
+creative();
 
 {{/equal}}

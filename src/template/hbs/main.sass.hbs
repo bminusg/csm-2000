@@ -1,7 +1,8 @@
 {{#equal format.slug "ra"}}
 // IMPORTS 
+@use "lib/sass/formats/ra.sass" as * with ($width: {{format.width}}, $height: {{format.height}})
+@use "tween-sass" as * with ($parent: "#flyTarget", $activeClass: ".flyContentActive")
 @use "lib/sass/abstracts/easings" as ease 
-@use "node_modules/tween-sass" as * with ($parent: "#flyTarget", $activeClass: ".flyContentActive")
 
 // CUSTOM CSS
 #pFA
@@ -11,7 +12,7 @@
 // IMPORTS 
 @use "lib/sass/components/creative" with ($width:{{#if format.width}}{{format.width}}px{{else}}100%{{/if}}, $height:{{#if format.height}}{{format.height}}px{{else}}100%{{/if}}, $format:"{{format.slug}}")
 @use "lib/sass/abstracts/easings" as ease 
-@use "node_modules/tween-sass" as * 
+@use "tween-sass" as * 
 
 // CUSTOM CSS
 .creative
