@@ -1,9 +1,12 @@
 "use strict";
 
+// NODE MODULES
 const path = require("path");
 const { merge } = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+// BUNDLER MODULES
 const commonConfig = require("./webpack.common.js");
 const getProject = require("./src/bundler/getProject");
 const getEntryPoint = require("./src/bundler/getEntryPoint");
