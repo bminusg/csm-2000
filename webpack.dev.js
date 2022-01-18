@@ -1,82 +1,97 @@
+"use strict";
+
+// NODE MODULES
 const glob = require("glob");
-const fs = require("fs");
 const { merge } = require("webpack-merge");
-const config = require("./config.js");
-const common = require("./webpack.common");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = (env) => {
-  // META SETUP
-  const year = env.year ? env.year : new Date().getFullYear();
-  const creativePaths = glob
-    .sync(`${config.paths.campaigns}/**/**/main.js`)
-    .map((path) => path.replace("/main.js", ""));
+// BUNDLER MODULES
+const commonConfig = require("./webpack.common");
+const getEntryPoint = require("./src/bundler/getEntryPoint");
+const getProject = require("./src/bundler/getProject")
 
-  const slugs = creativePaths.map((path) =>
-    path.substring(path.lastIndexOf("/") + 1)
-  );
 
-  // BUILD DEFAULT DEV CONFIG
-  let devConfig = {
-    mode: "development",
-    entry: {
-      index: "./projects/ui/main.js",
-      preview: "./projects/preview/main.js",
+let devConfig = {
+  mode: "development",
+  entry: {
+    ui: "./src/ui/main.js",
+  },
+  devServer: {
+    watchFiles: ["projects/**/*", "src/library/**/*"],
+    port: 8080,
+    open: true,
+    client: {
+      overlay: true,
+      progress: true,
     },
-    devServer: {
-      watchFiles: ["campaigns/**/*", "projects/**/*", "src/library/**/*"],
-      port: 8080,
-      open: true,
-    },
-    module: {
-      rules: [
-        {
-          test: /\.(png|jpe?g|webp|git|svg|)$/i,
-          type: "asset/resource",
-        },
-        {
-          test: /\.mp4$/,
-          type: "asset/resource",
-        },
-      ],
-    },
-    plugins: [
-      new HtmlWebpackPlugin({
-        filename: "index.html",
-        template: "projects/ui/index.hbs",
-        chunks: ["index"],
-        slugs: slugs,
-      }),
-      new HtmlWebpackPlugin({
-        filename: "preview.html",
-        template: "projects/preview/index.html",
-        chunks: ["preview"],
-      }),
+  },
+  output: {
+    filename: "[name]/main.js",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|jpe?g|webp|git|svg|)$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.sass$/i,
+        use: ["style-loader", "css-loader", "sass-loader"],
+        exclude: /node_modules/,
+      },
     ],
-  };
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      chunks: ["ui"],
+      template: "./src/ui/index.html.hbs",
+      templateParameters: {
+        projects: [],
+        creatives: [],
+      },
+    }),
+  ],
+};
 
-  // ADDING DYNAMIC VALUES TO DEV CONFIG
-  for (const idx in creativePaths) {
-    const slug = slugs[idx];
-    const path = creativePaths[idx];
+module.exports = async () => {
+  try {
+    const localCreativeSlugs = glob
+      .sync("./projects/**/main.js")
+      .map((path) => path.split("/").splice(-2)[0]);
 
-    // DEFINE ENTRY POINTS
-    Object.assign(devConfig.entry, {
-      [slug]: `${path}/main.js`,
-    });
+    for (const slug of localCreativeSlugs) {
+      const project = await getProject({ "creatives.slug": slug });
+      if (!project) continue;
 
-    if (!fs.existsSync(path + "/index.html")) continue;
+      const creative = project.creatives.find(
+        (creative) => creative.slug === slug
+      );
 
-    // ADD HTML Webpack Plugin
-    devConfig.plugins.push(
-      new HtmlWebpackPlugin({
-        filename: slug + "/index.html",
-        template: `${path}/index.html`,
-        chunks: [slug],
-      })
-    );
+      devConfig.plugins.push(
+        new HtmlWebpackPlugin({
+          filename: slug + "/index.html",
+          hash: true,
+          chunks: [slug],
+          template: "./src/template/hbs/index.html.hbs",
+          templateParameters: {
+            environment: devConfig.mode,
+            project: project,
+            creative: creative,
+            markup: `<h1>CSS is awesome</h1>`,
+          },
+        })
+      );
+
+      Object.assign(devConfig.entry, getEntryPoint(creative.slug));
+      devConfig.plugins[0].userOptions.templateParameters.creatives.push(
+        creative
+      );
+    }
+
+    const config = merge(devConfig, commonConfig);
+    return config;
+  } catch (e) {
+    console.error(e);
   }
-
-  // MERGE CONFIGS
-  return merge(common, devConfig);
 };

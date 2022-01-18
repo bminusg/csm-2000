@@ -1,8 +1,20 @@
+{{#equal creative.format.slug "ra"}}
 // IMPORTS 
-@use "lib/sass/components/creative" with ($width:{{#if size.width}}{{size.width}}px{{else}}100%{{/if}}, $height:{{#if size.height}}{{size.height}}px{{else}}100%{{/if}})
+@use "lib/sass/formats/ra.sass" as * with ($width: {{creative.format.width}}px, $height: {{creative.format.height}}px)
+@use "tween-sass" as * with ($parent: "#flyTarget", $activeClass: ".flyContentActive")
 @use "lib/sass/abstracts/easings" as ease 
-@use "node_modules/tween-sass" as * 
+
+// CUSTOM CSS
+#pFA
+
+
+{{else}}
+// IMPORTS 
+@use "lib/sass/components/creative" with ($width:{{#if creative.format.width}}{{creative.format.width}}px{{else}}100%{{/if}}, $height:{{#if creative.format.height}}{{creative.format.height}}px{{else}}100%{{/if}}, $format:"{{creative.format.slug}}")
+@use "lib/sass/abstracts/easings" as ease 
+@use "tween-sass" as * 
 
 // CUSTOM CSS
 .creative
-    
+
+{{/equal}}

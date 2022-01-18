@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Overview</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <h1>Creatives</h1>
+        <div class="container--grid">
+          <ul class="container--list">
+            {{#each creatives}}
+              <li class="container--list-item">
+                <a
+                  href="{{this.slug}}/index.html"
+                  target="_blank"
+                >{{this.slug}}</a>
+
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
