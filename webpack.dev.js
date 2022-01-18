@@ -1,11 +1,15 @@
 "use strict";
 
+// NODE MODULES
 const glob = require("glob");
 const { merge } = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+// BUNDLER MODULES
 const commonConfig = require("./webpack.common");
-const getProject = require("./src/bundler/getProject");
 const getEntryPoint = require("./src/bundler/getEntryPoint");
+const getProject = require("./src/bundler/getProject")
+
 
 let devConfig = {
   mode: "development",
@@ -13,7 +17,7 @@ let devConfig = {
     ui: "./src/ui/main.js",
   },
   devServer: {
-    watchFiles: ["projects/**/*", "src/library/**/*", "src/data/projects.json"],
+    watchFiles: ["projects/**/*", "src/library/**/*"],
     port: 8080,
     open: true,
     client: {
@@ -52,7 +56,6 @@ let devConfig = {
 
 module.exports = async () => {
   try {
-    const projects = [];
     const localCreativeSlugs = glob
       .sync("./projects/**/main.js")
       .map((path) => path.split("/").splice(-2)[0]);

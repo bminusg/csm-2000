@@ -1,7 +1,7 @@
-const getData = require("./getData");
+const data = require("../data")
 
 module.exports = async (query) => {
-  const projectData = await getData();
+  const projectData = await data.read();
   const queryKeys = Object.keys(query).map((keys) => keys.split("."))[0];
   const queryValue = Object.values(query)[0];
   let project = [];

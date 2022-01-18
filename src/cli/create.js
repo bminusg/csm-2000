@@ -5,11 +5,11 @@ const util = require("util");
 const inquirer = require("inquirer");
 const shortme = require("shortme");
 const exec = util.promisify(require("child_process").exec);
-const createProject = require("./modules/createProject");
 
 // GET DATA
-const brandData = require(process.cwd() + "/src/data/brands.json");
-const formatData = require(process.cwd() + "/src/data/formats.json");
+const data = require("../data");
+let brandData = [];
+let formatData = [];
 
 // REGISTER INQUIRER PLUGIN
 inquirer.registerPrompt(
@@ -26,7 +26,8 @@ inquirer
       message: "Which Brand need awesome Creatives?",
       name: "brand",
       suggestOnly: true,
-      source: (answersSoFar, input) => {
+      source: async (answersSoFar, input) => {
+        brandData = await data.read("brands");
         input = input || "";
 
         return new Promise((resolve) => {
@@ -83,8 +84,9 @@ inquirer
       type: "checkbox",
       message: "Select your campaign formats",
       name: "creatives",
-      choices: () => {
+      choices: async (answers) => {
         const creatives = [];
+        formatData = await data.read("formats");
 
         for (const creative of formatData) {
           creatives.push(new inquirer.Separator(creative.name));
@@ -93,9 +95,12 @@ inquirer
             creatives.push({
               name: option,
               value: {
-                name: creative.name,
-                slug: creative.slug,
-                ...creative.options[option],
+                caption: encodeURIComponent(answers.caption),
+                format: {
+                  name: creative.name,
+                  slug: creative.slug,
+                  ...creative.options[option],
+                }
               },
             });
           }
@@ -111,11 +116,11 @@ inquirer
     },
   ])
   .then(async (answers) => {
-    // UPDATE CAMPAIGN DATA
-    const createdProject = await createProject(answers);
+    const createdProject = await data.create("projects", answers);
     return createdProject;
   })
   .then(async (project) => {
+    console.log("RETURNED CREATED PROJECT", project);
     const creativeIDs = project.creatives
       .map((creative) => creative.id)
       .join(",");
@@ -127,10 +132,5 @@ inquirer
     console.log(stdout);
   })
   .catch((error) => {
-    if (error.isTtyError) {
-      throw new Error("Prompt couldn't be rendered in the current environment");
-    } else {
-      console.error("Something else went wrong");
-      console.log(error);
-    }
+    console.log(error);
   });

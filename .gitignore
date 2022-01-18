@@ -118,9 +118,9 @@ dist
 .pnp.*
 
 
-# FTP FOLDER
+# BUNDLES
 upload/*
 
 # PROJECTS
 projects/*
-src/data/projects.json
+#src/data/json/projects.json

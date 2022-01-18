@@ -1,4 +1,4 @@
-{{#equal format.slug "ra"}}
+{{#equal creative.format.slug "ra"}}
 import PLISTA from "lib/vendor/plista"; 
 import "./sass/main.sass"; 
 import "./markup.html";
@@ -25,7 +25,5 @@ const creative = new Creative({
     slug: "{{ creative.format.slug }}",
   },
 });
-
-creative();
 
 {{/equal}}

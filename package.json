@@ -9,9 +9,10 @@
     "iab"
   ],
   "scripts": {
-    "template": "node ./src/cli/template",
-    "serve": "webpack serve --config webpack.dev.js",
-    "build": "node ./src/cli/build"
+    "develop": "webpack serve --config webpack.dev.js",
+    "bundle": "node ./src/cli/bundle",
+    "create-project": "node ./src/cli/create",
+    "update-project": "node ./src/cli/update"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
