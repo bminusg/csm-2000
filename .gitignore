@@ -123,4 +123,4 @@ upload/*
 
 # PROJECTS
 projects/*
-#src/data/json/projects.json
+src/data/json/projects.json
