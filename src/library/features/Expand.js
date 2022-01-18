@@ -13,7 +13,7 @@ class Expand {
 
     // EXPAND OPTIONS
     this.expandedWidth = options.expandedWidth || this.collapseWidth;
-    this.expandedHeight = options.expandedHeight || this.collapseHeight;
+    this.expandedHeight = options.expandedHeight || "85%";
     this.expandTrigger = options.expandTrigger || "mouseover";
   }
 

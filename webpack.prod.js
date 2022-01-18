@@ -1,129 +1,129 @@
+"use strict";
+
 const path = require("path");
-const glob = require("glob");
 const { merge } = require("webpack-merge");
-const common = require("./webpack.common.js");
-const config = require("./config.js");
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const commonConfig = require("./webpack.common.js");
+const getProject = require("./src/bundler/getProject");
+const getEntryPoint = require("./src/bundler/getEntryPoint");
 
-module.exports = (env) => {
-  if (!env.creatives && !env.projects)
-    throw Error("Please define a creative/project slug");
-  const buildType = env.projects ? "projects" : "creatives";
-
-  // META SETUP
-  const slugs = env.projects
-    ? env.projects.split(",")
-    : env.creatives.split(",");
-  const year = env.year ? env.year : new Date().getFullYear();
-
-  // PRODUCTION CONFIG
-  let prodConfigs = [];
-
-  // MULTI COMPILER
-  for (const slug of slugs) {
-    const brand =
-      buildType === "projects" ? "" : slug.slice(0, slug.indexOf("_"));
-    const pathMainJS = glob.sync(
-      buildType === "projects"
-        ? `${config.paths.projects}/**/main.js`
-        : `${config.paths.campaigns}/${year}/**/${slug}/main.js`
-    );
-    const pathIndexHTML = glob.sync(
-      buildType === "projects"
-        ? `${config.paths.projects}/**/index.html`
-        : `${config.paths.campaigns}/${year}/**/${slug}/index.html`
-    );
-
-    if (pathIndexHTML.length === 0 || pathMainJS.length === 0)
-      throw new Error("Can't find entry points");
-    /*
-    if (pathIndexHTML.length > 1 || pathMainJS.length > 1)
-      throw new Error(
-        "Seems there are creative slug duplicate. Please ensure unique creative slugs"
-      );
-      */
-
-    const creativeConfig = {
-      name: slug,
-      mode: "production",
-      entry: {
-        [slug]: pathMainJS[0],
+const productionConfig = {
+  mode: "production",
+  output: {
+    clean: true,
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(png|gif)$/,
+        type: "asset",
       },
-      output: {
-        path:
-          buildType === "projects"
-            ? path.join(`${config.paths.upload}/${slug}`)
-            : path.join(`${config.paths.upload}/${year}/${brand}/${slug}`),
-        filename: "js/[name].[fullhash].js",
-      },
-      module: {
-        rules: [
-          {
-            test: /\.(png|jpe?g|webp|git|svg|)$/i,
-            use: [
-              {
-                loader: "img-optimize-loader",
-                options: {
-                  name: "img/[name].[hash].[ext]",
-                  compress: {
-                    // This will take more time and get smaller images.
-                    mode: "high", // 'lossless', 'low'
-                    disableOnDevelopment: true,
-                  },
-                },
-              },
-            ],
-            type: "javascript/auto",
-          },
-          {
-            test: /\.mp4$/,
-            use: [
-              {
-                loader: "file-loader",
-                options: {
-                  name: "video/[name].[ext]",
-                },
-              },
-            ],
-          },
-          {
-            test: /\.m?js$/,
-            exclude: /(node_modules|bower_components)/,
-            use: {
-              loader: "babel-loader",
-              options: {
-                comments: false,
-                presets: [
-                  [
-                    "minify",
-                    {
-                      removeConsole: true,
-                    },
-                  ],
-                ],
-              },
+      {
+        test: /\.(jpg|png|gif|svg)$/,
+        enforce: "pre",
+        use: {
+          loader: "image-webpack-loader",
+          options: {
+            mozjpeg: {
+              progressive: true,
+              maxMemory: 100,
+              quality: 66,
+            },
+            optipng: {
+              enabled: true,
+            },
+            pngquant: {
+              quality: [0.65, 0.9],
+              speed: 4,
+            },
+            gifsicle: {
+              interlaced: false,
+            },
+            webp: {
+              quality: 66,
             },
           },
-        ],
+        },
+      },
+      {
+        test: /\.sass$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader"],
+        exclude: /node_modules/,
+      },
+      {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            comments: false,
+            presets: [
+              [
+                "minify",
+                {
+                  removeConsole: true,
+                },
+              ],
+            ],
+          },
+        },
+      },
+    ],
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "style.css",
+    }),
+  ],
+  optimization: {
+    minimize: true,
+  },
+};
+
+module.exports = async (env) => {
+  const creativeIDs = env && env.creatives ? env.creatives.split(",") : [];
+  const creativeConfigs = [];
+
+  for (const creativeID of creativeIDs) {
+    const project = await getProject({ "creatives.id": creativeID });
+    const creative = project.creatives.find(
+      (projectCreative) => projectCreative.id === creativeID
+    );
+
+    const creativeConfig = {
+      name: creative.slug,
+      entry: getEntryPoint(creative.slug),
+      output: {
+        path: path.resolve(
+          process.cwd(),
+          "upload",
+          new Date(project.campaign.planning.start).getFullYear().toString(),
+          project.brand.slug,
+          creative.slug
+        ),
+        filename: "main.js",
+        assetModuleFilename: "img/[name][ext]",
+        clean: true,
       },
       plugins: [
-        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
           filename: "index.html",
-          template: pathIndexHTML[0],
-          chunks: [slug],
+          hash: true,
+          chunks: [creative.slug],
+          template: "./src/template/hbs/index.html.hbs",
+          templateParameters: {
+            environment: "production",
+            project: project,
+            creative: creative,
+            markup: `<h1>CSS is awesome</h1>`,
+          },
         }),
       ],
-      optimization: {
-        minimize: true,
-        minimizer: [new CssMinimizerPlugin()],
-      },
     };
 
-    prodConfigs.push(merge(common, creativeConfig));
+    const config = merge(creativeConfig, commonConfig, productionConfig);
+    creativeConfigs.push(config);
   }
-
-  return prodConfigs;
+  return creativeConfigs;
 };

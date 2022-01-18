@@ -1,0 +1,165 @@
+[
+  {
+    "name": "Medium Rectangle",
+    "slug": "mrec",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 300,
+        "height": 250,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Billboard",
+    "slug": "bb",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 800,
+        "height": 250,
+        "admark": ""
+      },
+      "aubi": {
+        "width": 1000,
+        "height": 250,
+        "admark": ""
+      },
+      "bild": {
+        "width": 1024,
+        "height": 250,
+        "admark": ""
+      },
+      "bz": {
+        "width": 1024,
+        "height": 250,
+        "admark": ""
+      },
+      "businessinsider": {
+        "width": 1230,
+        "height": 250,
+        "admark": ""
+      },
+      "cobi": {
+        "width": 1000,
+        "height": 250,
+        "admark": ""
+      },
+      "welt": {
+        "width": 970,
+        "height": 250,
+        "admark": "ANZEIGE"
+      }
+    }
+  },
+  {
+    "name": "Sitebar",
+    "slug": "sitebar",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 300,
+        "height": 600,
+        "admark": ""
+      },
+      "Dynamic": {
+        "width": 0,
+        "height": 0,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Superbanner",
+    "slug": "sb",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 728,
+        "height": 90,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Wide Skyscraper",
+    "slug": "wsky",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 160,
+        "height": 600,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Skyscraper",
+    "slug": "sky",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 120,
+        "height": 600,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Halfpage Ad",
+    "slug": "hp",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 300,
+        "height": 600,
+        "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Mobile Leaderboard",
+    "slug": "ml",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 320,
+        "height": 50,
+        "admark": "-w-"
+      },
+      "4-1": {
+        "width": 320,
+        "height": 75,
+        "admark": "-w-"
+      },
+      "2-1": {
+        "width": 300,
+        "height": 150,
+        "admark": "-w-"
+      }
+    }
+  },
+  {
+    "name": "Rise Ad",
+    "slug": "ra",
+    "type": "RichMedia",
+    "options": {
+      "Desktop": {
+        "width": 800,
+        "height": 250,
+        "admark": ""
+      },
+      "Tablet": {
+        "width": 500,
+        "height": 250,
+        "admark": ""
+      },
+      "Phone": {
+        "width": 300,
+        "height": 165,
+        "admark": ""
+      }
+    }
+  }
+]

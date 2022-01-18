@@ -3,10 +3,11 @@ class Rotate {
     // REQUIRED CONFIG
     this.triggerClassName = config.triggers;
     this.triggers = document.querySelectorAll(this.triggerClassName);
-    this.action = config.action || this.defaultAction;
-    this.target = config.target || "body";
+    this.slideCount = config.slideCount || null;
 
     // OPTIONAL CONFIG
+    this.target = config.target || "body";
+    this.action = config.action || this.defaultAction;
     this.maxRounds = config.maxRounds || 0; // 0 === infinite
     this.autoRotate = config.autoRotate || false;
     this.loopTime = config.loopTime || [2500];
@@ -25,10 +26,15 @@ class Rotate {
 
   init() {
     // RETURN IF NO MARKUP TRIGGERS DEFINED
-    if (this.triggers.length === 0)
-      return console.error(
-        "Can't find any markup elements for " + this.triggerClassName + ""
+    if (!this.slideCount && this.triggers.length === 0) {
+      console.error(
+        "Required fields are missing. Please provide at leat one of this options: slideCount or triggerClassName"
       );
+      return;
+    }
+
+    // SETTING THE SLIDE COUNT IN CASE WE ARE USING HTML ELEMENTS AS A TRIGGER
+    if (this.triggers.length > 0) this.slideCount = this.triggers.length;
 
     // DEFINE TARGET
     this.target = document.querySelector(this.target);
@@ -51,15 +57,13 @@ class Rotate {
     if (direction === "next") this.IDX++;
     else this.IDX--;
 
-    if (this.IDX === this.triggers.length) {
+    if (this.IDX === this.slideCount) {
       this.round++;
       if (this.maxRounds === 0 || this.round < this.maxRounds) this.IDX = 0;
       else return this.reset();
     }
 
-    if (this.IDX < 0) {
-      this.IDX = this.triggers.length - 1;
-    }
+    if (this.IDX < 0) this.IDX = this.slideCount - 1;
 
     this.update();
   }
@@ -77,8 +81,12 @@ class Rotate {
   update() {
     this.reset();
 
-    this.triggers[this.IDX].classList.add("is--active");
-    this.action(this.triggers[this.IDX], this.target);
+    if (this.triggers.length > 0) {
+      this.triggers[this.IDX].classList.add("is--active");
+      this.action(this.triggers[this.IDX], this.target);
+    } else {
+      this.target.dataset.stage = this.IDX;
+    }
 
     if (!this.autoRotate) return;
 

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "BILD",
+    "slug": "bild"
+  },
+  {
+    "name": "WELT",
+    "slug": "welt"
+  },
+  {
+    "name": "Computer BILD",
+    "slug": "cobi"
+  },
+  {
+    "name": "Auto BILD",
+    "slug": "aubi"
+  },
+  {
+    "name": "Berliner Zeitung",
+    "slug": "bz"
+  },
+  {
+    "name": "Business Insider",
+    "slug": "bi"
+  },
+  {
+    "name": "Sport 1",
+    "slug": "sport1"
+  },
+  {
+    "name": "default",
+    "slug": ""
+  }
+]

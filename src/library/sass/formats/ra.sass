@@ -1,0 +1,118 @@
+@use "sass:math"
+
+$width: 800px !default
+$height: 250px !default
+
+#fly
+
+    &Content
+        width: $width
+        height: $height
+        margin-top: auto
+        margin-bottom: -$height -(math.div($width, 2))
+        margin-left: -(math.div($width, 2))
+        left: 50% ! important
+        top: auto
+        bottom: 0
+        transition: margin-bottom 1s ease-in-out
+
+        *
+            position: absolute
+            display: block
+            margin: 0
+            padding: 0
+            overflow: visible
+            box-sizing: border-box
+
+        a
+            cursor: pointer
+            transition: none
+            text-decoration: none
+            outline: 0
+            background: none
+            opacity: 1
+
+        &.flyContentActive
+            margin-bottom: 0
+
+            @if $width <= 500px
+                #pFADefaultButtons
+                    top: -30px
+                    transition: top .4s ease-in .7s
+
+    &Wrap
+        z-index: 10000
+        width: inherit
+        height: inherit
+
+    &Target
+        width: inherit
+        height: inherit
+
+#pFADefaultButtons
+
+    a
+        background-repeat: no-repeat
+
+    @if $width > 500px
+        height: 108px
+        width: 40px
+        right: -40px
+        bottom: 0
+        overflow: hidden
+        z-index: 100001
+
+        a
+            position: relative
+            background-size: 40px auto
+
+        #flyClose
+            background-image: url("lib/vendor/plista/assets/btn--close.png")
+            height: 30px
+            width: inherit
+
+            &:hover
+                background-image: url("lib/vendor/plista/assets/btn--close-active.png")
+
+        #flyOBA
+            background-image: url("lib/vendor/plista/assets/btn--oba.png")
+            height: 25px
+
+            &:hover
+                background-image: url("lib/vendor/plista/assets/btn--oba-active.png")
+                height: 75px
+
+        #flyBrand
+            background-image: url("lib/vendor/plista/assets/btn--brand.png")
+            height: 50px
+            width: inherit
+
+            &:hover
+                background-image: url("lib/vendor/plista/assets/btn--brand-active.png")
+    @else
+
+        background-image: url("lib/vendor/plista/assets/btn--mobile.gif")
+        background-size: contain
+        background-color: #fff
+        border-radius: 5px 5px 0 0
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, .2)
+        width: 120px
+        height: 30px
+        top: 0
+        right: 8px
+        z-index: 9999
+
+        #flyClose
+            width: 30px
+            height: 30px
+            right: 0
+
+        #flyOBA
+            width: 30px
+            height: 30px
+            right: 30px
+
+        #flyBrand
+            width: 60px
+            height: 30px
+            left: 0
