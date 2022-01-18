@@ -29,7 +29,7 @@
     "img-optimize-loader": "^1.0.7",
     "inquirer": "^8.2.0",
     "inquirer-autocomplete-prompt": "^1.4.0",
-    "mini-css-extract-plugin": "^2.4.5",
+    "mini-css-extract-plugin": "^2.5.2",
     "sass": "^1.48.0",
     "sass-loader": "^12.4.0",
     "shortme": "^1.2.1",
