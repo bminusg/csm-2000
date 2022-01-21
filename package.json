@@ -34,7 +34,7 @@
     "shortme": "^1.2.1",
     "style-loader": "^3.3.1",
     "tween-sass": "^0.5.1",
-    "uuid": "^3.4.0",
+    "uuid": "^8.3.2",
     "webpack": "^5.65.0",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.7.3"
