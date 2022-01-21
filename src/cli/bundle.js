@@ -1,8 +1,13 @@
+"use strict";
+
+// NODE MODULES
 const inquirer = require("inquirer");
 const glob = require("glob");
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
-const projectData = require(process.cwd() + "/src/data/projects.json");
+
+// DATA MODULES
+const data = require("../data");
 
 // RUN THE CLI
 inquirer
@@ -11,7 +16,8 @@ inquirer
       type: "checkbox",
       message: "Select your creative slugs in order to run the build process.",
       name: "creatives",
-      choices: () => {
+      choices:async () => {
+        const projectData = await data.read();
         const creativeOptions = [];
         const localCreativeSlugs = glob
           .sync("./projects/**/main.js")

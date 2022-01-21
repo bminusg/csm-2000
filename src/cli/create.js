@@ -100,7 +100,7 @@ inquirer
                   name: creative.name,
                   slug: creative.slug,
                   ...creative.options[option],
-                }
+                },
               },
             });
           }
@@ -120,7 +120,6 @@ inquirer
     return createdProject;
   })
   .then(async (project) => {
-    console.log("RETURNED CREATED PROJECT", project);
     const creativeIDs = project.creatives
       .map((creative) => creative.id)
       .join(",");
