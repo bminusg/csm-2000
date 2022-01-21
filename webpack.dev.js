@@ -8,8 +8,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common");
 const getEntryPoint = require("./src/bundler/getEntryPoint");
-const getProject = require("./src/bundler/getProject")
-
+const getProject = require("./src/bundler/getProject");
 
 let devConfig = {
   mode: "development",
@@ -17,7 +16,7 @@ let devConfig = {
     ui: "./src/ui/main.js",
   },
   devServer: {
-    watchFiles: ["projects/**/*", "src/library/**/*"],
+    watchFiles: ["projects/**/*", "src/**/*"],
     port: 8080,
     open: true,
     client: {
@@ -84,6 +83,14 @@ module.exports = async () => {
       );
 
       Object.assign(devConfig.entry, getEntryPoint(creative.slug));
+
+      // DEFINE UI DATA
+      Object.assign(creative, {
+        project: {
+          brand: project.brand.name,
+          campaign: project.campaign.name,
+        },
+      });
       devConfig.plugins[0].userOptions.templateParameters.creatives.push(
         creative
       );

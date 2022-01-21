@@ -1,27 +1,43 @@
-<html>
+<!DOCTYPE html>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Creative Overview</title>
+    <title>Artboard</title>
+    <link
+      rel="icon"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAfElEQVRIS2NkoDFgpLH5DOgWrAdaGEChpQeA+h1hZqBb8J9CwzHMxWUBuUEHcyBc/8iwgFC8IIcCWUFEcwtISVhk+YDmFtA8iGhuAc2DiOYW0DyIaG4BzYNoaFpAiquxqcVZH5wHqjag0PQNQP2BuKpMCs3G1E5u1Ui0QwAlaywZdEB2MgAAAABJRU5ErkJggg=="
+    />
   </head>
   <body>
     <div id="app">
+      <nav></nav>
       <div class="container">
-        <h1>Creatives</h1>
-        <div class="container--grid">
-          <ul class="container--list">
-            {{#each creatives}}
-              <li class="container--list-item">
-                <a
+        <h1>Artboard</h1>
+
+        <ul class="list">
+          <li class="list--item list--item-header">
+            <div data-item="brand">Brand</div>
+            <div data-item="campaign">Campaign</div>
+            <div data-item="format">Format</div>
+            <div data-item="version">Version</div>
+            <div data-item="preview">Preview</div>
+          </li>
+
+          {{#each creatives}}
+            <li class="list--item">
+              <div data-item="brand">{{this.project.brand}}</div>
+              <div data-item="campaign">{{this.project.campaign}}</div>
+              <div data-item="format">{{this.format.name}}</div>
+              <div data-item="version">{{this.version}}</div>
+              <div data-item="preview"><a
                   href="{{this.slug}}/index.html"
                   target="_blank"
-                >{{this.slug}}</a>
+                >{{this.slug}}</a></div>
+            </li>
+          {{/each}}
+        </ul>
 
-              </li>
-            {{/each}}
-          </ul>
-        </div>
       </div>
     </div>
   </body>
