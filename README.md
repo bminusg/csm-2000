@@ -20,7 +20,7 @@ The Creative Solution Manager 2000 provides a working environment for your Adver
 
 ## Getting started
 
-The Bundler needs at least 2 entry points for recognizing your Creative. Please ensure that the following files exist on your creative folder `index.html`, `main.js`.
+The Bundler need one entry point for recognizing your Creative. Please ensure that the following file exist on your creative folder `main.js`.
 
 ### Entrypoint main.js
 
@@ -29,6 +29,7 @@ Furthermore, this file defines all the Modules that you need for example Styles 
 
 ```JS
 import Creative from "src/creative";  // Init Creative Object
+import "./markup.html"                // Your Creative Markup
 import "./sass/main.sass"             // Your Style files
 
 new Creative({
@@ -67,39 +68,18 @@ new Creative({
 
 #### Options `Type: Object`
 
-##### isAutoplay `Type: Boolean, Default: false`
-
-##### isLooped `Type: Boolean, Default: false`
-
-##### fileURLs `Type: Array[String], required`
-
-List of URL paths pointing to the video media file
-
-##### classNames `Type: String, Default: "creative--video"`
-
-##### video `Type: NodeElement, Default: undefined`
-
-You can use an excisting <video></video> Element as Video container. In default case the feature will build a video element
-
-##### parentContainer `Type: NodeElement, Default: <body>`
-
-The video event listeners send feedback to the parent container as data attributes.
-
-###### btnPlay `Type: NodeElement, Default: undefined`
-
-Append click event listener to Node Element for playing the video
-
-###### btnPause `Type: NodeElement, Default: undefined`
-
-Append click event listener to Node Element for pausing the video
-
-###### btnSoundOn `Type: NodeElement, Default: undefined`
-
-Append click event listener to Node Element for unmuting the video
-
-###### btnSoundOff `Type: NodeElement, Default: undefined`
-
-Append click event listener to Node Element for muting the video
+|             Name              |       Type        |      Default      | Description                                                                                                                     |
+| :---------------------------: | :---------------: | :---------------: | :------------------------------------------------------------------------------------------------------------------------------ |
+|   **`options.isAutoplay`**    |    `{Boolean}`    |       false       | Plays video without interaction and muted                                                                                       |
+|    **`options.isLooped`**     |    `{Boolean}`    |       false       |                                                                                                                                 |
+|    **`options.fileURLs`**     | `{Array[String]}` |        []         | Required. List of URL paths pointing to the video media file                                                                    |
+|   **`options.classNames`**    |    `{String}`     | "creative--video" |                                                                                                                                 |
+|      **`options.video`**      |  `{NodeElement}`  |     undefined     | You can use an excisting <video></video> Element as Video container. If it is undefined the feature will create a video element |
+| **`options.parentContainer`** |  `{NodeElement}`  |      <body>       | The video event listeners send feedback to the parent container as data attributes.                                             |
+|     **`options.btnPlay`**     |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for playing the video                                                               |
+|    **`options.btnPause`**     |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for pausing the video                                                               |
+|   **`options.btnSoundOn`**    |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for unmuting the video                                                              |
+|   **`options.btnSoundOff`**   |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for muting the video                                                                |
 
 ### Cross Site Connection
 
@@ -120,17 +100,17 @@ new Creative({
 
 #### Options `Type: Object`
 
-##### connectWith `Type: Array[String], required`
+|                                               Name                                                |        Type         |  Default  | Description                                                                                                                                                                                                                                                                                                                                 |
+| :-----------------------------------------------------------------------------------------------: | :-----------------: | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|                                     **`options.connectWith`**                                     |   `Array[String]`   | undefined | Required. String concatenation from your Creative frame ID's which you want to connect.                                                                                                                                                                                                                                                     |
+|                                       **`options.timeout`**                                       |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
+|                                       **`options.timeout`**                                       |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
+|                                       **`options.methods`**                                       | `Object{functions}` | undefined |
+| On this property, you can define your custom methods that are executable from external creatives. |
+|                                   **`options.hasDefaultEvent`**                                   |      `Boolean`      |   false   | This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container. |
+|                                                                                                   |
 
-String concatenation from your Creative frame ID's which you want to connect.
-
-##### timeout `Type: Number, Default: 3000`;
-
-Define a Millisecond value for how long the Creative is allowed to search for a connection.
-
-##### hasDefaultEvent `Type: Boolean, Default: false`
-
-This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container.
+##### hasDefaultEvent documentation
 
 ```JS
 // ----- CREATIVE A
@@ -149,9 +129,9 @@ window.Creative.container.dispatchEvent(event);
 
 ```
 
-##### methods `Type: Object[function]`
+##### methods documentation
 
-On this property, you can define your custom methods that are executable from external creatives. 2 methods are defined already:
+2 methods are defined already:
 
 1. `start(): function` method executes every creative after the connection is successful.
 2. `set(options: Object): function` method will call the target creatives
@@ -217,42 +197,22 @@ new Creative({
 
 #### Options `Type: Object`
 
-##### triggers `Type: String, required`
-
-Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.
-
-##### action `Type: function(trigger: nodeElement, target: nodeElement)`
-
-This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS.
-This
-
-##### target `Type: String, Default: document.querySelector("body")`
-
-The target nodeElement can change Styling via data-attribute stages
-
-##### maxRounds: `Type: Number, Default: 0`
-
-The number of loop rounds. 0 means infinite loop
-
-##### loopTime: `Array: [Number], Default: [2500]`
+|           Name           |                         Type                          |  Default  | Description                                                                                                                                                                                                                                                                                                                 |
+| :----------------------: | :---------------------------------------------------: | :-------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|  **`options.triggers`**  |                       `String`                        | undefined | Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.                                                                                                                   |
+| **`options.slideCount`** |                       `Number`                        |   null    | If no HTML Element Triggers are needed you need only to define a number of slides                                                                                                                                                                                                                                           |
+|   **`options.action`**   | `function(trigger: nodeElement, target: nodeElement)` | undefined | This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS. |
+|   **`options.target`**   |                       `String`                        |  "body"   | The target nodeElement can change Styling via data-attribute stages                                                                                                                                                                                                                                                         |
+| **`options.maxRounds`**  |                       `Number`                        |     0     | The number of loop rounds. 0 means infinite loop                                                                                                                                                                                                                                                                            |
+|  **`options.loopTime`**  |                   `Array: [Number]`                   |  [2500]   |
 
 Defining the offset time between every trigger change. It is number of milliseconds in an array. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]`
-
-##### autoRotate: `Type: Boolean, Default: false`
-
-If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`
-
-##### delay: `Type: Number, Default: 600`
-
-Wait time before auto rotate will be initiated
-
-##### mouseoverEvent: `Type: Boolean, Default: true`
-
-Append a mouseover event listener to every trigger element
-
-##### clickControllers: `Type: String, Default: ""`
-
-If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous || next"` to the node element
+|
+|**`options.autoRotate`**|`Boolean`|false|If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`|
+|**`options.delay`**|`Number`|600|Wait time before auto rotate will be initiated|
+|**`options.mouseoverEvent`**|`Boolean`|true|
+Append a mouseover event listener to every trigger element|
+|**`options.clickControllers`**|`String`|""|If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous || next"` to the node element|
 
 ## Ideation
 
