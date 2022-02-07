@@ -14,6 +14,7 @@ let devConfig = {
   mode: "development",
   entry: {
     ui: "./src/ui/main.js",
+    preview: "./src/preview/main.js",
   },
   devServer: {
     watchFiles: ["projects/**/*", "src/**/*"],
@@ -49,6 +50,11 @@ let devConfig = {
         projects: [],
         creatives: [],
       },
+    }),
+    new HtmlWebpackPlugin({
+      filename: "preview/index.html",
+      chunks: ["preview"],
+      template: "./src/preview/index.html",
     }),
   ],
 };

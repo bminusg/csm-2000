@@ -16,7 +16,7 @@ inquirer
       type: "checkbox",
       message: "Select your creative slugs in order to run the build process.",
       name: "creatives",
-      choices:async () => {
+      choices: async () => {
         const projectData = await data.read();
         const creativeOptions = [];
         const localCreativeSlugs = glob
@@ -44,16 +44,26 @@ inquirer
           );
         }
 
+        creativeOptions.push(new inquirer.Separator());
+
+        creativeOptions.push({
+          name: "Preview",
+          value: "preview",
+        });
+
         return creativeOptions;
       },
     },
   ])
   .then(async (answers) => {
     const creativeIDs = answers.creatives.join(",");
-    const { stdout, stderr } = await exec(
-      "webpack build --config webpack.prod.js --env production creatives=" +
-        creativeIDs
-    );
+    const command =
+      answers.creatives.indexOf("preview") > -1
+        ? "webpack build --config webpack.prod.js --env production preview"
+        : "webpack build --config webpack.prod.js --env production creatives=" +
+          creativeIDs;
+
+    const { stdout, stderr } = await exec(command);
 
     if (stderr) throw stderr;
     console.log(stdout);
