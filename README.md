@@ -14,9 +14,10 @@ The Creative Solution Manager 2000 provides a working environment for your Adver
 
 ## NPM Scripts
 
-- `npm run serve` Runs local web development server on your machine
-- `npm run build` run CLI helper for bundling your final static creative files
-- `npm run template` run CLI helper for creating your creative entry points from the template
+- `npm run develop` Runs local web development server on your machine
+- `npm run bundle` run CLI helper for bundling your final static creative files
+- `npm run create-project` run CLI helper for creating a new project and his templates
+- `npm run update-project` run CLI helper for updating an excisting project
 
 ## Getting started
 
@@ -100,15 +101,12 @@ new Creative({
 
 #### Options `Type: Object`
 
-|                                               Name                                                |        Type         |  Default  | Description                                                                                                                                                                                                                                                                                                                                 |
-| :-----------------------------------------------------------------------------------------------: | :-----------------: | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|                                     **`options.connectWith`**                                     |   `Array[String]`   | undefined | Required. String concatenation from your Creative frame ID's which you want to connect.                                                                                                                                                                                                                                                     |
-|                                       **`options.timeout`**                                       |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
-|                                       **`options.timeout`**                                       |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
-|                                       **`options.methods`**                                       | `Object{functions}` | undefined |
-| On this property, you can define your custom methods that are executable from external creatives. |
-|                                   **`options.hasDefaultEvent`**                                   |      `Boolean`      |   false   | This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container. |
-|                                                                                                   |
+|             Name              |        Type         |  Default  | Description                                                                                                                                                                                                                                                                                                                                 |
+| :---------------------------: | :-----------------: | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|   **`options.connectWith`**   |   `Array[String]`   | undefined | Required. String concatenation from your Creative frame ID's which you want to connect.                                                                                                                                                                                                                                                     |
+|     **`options.timeout`**     |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
+|     **`options.methods`**     | `Object{functions}` | undefined | On this property, you can define your custom methods that are executable from external creatives.                                                                                                                                                                                                                                           |
+| **`options.hasDefaultEvent`** |      `Boolean`      |   false   | This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container. |
 
 ##### hasDefaultEvent documentation
 
