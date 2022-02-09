@@ -38,6 +38,7 @@ module.exports = {
             loader: "html-loader",
             options: {
               preprocessor: (content, loaderContext) => {
+                content = String(content).replace(/(\r\n|\n|\r)/gm, "");
                 const localSlug = loaderContext.resourcePath
                   .split(path.sep)
                   .splice(-2)[0];
