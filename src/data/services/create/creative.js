@@ -23,7 +23,7 @@ module.exports = (input, customCreatives = false) => {
           protect: [input.brand.slug, creative.format.slug, version],
         }
       ),
-      caption: encodeURIComponent(creative.caption),
+      caption: creative.caption,
       version: parseInt(version),
       format: creative.format,
       adserver: "",

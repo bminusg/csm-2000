@@ -4,6 +4,9 @@ import getURIparams from "./modules/getURIparams";
 
 class Creative {
   constructor(options = {}) {
+    // META DATA
+    this.id = options.id || undefined;
+    this.caption = options.caption || undefined;
     this.format =
       typeof options.format === "object" ? options.format : undefined;
     this.brand = typeof options.brand === "object" ? options.brand : undefined;
@@ -17,6 +20,7 @@ class Creative {
     this.slug = typeof options.slug === "string" ? options.slug : undefined;
 
     // TRACKING
+    this.macros = {};
     this.params = getURIparams();
     this.clicktags = options.clicktags || [];
 
@@ -54,12 +58,22 @@ class Creative {
 
     // START ANIMATION
     window.addEventListener("load", this.startAnimation());
+
+    // CRYPTO BROS
+    // https://www.heise.de/developer/artikel/Verschluesselung-im-Web-mit-der-Web-Crypto-API-5035591.html
   }
 
   // VALIDATE CREATIVE
   validate() {
     // VALIDATE META SETUP Format
     if (!this.format) throw new Error("No format defined");
+
+    // DECODE CAPTION
+    if (this.caption) {
+      this.caption = Array.isArray(this.caption)
+        ? this.decodeURIs(this.caption)
+        : Array(decodeURIComponent(this.caption));
+    }
 
     // VALIDATE CONTAINER
     const defaultContainer = document.querySelector(".creative");
@@ -79,27 +93,74 @@ class Creative {
       this.container.classList.add(creativeClassName);
 
     // VALIDATE TRACKING
-    if (!document.querySelector("a"))
-      throw new Error("Can't find any anchor tag");
+    if (!document.querySelector("a")) throw new Error("Can't find anchor tag");
+  }
+
+  decodeURIs(URIs = []) {
+    URIs = URIs.map((URI) => decodeURIComponent(URI));
+    return URIs;
   }
 
   // TRACKING CONFIGURATION
   track() {
     // GET PARAM CLICKTAGS
+
     const clicktags = [];
     for (const param in this.params) {
       if (param.indexOf("clicktag") === -1) continue;
       clicktags.push(this.params[param]);
     }
 
+    console.log(this.caption);
+
     // PARAM CLICKTAGS OVERWRITE INLINE CLICKTAGS
     if (clicktags.length > 0) this.clicktags = clicktags;
 
+    console.log(this.clicktags);
+
     // PARSE ANCHOR TAGS
-    const anchors = document.querySelectorAll("a");
+    const anchorTag = document.querySelector("a");
+    const anchors = document.querySelectorAll(".creative--clicktag");
+
+    // INIT CAPTION
+    if (this.caption) anchorTag.setAttribute("href", this.caption[0]);
+
     anchors.forEach((anchor, idx) => {
-      anchor.setAttribute("href", this.clicktags[idx]);
-      anchor.setAttribute("target", "_blank");
+      // REINIT CAPTION ON MOUSEOVER
+      anchor.addEventListener(
+        "mouseover",
+        (event) => {
+          event.preventDefault();
+
+          if (!this.caption) return;
+
+          let caption = anchor.dataset.caption
+            ? this.caption[anchor.dataset.caption]
+            : this.caption[idx];
+
+          if (!caption) caption = this.caption[0];
+
+          anchorTag.setAttribute("href", caption);
+        },
+        true
+      );
+
+      // SET CLICKTAG ON MOUSEDOWN
+      anchor.addEventListener(
+        "mousedown",
+        (event) => {
+          event.preventDefault();
+
+          let clicktag = anchor.dataset.clicktag
+            ? this.clicktags[anchor.dataset.clicktag]
+            : this.clicktags[idx];
+          if (!clicktag) clicktag = this.clicktags[0];
+
+          anchorTag.setAttribute("href", clicktag);
+          anchorTag.setAttribute("target", "_blank");
+        },
+        true
+      );
     });
   }
 
