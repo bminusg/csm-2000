@@ -15,7 +15,7 @@
     "update-project": "node ./src/cli/update"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
+    "@babel/core": "^7.17.2",
     "@babel/preset-env": "^7.16.11",
     "babel-loader": "^8.2.3",
     "babel-preset-minify": "^0.5.1",
