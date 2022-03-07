@@ -28,7 +28,7 @@
     "image-webpack-loader": "^8.0.1",
     "inquirer": "^8.2.0",
     "inquirer-autocomplete-prompt": "^1.4.0",
-    "mini-css-extract-plugin": "^2.5.2",
+    "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.49.7",
     "sass-loader": "^12.4.0",
     "shortme": "^1.2.1",
