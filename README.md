@@ -69,18 +69,18 @@ new Creative({
 
 #### Options `Type: Object`
 
-|             Name              |       Type        |      Default      | Description                                                                                                                     |
-| :---------------------------: | :---------------: | :---------------: | :------------------------------------------------------------------------------------------------------------------------------ |
-|   **`options.isAutoplay`**    |    `{Boolean}`    |       false       | Plays video without interaction and muted                                                                                       |
-|    **`options.isLooped`**     |    `{Boolean}`    |       false       |                                                                                                                                 |
-|    **`options.fileURLs`**     | `{Array[String]}` |        []         | Required. List of URL paths pointing to the video media file                                                                    |
-|   **`options.classNames`**    |    `{String}`     | "creative--video" |                                                                                                                                 |
-|      **`options.video`**      |  `{NodeElement}`  |     undefined     | You can use an excisting <video></video> Element as Video container. If it is undefined the feature will create a video element |
-| **`options.parentContainer`** |  `{NodeElement}`  |      <body>       | The video event listeners send feedback to the parent container as data attributes.                                             |
-|     **`options.btnPlay`**     |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for playing the video                                                               |
-|    **`options.btnPause`**     |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for pausing the video                                                               |
-|   **`options.btnSoundOn`**    |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for unmuting the video                                                              |
-|   **`options.btnSoundOff`**   |  `{NodeElement}`  |     undefined     | Append click event listener to Node Element for muting the video                                                                |
+|             Name              |         Type         |      Default      | Description                                                                                                                    |
+| :---------------------------: | :------------------: | :---------------: | :----------------------------------------------------------------------------------------------------------------------------- |
+|   **`options.isAutoplay`**    |     `{Boolean}`      |       false       | Plays video without interaction and muted                                                                                      |
+|    **`options.isLooped`**     |     `{Boolean}`      |       false       |                                                                                                                                |
+|    **`options.fileURLs`**     |  `{Array[String]}`   |        []         | Required. List of URL paths pointing to the video media file                                                                   |
+|   **`options.classNames`**    |      `{String}`      | "creative--video" |                                                                                                                                |
+|      **`options.video`**      | `{HTMLMediaElement}` |     undefined     | You can use an excisting <video></video> Element as Video container. If it is undefined the feature will build a video element |
+| **`options.parentContainer`** |   `{NodeElement}`    |      <body>       | The video event listeners send feedback to the parent container as data attributes.                                            |
+|     **`options.btnPlay`**     |   `{NodeElement}`    |     undefined     | Append click event listener to Node Element for playing the video                                                              |
+|    **`options.btnPause`**     |   `{NodeElement}`    |     undefined     | Append click event listener to Node Element for pausing the video                                                              |
+|   **`options.btnSoundOn`**    |   `{NodeElement}`    |     undefined     | Append click event listener to Node Element for unmuting the video                                                             |
+|   **`options.btnSoundOff`**   |   `{NodeElement}`    |     undefined     | Append click event listener to Node Element for muting the video                                                               |
 
 ### Cross Site Connection
 

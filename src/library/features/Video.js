@@ -1,15 +1,37 @@
 class Video {
   constructor(options = {}) {
     this.video = options.video || undefined;
-    this.fileURLs = options.fileURLs || [];
+    this.classNames = options.classNames || "creative--video";
     this.parentContainer =
       options.parentContainer || document.querySelector("body");
+
+    // MEDIA
+    this.fileURLs = options.fileURLs || [];
+    this.poster =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     // VIDEO CONFIG
     this.isAutoplay = options.isAutoplay || false;
     this.isLooped = options.isLooped || false;
 
-    this.classNames = options.classNames || "creative--video";
+    // TRACKING
+    // DEFINITIONS ON PAGE 33 - https://www.iab.com/wp-content/uploads/2015/06/VASTv3_0.pdf
+    this.track = {
+      mute: options.mute ? options.mute : [],
+      unmute: options.unmute ? options.unmute : [],
+      pause: options.pause ? options.pause : [],
+      resume: options.resume ? options.resume : [],
+      rewind: options.rewind ? options.rewind : [],
+      skip: options.skip ? options.skip : [],
+      playerExpand: options.playerExpand ? options.playerExpand : [],
+      playerCollapse: options.playerCollapse ? options.playerCollapse : [],
+      loaded: options.loaded ? options.loaded : [],
+      start: options.start ? options.start : [],
+      firstQuartile: options.firstQuartile ? options.firstQuartile : [],
+      midpoint: options.midpoint ? options.midpoint : [],
+      thirdQuartile: options.thirdQuartile ? options.thirdQuartile : [],
+      complete: options.complete ? options.complete : [],
+    };
 
     // BUTTONS
     this.btns = {
@@ -21,13 +43,9 @@ class Video {
   }
 
   init() {
-    if (!this.video) this.buildPlayer();
+    if (!this.video) return this.buildPlayer();
 
-    // APPEND EVENT LISTENERS
     this.addListeners();
-
-    // AUTOPLAY
-    if (this.isAutoplay) this.video.play();
   }
 
   addListeners() {
@@ -35,59 +53,134 @@ class Video {
       ? window.Creative.container
       : this.parentContainer;
 
+    // CALC DURATION
+    let firstQuartile,
+      midpoint,
+      thirdQuartile = null;
+
     // PAUSE
     this.video.addEventListener("pause", (e) => {
       container.dataset.playing = "0";
+      this.trackEvent("pause");
     });
 
     // CAN PLAY
     this.video.addEventListener("canplay", (e) => {
-      //if (this.isAutoplay) this.video.play();
+      const duration = this.video.duration;
+
+      firstQuartile = duration / 4;
+      midpoint = duration / 2;
+      thirdQuartile = (duration / 4) * 3;
+
+      if (this.isAutoplay) this.video.play();
+    });
+
+    // CAN PLAY THROUGH
+    this.video.addEventListener("canplaythrough", (e) => {
+      this.trackEvent("loaded");
     });
 
     // PLAY
     this.video.addEventListener("play", (e) => {
+      this.trackEvent("start");
       container.dataset.playing = "1";
     });
 
+    // ENDED
+    this.video.addEventListener("ended", (e) => {
+      this.trackEvent("complete");
+    });
+
     // VOLUME CHANGE
-    this.video.addEventListener("volumechange", (event) => {
-      const value = this.video.muted ? 0 : 1;
-      container.dataset.muted = value;
+    this.video.addEventListener("volumechange", (e) => {
+      const isMute = this.video.muted;
+      container.dataset.muted = isMute ? 0 : 1;
+
+      if (isMute) this.trackEvent("mute");
+
+      if (!isMute) this.trackEvent("unmute");
+    });
+
+    // TIME UPDATE
+    this.video.addEventListener("timeupdate", (e) => {
+      const time = this.video.currentTime;
+
+      if (typeof firstQuartile === "number" && time >= firstQuartile) {
+        firstQuartile = false;
+        this.trackEvent("firstQuartile");
+      }
+
+      if (typeof midpoint === "number" && time >= midpoint) {
+        midpoint = false;
+        this.trackEvent("midpoint");
+      }
+
+      if (typeof thirdQuartile === "number" && time >= thirdQuartile) {
+        thirdQuartile = false;
+        this.trackEvent("thirdQuartile");
+      }
     });
 
     // BUTTONS
     for (const btn in this.btns) {
       if (!this.btns[btn]) continue;
 
-      this.btns[btn].addEventListener("click", (e) => {
-        e.preventDefault();
+      this.btns[btn].addEventListener(
+        "click",
+        (e) => {
+          e.preventDefault();
 
-        if (btn === "play") {
-          this.video.muted = false;
-          this.video.play();
-        }
+          if (btn === "play") {
+            this.video.muted = false;
+            this.video.play();
+          }
 
-        if (btn === "pause") {
-          this.video.pause();
-        }
+          if (btn === "pause") {
+            this.video.pause();
+          }
 
-        if (btn === "soundoff") this.video.muted = true;
-
-        if (btn === "soundon") this.video.muted = false;
-      });
+          if (btn === "soundoff") this.video.muted = true;
+          if (btn === "soundon") this.video.muted = false;
+        },
+        true
+      );
     }
+  }
+
+  trackEvent(event) {
+    console.log("TRACK", event);
+    console.log("TRACK", this.track[event]);
+
+    const timestamp = new Date().getTime();
+    for (let src of this.track[event]) {
+      const img = document.createElement("img");
+
+      // REPLACE MACROS
+      src = src.replace(/\[timestamp\]/g, timestamp);
+
+      // SET ATTRIBUTES
+      img.setAttribute("src", src);
+      img.setAttribute("width", "1");
+      img.setAttribute("width", "1");
+      img.setAttribute("alt", "Impression Pixel Event: " + event);
+      img.style.display = "none";
+
+      console.log("IMPRESSION PIXEL", img);
+      document.body.appendChild(img);
+    }
+
+    this.track[event] = [];
   }
 
   buildPlayer() {
     const video = document.createElement("video");
 
-    // SRC TYPE
+    // DEFINE SOURCES
 
     this.fileURLs.forEach((fileURL) => {
       const source = document.createElement("source");
       //source.type = options.mimeType;
-      //source.type = "video/mp4";
+      source.type = "video/mp4";
       source.src = fileURL;
 
       video.appendChild(source);
@@ -100,18 +193,23 @@ class Video {
     video.controls = false;
     video.disablePictureInPicture = false;
     //video.bitrate = options.bitrate;
+    video.className = this.classNames;
 
     // DEFINE VIDEO ATTRIBUTES
-    video.setAttribute("class", this.classNames);
     video.setAttribute("playsinline", true);
     video.setAttribute("preload", "metadata");
+    video.setAttribute("poster", this.poster);
 
     if (this.isAutoplay) video.setAttribute("muted", true);
     if (this.isAutoplay) video.setAttribute("autoplay", true);
 
-    // APPEND VIDEO CONTAINER
-
+    // DEFINE VIDEO
     this.video = video;
+
+    // ADD EVENT LISTENERS
+    this.addListeners();
+
+    // APPEND VIDEO CONTAINER
     this.parentContainer.appendChild(video);
   }
 }

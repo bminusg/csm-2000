@@ -14,12 +14,9 @@ module.exports = {
         test: /\.mp4$/,
         type: "asset/resource",
         generator: {
-          filename: "video/[name].[hash][ext]",
+          filename: "video/[name][ext]",
         },
       },
-      /*
-      
-      */
       {
         test: /\.hbs$/,
         loader: "handlebars-loader",
