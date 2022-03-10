@@ -104,19 +104,14 @@ class Creative {
   // TRACKING CONFIGURATION
   track() {
     // GET PARAM CLICKTAGS
-
     const clicktags = [];
     for (const param in this.params) {
       if (param.indexOf("clicktag") === -1) continue;
       clicktags.push(this.params[param]);
     }
 
-    console.log(this.caption);
-
     // PARAM CLICKTAGS OVERWRITE INLINE CLICKTAGS
     if (clicktags.length > 0) this.clicktags = clicktags;
-
-    console.log(this.clicktags);
 
     // PARSE ANCHOR TAGS
     const anchorTag = document.querySelector("a");

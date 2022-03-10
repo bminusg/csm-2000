@@ -154,13 +154,15 @@ window.PREVIEW = {
       dir: "/spot.mp4",
     });
 
-    new Video({
+    const video = new Video({
       parentContainer: document.querySelector(".creative--videowall"),
       isAutoplay: true,
       isLooped: true,
       fileURLs: [this.videoWallSource],
       classNames: "creative--videowall-video",
-    }).init();
+    });
+
+    video.init();
 
     // BUILD BILLBOARDS
     this.buildCreativeContainers(["billboard"]);
@@ -205,8 +207,9 @@ window.PREVIEW = {
 
     const videoNode = videoNodeOrigin.cloneNode();
     videoNode.src = this.videoWallSource;
-    videoNode.controls = true;
+    videoNode.controls = false;
     videoNode.loop = false;
+    videoNode.muted = false;
     videoNode.classList.add("creative--videowall-video__expanded");
     videoNode.removeAttribute("id");
 

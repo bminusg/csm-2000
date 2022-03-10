@@ -161,5 +161,17 @@
         "admark": ""
       }
     }
+  },
+  {
+    "name": "Videowall",
+    "slug": "videowall",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 0,
+        "height": 0,
+        "admark": ""
+      }
+    }
   }
 ]

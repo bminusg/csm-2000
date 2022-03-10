@@ -66,11 +66,8 @@ class Data extends Service {
   }
 
   async update(route = "projects", targetID, query = {}) {
-    console.log(this.models);
     try {
       const item = await this.read(route, { id: targetID });
-
-      console.log("update item", item);
       const updatedItem = await this.service.update[route](item, query);
 
       this.models[route] = this.models[route].map((model) => {
