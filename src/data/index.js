@@ -6,7 +6,6 @@ const path = require("path");
 const brands = require("./json/brands.json");
 const categories = require("./json/categories.json");
 const formats = require("./json/formats.json");
-const projects = require("./json/projects.json");
 const publishers = require("./json/publishers.json");
 
 // SERVICES
@@ -20,19 +19,31 @@ class Data extends Service {
       brands: brands,
       categories: categories,
       formats: formats,
-      projects: Array.isArray(projects) ? projects : [],
+      projects: this.defineProjects(),
       publishers: publishers,
     };
+  }
+
+  defineProjects() {
+    let module;
+
+    try {
+      module = require("./json/projects.json");
+    } catch (e) {
+      module = [];
+    }
+
+    return module;
   }
 
   async create(route = "projects", body = {}) {
     try {
       const createdItem = await this.service.create[route](body);
 
-      this.models[route].push(createdItem)
-      this.writeFile(route)
-      
-      return createdItem
+      this.models[route].push(createdItem);
+      this.writeFile(route);
+
+      return createdItem;
     } catch (e) {
       console.error(e);
     }
@@ -41,17 +52,16 @@ class Data extends Service {
   async read(route = "projects", query = {}) {
     try {
       const data = this.models[route];
-  
+
       if (Object.keys(query).length === 0) return data;
-  
+
       const searchKey = Object.keys(query)[0];
       const searchValue = Object.values(query)[0];
       const result = data.find((item) => item[searchKey] === searchValue);
-  
-      return result;
 
-    } catch(e) {
-      console.log(e)
+      return result;
+    } catch (e) {
+      console.log(e);
     }
   }
 

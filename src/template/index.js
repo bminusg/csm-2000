@@ -69,8 +69,11 @@ async function buildFiles(project, creativeIDs) {
       if (err) throw err;
 
       // CREATE FILES FROM TEMPLATES
-      templateFiles.forEach((tempFile) => {
+      for (const tempFile of templateFiles) {
         const filename = tempFile.replace(".hbs", "");
+
+        if (creative.format.slug === "videowall" && filename !== "main.js")
+          continue;
 
         // BRING DATA TO TEMPLATES
         fs.readFile("./src/template/hbs/" + tempFile, "utf-8", (err, file) => {
@@ -109,7 +112,7 @@ async function buildFiles(project, creativeIDs) {
             }
           );
         });
-      });
+      }
     });
   }
 }

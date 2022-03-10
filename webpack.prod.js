@@ -37,7 +37,7 @@ const productionConfig = {
               enabled: true,
             },
             pngquant: {
-              quality: [0.65, 0.9],
+              quality: [0.5, 0.8],
               speed: 4,
             },
             gifsicle: {
@@ -87,6 +87,30 @@ const productionConfig = {
 module.exports = async (env) => {
   const creativeIDs = env && env.creatives ? env.creatives.split(",") : [];
   const creativeConfigs = [];
+
+  if (env.preview)
+    return merge(
+      {
+        name: "preview",
+        entry: { preview: "./src/preview/main.js" },
+        output: {
+          path: path.resolve(process.cwd(), "upload", "preview"),
+          filename: "main.js",
+          assetModuleFilename: "img/[name][ext]",
+          clean: true,
+        },
+        plugins: [
+          new HtmlWebpackPlugin({
+            filename: "index.html",
+            hash: true,
+            chunks: ["preview"],
+            template: "./src/preview/index.html",
+          }),
+        ],
+      },
+      commonConfig,
+      productionConfig
+    );
 
   for (const creativeID of creativeIDs) {
     const project = await getProject({ "creatives.id": creativeID });
