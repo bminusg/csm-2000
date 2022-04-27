@@ -6,7 +6,7 @@ const path = require("path");
 const Handlebars = require("handlebars");
 
 // DATA MODULE
-const data = require("../data");
+const project = require("../data/models/Project");
 
 // REGISTER HELPERS
 Handlebars.registerHelper("equal", require("./helpers/equal"));
@@ -24,7 +24,7 @@ async function buildTemplate() {
     .split("=")[1]
     .split(",");
 
-  const findProject = await data.read("projects", { id: projectParamId });
+  const findProject = project.read({ id: projectParamId });
 
   if (!findProject) throw new Error("Can't find project ID: " + projectParamId);
   if (creativeParamIDs[0] === "") creativeParamIDs = [];

@@ -6,10 +6,15 @@ const inquirer = require("inquirer");
 const shortme = require("shortme");
 const exec = util.promisify(require("child_process").exec);
 
-// GET DATA
-const data = require("../data");
-let brandData = [];
-let formatData = [];
+// GET DATA MODELS
+const project = require("../data/models/Project");
+const brand = require("../data/models/Brand");
+const format = require("../data/models/Format");
+const creative = require("../data/models/Creative");
+
+// READ DATA
+let brandData = brand.read();
+let formatData = format.read();
 
 // REGISTER INQUIRER PLUGIN
 inquirer.registerPrompt(
@@ -27,7 +32,7 @@ inquirer
       name: "brand",
       suggestOnly: true,
       source: async (answersSoFar, input) => {
-        brandData = await data.read("brands");
+        //brandData = await data.read("brands");
         input = input || "";
 
         return new Promise((resolve) => {
@@ -86,7 +91,6 @@ inquirer
       name: "creatives",
       choices: async (answers) => {
         const creatives = [];
-        formatData = await data.read("formats");
 
         for (const creative of formatData) {
           creatives.push(new inquirer.Separator(creative.name));
@@ -116,7 +120,7 @@ inquirer
     },
   ])
   .then(async (answers) => {
-    const createdProject = await data.create("projects", answers);
+    const createdProject = await project.create(answers);
     return createdProject;
   })
   .then(async (project) => {

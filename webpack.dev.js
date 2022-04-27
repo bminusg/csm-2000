@@ -1,25 +1,30 @@
 "use strict";
 
 // NODE MODULES
-const glob = require("glob");
 const { merge } = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common");
-const getEntryPoint = require("./src/bundler/getEntryPoint");
-const getProject = require("./src/bundler/getProject");
+
+// DATA MODEL
+const project = require("./src/data/models/Project");
 
 let devConfig = {
   mode: "development",
-  entry: {
-    ui: "./src/ui/main.js",
-    preview: "./src/preview/main.js",
+  entry: () => {
+    project.defineEntrypoints();
+
+    return {
+      ui: "./src/ui/main.js",
+      preview: "./src/preview/main.js",
+      ...project.entrypoints,
+    };
   },
   devServer: {
     watchFiles: ["projects/**/*", "src/**/*"],
     port: 8080,
-    open: true,
+    //open: true,
     client: {
       overlay: true,
       progress: true,
@@ -46,65 +51,19 @@ let devConfig = {
       filename: "index.html",
       chunks: ["ui"],
       template: "./src/ui/index.html.hbs",
-      templateParameters: {
-        projects: [],
-        creatives: [],
-      },
     }),
     new HtmlWebpackPlugin({
       filename: "preview/index.html",
       chunks: ["preview"],
       template: "./src/preview/index.html",
     }),
+    ...project.defineHTMLPlugins(),
   ],
+  optimization: {
+    runtimeChunk: "single",
+  },
 };
 
-module.exports = async () => {
-  try {
-    const localCreativeSlugs = glob
-      .sync("./projects/**/main.js")
-      .map((path) => path.split("/").splice(-2)[0]);
-
-    for (const slug of localCreativeSlugs) {
-      const project = await getProject({ "creatives.slug": slug });
-      if (!project) continue;
-
-      const creative = project.creatives.find(
-        (creative) => creative.slug === slug
-      );
-
-      devConfig.plugins.push(
-        new HtmlWebpackPlugin({
-          filename: slug + "/index.html",
-          hash: true,
-          chunks: [slug],
-          template: "./src/template/hbs/index.html.hbs",
-          templateParameters: {
-            environment: devConfig.mode,
-            project: project,
-            creative: creative,
-            markup: `<h1>CSS is awesome</h1>`,
-          },
-        })
-      );
-
-      Object.assign(devConfig.entry, getEntryPoint(creative.slug));
-
-      // DEFINE UI DATA
-      Object.assign(creative, {
-        project: {
-          brand: project.brand.name,
-          campaign: project.campaign.name,
-        },
-      });
-      devConfig.plugins[0].userOptions.templateParameters.creatives.push(
-        creative
-      );
-    }
-
-    const config = merge(devConfig, commonConfig);
-    return config;
-  } catch (e) {
-    console.error(e);
-  }
+module.exports = () => {
+  return merge(devConfig, commonConfig);
 };

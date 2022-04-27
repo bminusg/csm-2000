@@ -45,11 +45,16 @@
     "iABcategory": 9
   },
   { "name": "Coca-Cola", "slug": "coca-cola", "industry": "Beverages" },
-  { "name": "OBI", "slug": "obi", "industry": "Home & Garden", "iABcategory": 10 },
+  {
+    "name": "OBI",
+    "slug": "obi",
+    "industry": "Home & Garden",
+    "iABcategory": 10
+  },
   { "name": "Disney", "slug": "walt-disney", "industry": "Leisure" },
   {
     "name": "Samsung",
-    "slug": "samsung-electronics",
+    "slug": "samsung",
     "industry": "Technology",
     "iABcategory": 9
   },
@@ -99,7 +104,7 @@
   { "name": "SAP", "slug": "sap", "industry": "Technology", "iABcategory": 9 },
   {
     "name": "Mercedes-Benz",
-    "slug": "mercedes-benz",
+    "slug": "mercedes",
     "industry": "Automotive",
     "iABcategory": 2
   },

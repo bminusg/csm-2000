@@ -8,8 +8,11 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common.js");
-const getProject = require("./src/bundler/getProject");
-const getEntryPoint = require("./src/bundler/getEntryPoint");
+// const getProject = require("./src/bundler/getProject");
+// const getEntryPoint = require("./src/bundler/getEntryPoint");
+
+// DATA MODEL
+const project = require("./src/data/models/Project");
 
 const productionConfig = {
   mode: "production",
@@ -23,7 +26,7 @@ const productionConfig = {
         type: "asset",
       },
       {
-        test: /\.(jpg|png|gif|svg)$/,
+        test: /\.(jpg|png|gif|svg|webp)$/,
         enforce: "pre",
         use: {
           loader: "image-webpack-loader",
@@ -44,7 +47,7 @@ const productionConfig = {
               interlaced: false,
             },
             webp: {
-              quality: 66,
+              quality: 40,
             },
           },
         },
@@ -113,20 +116,22 @@ module.exports = async (env) => {
     );
 
   for (const creativeID of creativeIDs) {
-    const project = await getProject({ "creatives.id": creativeID });
-    const creative = project.creatives.find(
+    const projectItem = project.read({ "creatives.id": creativeID });
+    const creative = projectItem.creatives.find(
       (projectCreative) => projectCreative.id === creativeID
     );
 
     const creativeConfig = {
       name: creative.slug,
-      entry: getEntryPoint(creative.slug),
+      entry: { [creative.slug]: project.entrypoints[creative.slug] },
       output: {
         path: path.resolve(
           process.cwd(),
           "upload",
-          new Date(project.campaign.planning.start).getFullYear().toString(),
-          project.brand.slug,
+          new Date(projectItem.campaign.planning.start)
+            .getFullYear()
+            .toString(),
+          projectItem.brand.slug,
           creative.slug
         ),
         filename: "main.js",
@@ -141,7 +146,7 @@ module.exports = async (env) => {
           template: "./src/template/hbs/index.html.hbs",
           templateParameters: {
             environment: "production",
-            project: project,
+            project: projectItem,
             creative: creative,
             markup: `<h1>CSS is awesome</h1>`,
           },

@@ -7,7 +7,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 // DATA MODULES
-const data = require("../data");
+const project = require("../data/models/Project");
 
 // RUN THE CLI
 inquirer
@@ -17,7 +17,7 @@ inquirer
       message: "Select your creative slugs in order to run the build process.",
       name: "creatives",
       choices: async () => {
-        const projectData = await data.read();
+        const projectData = project.read();
         const creativeOptions = [];
         const localCreativeSlugs = glob
           .sync("./projects/**/main.js")

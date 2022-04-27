@@ -5,7 +5,9 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 // DATA HANDLER
-const data = require("../data");
+const creative = require("../data/models/Creative");
+const format = require("../data/models/Format");
+const project = require("../data/models/Project");
 
 // SESSION DATA
 let projects = [];
@@ -19,7 +21,7 @@ inquirer
       name: "project",
       choices: async () => {
         const choices = [];
-        projects = await data.read();
+        projects = project.read();
 
         for (const project of projects) {
           choices.push({
@@ -42,7 +44,7 @@ inquirer
       message: "Choose your update options",
       name: "creatives",
       choices: async (answers) => {
-        formats = await data.read("formats");
+        formats = format.read();
 
         const project = answers.project;
         const choices = [];
@@ -51,27 +53,28 @@ inquirer
 
         if (project.creatives.length > 0) {
           choices.push(new inquirer.Separator());
-          choices.push(new inquirer.Separator("Create a new version of"));
+          choices.push(new inquirer.Separator("Create a new version from"));
 
           for (const creative of project.creatives) {
-            let values = { ...creative };
-            values.version = parseInt(values.version) + 1;
-
-            delete values.slug;
-            delete values.id;
-            delete values.state;
-            delete values.tracking;
-
-            caption = values.caption;
-
-            choices.push({
+            const format = JSON.stringify(creative.format);
+            const choice = {
               name: creative.slug,
-              value: {
-                ...values,
-              },
-            });
+              value: creative,
+            };
 
-            definedFormats.push(creative.format);
+            const choiceFormatExcist = choices.findIndex(
+              (choice) =>
+                choice.value && JSON.stringify(choice.value.format) === format
+            );
+
+            // SHOW ONLY LAST VERSION ITEMS
+            if (choiceFormatExcist > -1) {
+              choices[choiceFormatExcist] = choice;
+            } else {
+              choices.push(choice);
+              definedFormats.push(creative.format);
+              caption = creative.caption;
+            }
           }
         }
 
@@ -111,11 +114,29 @@ inquirer
     },
   ])
   .then(async (answers) => {
-    const updatedProject = await data.update("projects", answers.project.id, {
-      creatives: answers.creatives,
-    });
 
-    return updatedProject;
+    // CREATE NEW CREATIVES
+    if (answers.creatives) {
+      const newVersions = [];
+
+      for (const creativeItem of answers.creatives) {
+        let options = { ...creativeItem };
+        options.version = parseInt(options.version) + 1;
+
+        delete options.id;
+        delete options.slug;
+        delete options.tracking;
+
+        const newCreative = creative.create(answers.project, options);
+        newVersions.push(newCreative);
+      }
+
+      const updatedProject = project.update(answers.project.id, {
+        creatives: newVersions,
+      });
+
+      return updatedProject;
+    }
   })
   .then(async (project) => {
     const creativeIDs = project.creatives
