@@ -30,7 +30,7 @@
     "inquirer-autocomplete-prompt": "^2.0.0",
     "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.50.1",
-    "sass-loader": "^12.4.0",
+    "sass-loader": "^12.6.0",
     "shortme": "^1.2.1",
     "style-loader": "^3.3.1",
     "tween-sass": "^0.5.1",
