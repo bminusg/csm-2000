@@ -25,6 +25,9 @@ window.PREVIEW = {
 
     // APPEND EXPAND LISTENER USING OVK STANDARDS
     expandListener();
+
+    // TRACK MOUSECOURSER
+    this.trackCoursor();
   },
   parameterSetup() {
     const query = window.location.search.substring(1);
@@ -250,6 +253,29 @@ window.PREVIEW = {
     const toggledState = app.dataset.interstitial === "true" ? false : true;
 
     app.dataset.interstitial = toggledState;
+  },
+  trackCoursor() {
+    const frames = Object.values(window.frames).filter(
+      (frame) => frame instanceof Window
+    );
+
+    window.addEventListener("mousemove", (event) => {
+      const X = event.offsetX;
+      const Y = event.offsetY;
+
+      for (const frame of frames) {
+        frame.postMessage(
+          {
+            message: "cursorPosition",
+            data: {
+              X: X,
+              Y: Y,
+            },
+          },
+          "*"
+        );
+      }
+    });
   },
   log(msgString = "", type = "active") {
     if (msgString === "") return;
