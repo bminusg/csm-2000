@@ -1,3 +1,10 @@
+/**
+ * @description Generates a plain video player
+ * @param { String } classNames
+ * @param { Array[String]} fileURLs
+ * @param {Boolean} isAutoplay
+ * @param {Boolean} isLooped
+ */
 class Video {
   constructor(options = {}) {
     this.video = options.video || undefined;
@@ -39,6 +46,7 @@ class Video {
       pause: options.btnPause || undefined,
       soundon: options.btnSoundOn || undefined,
       soundoff: options.btnSoundOff || undefined,
+      fullscreen: options.btnFullscreen || undefined,
     };
   }
 
@@ -141,6 +149,8 @@ class Video {
 
           if (btn === "soundoff") this.video.muted = true;
           if (btn === "soundon") this.video.muted = false;
+
+          if (btn === "fullscreen") this.video.requestFullscreen();
         },
         true
       );
@@ -179,8 +189,9 @@ class Video {
 
     this.fileURLs.forEach((fileURL) => {
       const source = document.createElement("source");
+      const type = fileURL.slice(fileURL.lastIndexOf(".") + 1);
       //source.type = options.mimeType;
-      source.type = "video/mp4";
+      source.type = "video/" + type;
       source.src = fileURL;
 
       video.appendChild(source);

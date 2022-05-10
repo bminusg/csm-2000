@@ -1,5 +1,12 @@
 "use strict";
 
+/**
+ *
+ * @description If you have multiple frames on one ad impression you can connect them to run your animation synchronously and interact between the frames. You only have to define on every Creative the Creative slugs which you want to connect.
+ * @param { Array[String] } connectWith Required. String concatenation from your Creative frame ID's which you want to connect.
+ *
+ */
+
 class CrossSiteConnection {
   constructor(options = {}) {
     // META
