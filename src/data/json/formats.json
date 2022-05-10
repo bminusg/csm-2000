@@ -50,6 +50,11 @@
         "width": 970,
         "height": 250,
         "admark": "ANZEIGE"
+      },
+      "finanzennet": {
+        "width": 900,
+        "height": 250,
+        "admark": ""
       }
     }
   },
@@ -171,6 +176,18 @@
         "width": 0,
         "height": 0,
         "admark": ""
+      }
+    }
+  },
+  {
+    "name": "Mobile Interscroller",
+    "slug": "mi",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 320,
+        "height": 480,
+        "admark": "-w-"
       }
     }
   }
