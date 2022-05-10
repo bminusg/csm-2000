@@ -15,10 +15,10 @@
     "update-project": "node ./src/cli/update"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/preset-env": "^7.16.11",
+    "@babel/core": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
     "babel-loader": "^8.2.5",
-    "babel-preset-minify": "^0.5.1",
+    "babel-preset-minify": "^0.5.2",
     "css-loader": "^6.7.1",
     "glob": "^8.0.1",
     "handlebars": "^4.7.7",
@@ -26,7 +26,7 @@
     "html-loader": "^3.1.0",
     "html-webpack-plugin": "^5.5.0",
     "image-webpack-loader": "^8.0.1",
-    "inquirer": "^8.2.3",
+    "inquirer": "^8.2.4",
     "inquirer-autocomplete-prompt": "^2.0.0",
     "mini-css-extract-plugin": "^2.6.0",
     "sass": "^1.51.0",
@@ -35,8 +35,8 @@
     "style-loader": "^3.3.1",
     "tween-sass": "^0.5.1",
     "uuid": "^8.3.2",
-    "webpack": "^5.70.0",
+    "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.8.1"
+    "webpack-dev-server": "^4.9.0"
   }
 }
