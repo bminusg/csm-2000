@@ -8,8 +8,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common.js");
-// const getProject = require("./src/bundler/getProject");
-// const getEntryPoint = require("./src/bundler/getEntryPoint");
 
 // DATA MODEL
 const project = require("./src/data/models/Project");

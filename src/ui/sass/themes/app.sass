@@ -1,20 +1,9 @@
-#app
-    width: 100vw
-    height: 100vh
+body
+    background-color: #121417
+    color: #fff
+    width: 100%
+    min-height: 100vh
     top: 0
     left: 0
     position: absolute
-    background-image: url("../img/background.jpg")
-    background-size: 150% auto
-    background-position: center center
-    background-repeat: no-repeat
     transition: background-size 1s cubic-bezier(0.76, 0, 0.24, 1)
-
-    @media screen and (orientation: portrait)
-        background-size: auto 150%
-
-    &.is--active
-        background-size: 100% auto
-
-        @media screen and (orientation: portrait)
-            background-size: auto 100%

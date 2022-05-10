@@ -1,0 +1,24 @@
+.section
+    &--header
+        border-bottom: 1px solid var(--color--grey-dark)
+
+        &-search
+            border: 1px solid var(--color--grey-dark)
+            height: var(--layout--space)
+            border-radius: calc( var(--layout--space) / 2 )
+            padding-left: calc( var(--layout--space) / 2 )
+
+            &__input
+                all: unset
+                padding: 5px calc( var(--layout--space) / 2 ) 5px 0
+
+            &__icon
+                position: relative
+                height: var(--layout--space)
+                width: var(--layout--space)
+                opacity: 0.5
+                flex: 0 1 var(--layout--space)
+
+                svg
+                    max-height: var(--layout--space-s)
+                    flex: 0 1 var(--layout--space-s)

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artboard</title>
+    <link
+      rel="icon"
+      href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAfElEQVRIS2NkoDFgpLH5DOgWrAdaGEChpQeA+h1hZqBb8J9CwzHMxWUBuUEHcyBc/8iwgFC8IIcCWUFEcwtISVhk+YDmFtA8iGhuAc2DiOYW0DyIaG4BzYNoaFpAiquxqcVZH5wHqjag0PQNQP2BuKpMCs3G1E5u1Ui0QwAlaywZdEB2MgAAAABJRU5ErkJggg=="
+    />
+  </head>
+  <body>
+    <header>
+      <nav></nav>
+    </header>
+
+    <main id="app--main">
+      <section id="creatives" class="section">
+        <header class="section--header">
+          <div class="container flex flex--between flex--vcenter">
+            <h1>Creatives</h1>
+
+            <div class="section--header-search flex flex--vcenter">
+              <input
+                type="text"
+                id="searchCreativeField"
+                class="section--header-search__input"
+              />
+              <div
+                class="section--header-search__icon flex flex--center flex--vcenter"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <defs>
+                    <style>
+                      .b {
+                        fill: none;
+                        stroke: #fff;
+                        stroke-linecap: round;
+                        stroke-linejoin: round;
+                        stroke-width: 2px;
+                      }
+                    </style>
+                  </defs>
+                  <circle class="b" cx="9" cy="9" r="8" />
+                  <line class="b" x1="19" y1="19" x2="14.65" y2="14.65" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="section--main">
+          <div class="container">
+            <div class="creative--list-title creative--grid">
+              <div class="creative--list-title__version">Version</div>
+              <div>Campaign</div>
+              <div>Format</div>
+              <div>Actions</div>
+            </div>
+          </div>
+          <div class="container">
+            <div id="projects--list"></div>
+          </div>
+        </main>
+      </section>
+    </main>
+  </body>
+</html>

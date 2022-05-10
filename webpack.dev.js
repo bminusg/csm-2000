@@ -50,7 +50,7 @@ let devConfig = {
     new HtmlWebpackPlugin({
       filename: "index.html",
       chunks: ["ui"],
-      template: "./src/ui/index.html.hbs",
+      template: "./src/ui/index.html",
     }),
     new HtmlWebpackPlugin({
       filename: "preview/index.html",
