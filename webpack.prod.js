@@ -61,12 +61,11 @@ const productionConfig = {
         use: {
           loader: "babel-loader",
           options: {
-            comments: false,
             presets: [
               [
-                "minify",
+                "@babel/preset-env",
                 {
-                  removeConsole: true,
+                  targets: "> 0.25%, not dead",
                 },
               ],
             ],
