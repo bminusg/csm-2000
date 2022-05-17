@@ -15,6 +15,7 @@ class Video {
     // MEDIA
     this.fileURLs = options.fileURLs || [];
     this.poster =
+      options.poster ||
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     // VIDEO CONFIG
@@ -52,7 +53,6 @@ class Video {
 
   init() {
     if (!this.video) return this.buildPlayer();
-
     this.addListeners();
   }
 
@@ -60,6 +60,9 @@ class Video {
     const container = window.Creative
       ? window.Creative.container
       : this.parentContainer;
+
+    // FULLSCREEN
+    if (this.btns.fullscreen) this.fullscreen();
 
     // CALC DURATION
     let firstQuartile,
@@ -143,14 +146,9 @@ class Video {
             this.video.play();
           }
 
-          if (btn === "pause") {
-            this.video.pause();
-          }
-
+          if (btn === "pause") this.video.pause();
           if (btn === "soundoff") this.video.muted = true;
           if (btn === "soundon") this.video.muted = false;
-
-          if (btn === "fullscreen") this.video.requestFullscreen();
         },
         true
       );
@@ -158,8 +156,16 @@ class Video {
   }
 
   trackEvent(event) {
-    console.log("TRACK", event);
-    console.log("TRACK", this.track[event]);
+    console.log(
+      "%c TRACK EVENT ",
+      "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
+      event
+    );
+    console.log(
+      "%c TRACK PIXELS ",
+      "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
+      this.track[event]
+    );
 
     const timestamp = new Date().getTime();
     for (let src of this.track[event]) {
@@ -222,6 +228,24 @@ class Video {
 
     // APPEND VIDEO CONTAINER
     this.parentContainer.appendChild(video);
+  }
+
+  fullscreen() {
+    // ENSURE THAT PUBLISHER HAS allow="fullscreen" as iframe attribute
+    const engine = [
+      "requestFullscreen",
+      "webkitRequestFullscreen",
+      "mozRequestFullScreen",
+      "msRequestFullscreen",
+    ].find((engine) => this.video[engine]);
+
+    if (!engine) return;
+
+    this.btns.fullscreen.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      this.video[engine]();
+    });
   }
 }
 
