@@ -3,6 +3,7 @@ import createIframe from "./modules/iframe.js";
 import getSRC from "./modules/source.js";
 import expandListener from "./modules/expand.js";
 import Video from "lib/features/Video";
+import stickySitebars from "./modules/stickySitebars";
 
 window.PREVIEW = {
   app: document.querySelector(".app"),
@@ -27,7 +28,10 @@ window.PREVIEW = {
     expandListener();
 
     // TRACK MOUSECOURSER
-    this.trackCoursor();
+    //this.trackCoursor();
+
+    // STICKY SITEBARS
+    if (this.formats.sitebar) stickySitebars();
   },
   parameterSetup() {
     const query = window.location.search.substring(1);
@@ -92,6 +96,9 @@ window.PREVIEW = {
     // VIDEOWALL
     if (this.formats.videowall) type = "Video Wall";
 
+    // BIG STAGE
+    if (this.formats.bigstage) type = "Big Stage";
+
     this.adCompilationType = type;
     this.app.dataset.adCompilation = type;
   },
@@ -104,6 +111,9 @@ window.PREVIEW = {
 
     // VIDEO WALL
     if (this.formats.videowall) return this.videowall();
+
+    // BIG STAGE
+    if (this.formats.bigstage) return this.bigstage();
 
     // BUILD
     this.buildCreativeContainers(paramKeys);
@@ -143,6 +153,62 @@ window.PREVIEW = {
       }
     }
   },
+  bigstage() {
+    // VALIDATE
+    if (!this.formats.billboard)
+      return this.log("Big Stage: Billboard component is missing", "error");
+
+    if (!this.formats.sitebar)
+      return this.log("Big Stage: Sitebar components are missing", "error");
+
+    if (this.formats.sitebar.length !== 2)
+      return this.log("Big Stage: 2 Sitebar creatives are required", "error");
+
+    // DEFINE VIDEO
+    const video = new Video({
+      fileURLs: [
+        "https://mics.bild.de/media/2022/mercedes/mercedes_weltpremieree_bigstage_01/teaser.mp4",
+      ],
+      parentContainer: document.querySelector(".creative--bigstage"),
+      poster:
+        "https://mics.bild.de/media/2022/mercedes/mercedes_weltpremieree_bigstage_01/teaser--poster.jpg",
+      classNames: "creative--bigstage-video",
+      isAutoplay: true,
+    });
+
+    video.init();
+
+    // DEFINE HTML ELEMENTS
+    const publisher = document.querySelector(".publisher");
+    const bigstage = document.querySelector(".creative--bigstage");
+
+    // APPEND EVENT LISTENERS
+    video.video.addEventListener("loadstart", (event) => {
+      event.preventDefault();
+      const navHeight = document.querySelector(".publisher--nav").clientHeight;
+
+      publisher.style.transition = "transform 2s cubic-bezier(0.25, 1, 0.5, 1)";
+      publisher.style.transform =
+        "translateY(" + (window.innerHeight - navHeight - 50) + "px)";
+    });
+
+    video.video.addEventListener("ended", (event) => {
+      event.preventDefault();
+      publisher.style.transform = "translateY(0px)";
+
+      setTimeout(() => {
+        bigstage.style.display = "none";
+        this.buildCreativeContainers(["billboard", "sitebar"]);
+      }, 2000);
+    });
+
+    video.video.addEventListener("click", (event) => {
+      event.preventDefault();
+      // BETTER WAY TO DEFINE CLICKTAG VIA URL PARAMETER
+      window.open("https://www.example.com/#clicktag", "_blank").focus();
+    });
+  },
+
   videowall() {
     // VALIDATE
     if (!this.formats.billboard)

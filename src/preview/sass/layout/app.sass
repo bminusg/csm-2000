@@ -3,11 +3,25 @@
 .app
   display: grid
   overflow-y: auto
-  min-height: 100vh
+  min-height: calc(100vh - 50px)
   max-width: 100vw
   grid-template-columns: 1fr 3fr 1fr
   grid-template-rows: minmax(0, auto) 1fr
   grid-template-areas: "SITEBAR-LEFT SUPERBANNER SITEBAR-RIGHT" "SITEBAR-LEFT PUBLISHER SITEBAR-RIGHT"
+
+  &--disclaimer
+    background-color: #262323
+    position: absolute
+    width: 100%
+    height: 50px
+    display: flex
+    justify-content: center
+    align-items: center
+
+    p
+      color: #8e8a85
+      font-size: 11px
+      line-height: 1
 
   &--layer
     background-color: #fff
