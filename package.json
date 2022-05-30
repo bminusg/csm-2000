@@ -32,7 +32,7 @@
     "sass-loader": "^12.6.0",
     "shortme": "^1.2.1",
     "style-loader": "^3.3.1",
-    "tween-sass": "^0.5.3",
+    "tween-sass": "^0.5.4",
     "uuid": "^8.3.2",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
