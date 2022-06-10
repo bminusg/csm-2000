@@ -1,7 +1,7 @@
 /**
  * @description Generates a plain video player
  * @param { String } classNames
- * @param { Array[String]} fileURLs
+ * @param { String[]} fileURLs
  * @param {Boolean} isAutoplay
  * @param {Boolean} isLooped
  */
@@ -100,6 +100,7 @@ class Video {
     // ENDED
     this.video.addEventListener("ended", (e) => {
       this.trackEvent("complete");
+      if (this.isLooped) this.video.play();
     });
 
     // VOLUME CHANGE
@@ -206,7 +207,6 @@ class Video {
     video.muted = true;
     video.playsInline = true;
     video.autoplay = this.isAutoplay;
-    video.loop = this.isLooped;
     video.controls = false;
     video.disablePictureInPicture = false;
     //video.bitrate = options.bitrate;
