@@ -65,7 +65,7 @@ const productionConfig = {
               [
                 "@babel/preset-env",
                 {
-                  targets: "> 0.25%, not dead",
+                  targets: { esmodules: true },
                 },
               ],
             ],
@@ -77,6 +77,7 @@ const productionConfig = {
   plugins: [
     new MiniCssExtractPlugin({
       filename: "style.css",
+      chunkFilename: "css/[name].chunk.css",
     }),
   ],
   optimization: {
@@ -96,6 +97,7 @@ module.exports = async (env) => {
         output: {
           path: path.resolve(process.cwd(), "upload", "preview"),
           filename: "main.js",
+          chunkFilename: "js/[name].chunk.js",
           assetModuleFilename: "img/[name][ext]",
           clean: true,
         },
@@ -132,6 +134,7 @@ module.exports = async (env) => {
           creative.slug
         ),
         filename: "main.js",
+        chunkFilename: "js/[name].chunk.js",
         assetModuleFilename: "img/[name][ext]",
         clean: true,
       },

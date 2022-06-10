@@ -1,38 +1,39 @@
+:root
+  --publisher--width: 970px
+  --publisher--nav--height: 150px
+  --publisher--nav--background: #003a5a
+  --publisher--button--close-image: url("../../img/welt--close.png")
+
+  --widget--billboard-width: 970px
+  --widget--billboard-height: 250px
+
+  --widget--superbanner-width: 728px
+  --widget--superbanner-height: 90px
+
 .app[data-publisher="welt"]
-  grid-template-columns: 1fr minmax(320px, 970px) 1fr
   background-color: #f9f9f8
 
   .publisher
+    max-width: 970px
 
     &--nav
-      background-image: url("../img/welt-nav.jpg")
-      height: 150px
+      background-image: url("../../img/welt-nav.jpg")
       width: 100%
 
     &--article
       background-color: #edece8
-      height: calc(100% - 150px)
 
-  // CUSTOM PUBLISHER BANNER SETTINGS
-  .creative
-    &--interstitial
-      &-btn
-        &__close
-          position: absolute
-          background-image: url("../img/welt--close.png")
-          background-size: contain
-          width: 25px
-          height: 25px
-          top: 10px
-          left: 10px
-          cursor: pointer
+.app[data-device="phone"]
+  .publisher
+    &--nav
+      position: sticky
+      top: 0
+      left: 0
+      height: 50px
+      background-image: none
 
-    &--billboard
-      &-iframe
-        width: 970px
-        height: 250px
+    &--article
+      height: 100%
 
-    &--superbanner
-      &-iframe
-        width: 728px
-        height: 90px
+      &:first-child
+        margin-bottom: 100%

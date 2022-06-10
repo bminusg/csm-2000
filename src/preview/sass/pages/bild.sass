@@ -1,3 +1,9 @@
+:root
+  --publisher--width: 1024px
+  --publisher--nav--height: 193px
+
+  --widget--billboard-width: 1024px
+
 .app[data-publisher="bild"]
   grid-template-columns: 1fr minmax(320px, 1024px) 1fr
   background-color: #fff
@@ -5,30 +11,13 @@
   @media screen and (max-width: 1440px)
     grid-template-columns: 0fr minmax(320px, 1024px) 1fr
 
-  // CUSTOM PUBLISHER SETTINGS
   .publisher
     background-color: #fff
 
     &--nav
-      background-image: url("../img/bild-nav.jpg")
+      background-image: url("../../img/bild-nav.jpg")
       height: 193px
       width: 100%
-
-  // CUSTOM PUBLISHER BANNER SETTINGS
-  .creative
-    &--billboard
-      &-iframe
-        width: 1024px
-        height: 250px
-
-    &--superbanner
-      &-iframe
-        min-width: 728px
-        max-width: 1024px
-        width: 100%
-        min-height: 90px
-        max-height: 120px
-        height: 100%
 
   // COMPILATION ADS
   &[data-ad-compilation="Bridge Ad"],

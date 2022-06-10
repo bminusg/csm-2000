@@ -1,0 +1,38 @@
+.disclaimer
+    position: fixed
+    width: calc( 100% - 20px )
+    height: auto
+    left: 10px
+    bottom: -100%
+    display: flex
+    justify-content: center
+    transition: bottom 1s ease-in-out
+    z-index: 100
+
+    &.is--visible
+        bottom: 10px
+
+    &--inner
+        position: relative
+        flex: 0 1 600px
+        border-radius: 6px
+        background-color: #fff
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15)
+        display: grid
+        grid-template-columns: 3fr 1fr
+        gap: 10px
+
+        @media screen and (max-width: 415px)
+            grid-template-columns: 1fr
+            grid-template-rows: 1fr auto
+            gap: 0
+
+        &-txt
+            font-size: 12px
+            line-height: 16px
+            padding: 10px
+
+        &-button
+            display: flex
+            justify-content: center
+            align-items: center

@@ -1,0 +1,104 @@
+.widget
+  position: relative
+  display: none
+
+  &:empty
+    display: none
+
+  // INTERSCROLLER
+
+  &[data-widget-type="interscroller"]
+    height: 100%
+    width: 100%
+    background: var(--widget--interscroller-background)
+    clip-path: inset(0)
+
+    .widget--interscroller-iframe
+      position: fixed
+      pointer-events: all
+      width: var(--widget--interscroller-width)
+      height: var(--widget--interscroller-height)
+      left: calc(50% - calc(var(--widget--interscroller-width, 160px) / 2) - calc(var(--scrollbar--width, 0) / 2))
+      top: calc(50% - calc( var(--widget--interscroller-height) / 2 ))
+
+  // INTERSTITIAL
+
+  &[data-widget-type="interstitial"]
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 100%
+
+    .widget--interstitial-layer
+      position: fixed
+      background-color: rgba(0,0,0,0.95)
+      width: 100%
+      height: 100%
+      z-index: 200
+      display: none
+
+  // SITEBAR
+
+  &[data-widget-type="sitebar"]
+
+    iframe
+      border: 0
+      width: 100%
+      height: 100%
+
+    &[data-widget-position="left"]
+      grid-area: SITEBAR-LEFT
+
+      iframe
+        @media screen and (max-width: 1340px)
+          // display: none
+
+    &[data-widget-position="right"]
+      grid-area: SITEBAR-RIGHT
+
+  // BILLBOARD
+
+  &[data-widget-type="billboard"]
+    grid-area: var(--widget--billboard-area,BILLBOARD)
+    width: var(--widget--billboard-width)
+    height: var(--widget--billboard-height)
+
+  // SUPERBANNER
+
+  &[data-widget-type="superbanner"]
+    grid-area: SUPERBANNER
+
+    &:empty
+      height: 0
+
+  // SKY
+
+  &[data-widget-type="sky"]
+    position: absolute
+    top: 0
+
+    &[data-widget-position="left"]
+      right: 0
+
+    &[data-widget-position="right"]
+      left: 0
+
+  // MEDIUM RECTANGLE
+
+  &[data-widget-type="mrec"]
+    grid-area: MREC
+    min-width: var(--widget--mrec-width)
+    min-height: var(--widget--mrec-height)
+
+  // HALFPAGE
+
+  &[data-widget-type="halfpage"]
+    grid-area: HALFPAGE
+    width: var(--widget--halfpage-width)
+    height: var(--widget--halfpage-height)
+
+[data-interstitial="true"]
+  .creative
+    &--interstitial
+      &-layer
+        display: block

@@ -1,0 +1,26 @@
+.widget
+    &[data-widget-type="bigstage"]
+        background-color: #000
+        position: absolute
+        width: 100%
+        height: 100%
+        z-index: 0
+        cursor: pointer
+
+    &--bigstage
+        &-video
+            position: fixed
+            z-index: -5630
+            top: 0
+            object-fit: cover
+            width: 100%
+            height: 100%
+
+[data-ad-compilation="Big Stage"]
+.widget
+    &--interstitial
+        cursor: pointer
+    &--bigstage
+        display: block
+    &--billboard
+        display: block
