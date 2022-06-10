@@ -1,12 +1,23 @@
+/**
+ * Parallax feature provides an opportunity to transform HTMLElements parallax using CSS variables like var(--parallax-00-x) on Mousemove Event
+ * @param { Object } options - Parallax options object
+ * @param { number[] } options.offset - adding/substract from mouse position [X,Y]
+ * @param { number } options.maxOffset - max pixel amount for moving variable
+ * @param { Object } options.crossSiteCommunication - dispatch custom crossSiteCommunictation event
+ * @param { number[] } options.viewport - amount of viewport, [amount X, amount Y]
+ * @param { number[] } options.parallaxRatios - calculation parallax pixel ratios, [0.2, 0.6, 0.9]
+ *
+ */
+
 class Parallax {
   constructor(options = {}) {
     this.offset = options.offset || [0, 0];
+    this.maxOffset = options.maxOffset || 50;
     this.crossSiteCommunication = options.crossSiteCommunication || undefined;
     this.viewport = options.viewport || [window.innerWidth, window.innerHeight];
     this.vanishingPoints = [null, null];
     this.root = document.querySelector(":root");
     this.parallaxRatios = options.parallaxRatios || [0.2, 0.6, 0.9];
-    this.maxOffset = options.maxOffset || 50;
   }
 
   init() {

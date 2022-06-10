@@ -50,6 +50,30 @@ This file defines your custom Markup. You can use `npm run template` to create y
 
 The idea for feature integration is to encapsulate default logic from custom functionality. Another obstacle is to prevent blowing up the final creative JS file size. We only want to integrate code which we only need in the live environment. The following docs give an instruction how to use the features
 
+### Parallax
+
+Parallax feature provides an opportunity to transform HTMLElements parallax using CSS variables like var(--parallax-00-x) on Mousemove Event
+
+```JS
+import Parallax from "lib/features/Parallax";
+
+new Creative({
+  features: [
+    new Parallax()
+  ]
+});
+```
+
+#### Options `Type: Object`
+
+|                 Name                 |    Type    |                 Default                 | Description                                   |
+| :----------------------------------: | :--------: | :-------------------------------------: | :-------------------------------------------- |
+|         **`options.offset`**         | `number[]` |                  [0,0]                  | adding/substract from mouse position [X,Y]    |
+|       **`options.maxOffset`**        |  `number`  |                   50                    | max pixel amount for moving                   |
+| **`options.crossSiteCommunication`** |  `Object`  |               undefinded                | dispatch custom crossSiteCommunictation event |
+|        **`options.viewport`**        | `number[]` | [window.innerWidth, window.innerHeight] | amount of viewport                            |
+|     **`options.parallaxRatios`**     | `number[]` |             [0.2, 0.6, 0.9]             | calculation parallax pixel ratios             |
+
 ### Video Player
 
 Generates a plain video player
