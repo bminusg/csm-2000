@@ -2,15 +2,17 @@
 
 /**
  *
- * @description If you have multiple frames on one ad impression you can connect them to run your animation synchronously and interact between the frames. You only have to define on every Creative the Creative slugs which you want to connect.
- * @param { Array[String] } connectWith Required. String concatenation from your Creative frame ID's which you want to connect.
+ * If you have multiple frames on one ad impression you can connect them to run your animation synchronously and interact between the frames. You only have to define on every Creative the Creative slugs which you want to connect.
+ *
+ * @param { String[] } options.connectWith Required. String concatenation from your Creative frame ID's which you want to connect.
+ *
  *
  */
 
 class CrossSiteConnection {
   constructor(options = {}) {
     // META
-    this.name = "CrossSite";
+    this.name = "CrossSiteConnection";
 
     // SETUP
     this.timeout = parseInt(options.timeout) || 3000;
@@ -21,12 +23,11 @@ class CrossSiteConnection {
     this.frames = [];
     this.connected = false;
     this.countConnect = 0;
+    this.maxCounts = this.connectWith.length * (this.connectWith.length + 1);
+    this.isConnectionSuccess = false;
 
     // CUSTOM METHODS
     this.methods = options.methods || {};
-
-    // CONFIG
-    this.hasDefaultEvent = options.hasDefaultEvent || false;
   }
 
   /**
@@ -36,30 +37,38 @@ class CrossSiteConnection {
    * @desc Append postMessage Listeners and starts the Watch Job
    *
    */
-  load(options) {
-    this.frameID = options.frameID;
-
+  load() {
     // APPEND CROSS SITE COMMUNICATION FUNC TO METHODS
     Object.assign(this.methods, { set: this.set.bind(this) });
 
+    // ADD CROSS SITE EVENT LISTENER
+    this.appendCustomEvent();
+
     // DEFINE POST MESSAGE EVENT LISTNERS
     window.addEventListener("message", (event) => {
-      const type = event.data.type;
-      const origin = event.data.origin;
-      const method = event.data.method;
-      const data = event.data.data;
+      try {
+        const type = event.data.type;
+        const origin = event.data.origin;
+        const method = event.data.method;
+        const data = event.data.data;
 
-      // DEFINING FRAMES
-      if (type === "sayHello") this.defineFrames(origin, event.source);
+        // DEFINING FRAMES
+        if (type === "sayHello") this.defineFrames(origin, event.source);
 
-      // FRAME CALLED LOCATED
-      if (type === "located") this.connectFrames(origin);
+        // FRAME CALLED LOCATED
+        if (type === "located") this.connectFrames(origin);
 
-      // INIT ANIMATION
-      if (type === "connected") this.initFrames();
+        // COUNT CONNECTIONS
+        if (type === "connected") this.countUpConnection(event);
 
-      // EXEC CROSS ACTION METHODS
-      if (type === "action") this.methods[method](data);
+        // INIT ANIMATION
+        if (type === "connectionSuccess") this.initFrames();
+
+        // EXEC CROSS ACTION METHODS
+        if (type === "action") this.methods[method](data);
+      } catch (error) {
+        console.debug(error);
+      }
     });
 
     // START WATCH JOB
@@ -77,7 +86,7 @@ class CrossSiteConnection {
     if (!this.connected) return this.frameLoop();
 
     // CHECK IF EVERY FRAME IS CONNECTED
-    if (this.checkConnection()) this.onSucces();
+    if (this.checkConnection()) this.isConnected();
   }
 
   /**
@@ -151,17 +160,10 @@ class CrossSiteConnection {
    * @desc Confirm that all frames are connected
    */
   checkConnection() {
-    let check = false;
+    const connectedFrames = this.frames.filter((frame) => frame.connected);
 
-    // RETURN FALSE IF CREATIVES ARE MISSING
-    if (this.frames.length !== this.connectWith.length) return false;
-
-    this.frames.forEach((frame) => {
-      if (!frame.connected) return;
-      check = true;
-    });
-
-    return check;
+    if (connectedFrames.length === this.connectWith.length) return true;
+    return false;
   }
 
   /**
@@ -179,13 +181,30 @@ class CrossSiteConnection {
     });
   }
 
+  countUpConnection(event) {
+    this.countConnect++;
+
+    if (this.countConnect < this.maxCounts) return;
+    clearInterval(this.watchJobInterval);
+
+    const viewports = this.frames.map((frame) => frame.viewport);
+    viewports.forEach((viewport) =>
+      viewport.postMessage(
+        {
+          type: "connectionSuccess",
+          origin: this.frameID,
+        },
+        "*"
+      )
+    );
+  }
+
   /**
    * @desc Connection success Event
    *
    */
-  onSucces() {
+  isConnected() {
     // STOP WATCH-JOB
-    clearInterval(this.watchJobInterval);
 
     // COLLECTING ALL CONNECTED VIEWPORTS
     let viewports = this.frames.map((frame) => frame.viewport);
@@ -263,7 +282,6 @@ class CrossSiteConnection {
       };
 
       // TRIGGER CROSS SITE COMMUNICATION FUNC
-
       this.set(options);
     });
   }
@@ -274,10 +292,10 @@ class CrossSiteConnection {
    */
   initFrames() {
     clearInterval(this.watchJobInterval);
-    window.Creative.startAnimation();
+    if (this.isConnectionSuccess) return;
+    this.isConnectionSuccess = true;
 
-    // APPEND DATASET EVENT LISTENER ON CREATIVE CONTAINER
-    if (this.hasDefaultEvent) this.appendCustomEvent();
+    window.Creative.startAnimation();
 
     // START CUSTOM METHOD
     if (!this.methods || !this.methods.start) return;
@@ -292,7 +310,9 @@ class CrossSiteConnection {
    */
   set(options) {
     // VALIDATE TARGETS AND EXEC ACTION
-    options.targets.forEach((target) => {
+    const targets = options.targets || this.connectWith;
+
+    targets.forEach((target) => {
       const frame = this.frames.find((frame) => frame.ID === target);
       if (!frame) throw new Error("Can't find frame target: " + target);
 
