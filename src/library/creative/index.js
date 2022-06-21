@@ -28,9 +28,9 @@ class Creative {
     this.features = options.features || [];
 
     // DEFINE EVENTS
+    this.visibilityListener = options.visibilityListener || false;
     this.defineEvents();
 
-    // INIT CREATIVE
     window.addEventListener("DOMContentLoaded", this.init());
   }
 
@@ -49,18 +49,17 @@ class Creative {
     this.features.forEach((feat) => (feat.frameID = this.slug));
 
     // INIT CROSS SITE COMMUNICATION
-    const CS = this.features.find((feat) => feat.name === "CrossSite");
-    if (CS)
-      return CS.load({
-        groupID: this.campaign.slug,
-        frameID: this.slug,
-      });
+    const CSC = this.features.find(
+      (feat) => feat.name === "CrossSiteConnection"
+    );
+
+    if (CSC) return CSC.load();
+
+    // PREVENT DEFAULT ANIMATION INIT
+    if (this.visibilityListener) return;
 
     // START ANIMATION
-    window.addEventListener("load", this.startAnimation());
-
-    // CRYPTO BROS
-    // https://www.heise.de/developer/artikel/Verschluesselung-im-Web-mit-der-Web-Crypto-API-5035591.html
+    this.startAnimation();
   }
 
   // VALIDATE CREATIVE
@@ -159,17 +158,44 @@ class Creative {
     });
   }
 
-  // EVENT BUILDER
+  // RUN ANIMATION IF IT'S VISIBLE
+  checkVisibility(value) {
+    value = parseFloat(value);
+    if (this.container.classList.contains("is--tweening") || value !== 1)
+      return;
+
+    this.startAnimation();
+  }
+
+  // ADDING EVENT LISTENERS
   defineEvents() {
+    // MESSAGE LISTENERS
+    window.addEventListener("message", (event) => {
+      const data = event.data;
+      const dataStringValuePair =
+        typeof data === "string" ? data.split("=") : [];
+
+      if (dataStringValuePair[0] === "isVisible")
+        this.checkVisibility(dataStringValuePair[1]);
+    });
+
     // START ANIMATION EVENT
-    this.container.addEventListener("startAnimation", (event) => {
-      // SETTING GLOBAL ACTIVE VAR
+    this.container.addEventListener("startAnimation", () => {
+      // SWITCH isTWEENING
+      this.isTweening = true;
+
+      // SETTING CLASS INSTEAD TO RUN CSS ANIMATIONS
       this.container.classList.add("is--tweening");
 
       // INIT FEATURES
       this.features.forEach((feature) => {
         if (typeof feature.init === "function") feature.init();
       });
+    });
+
+    // RESET ANIMATION EVENT
+    this.container.addEventListener("resetAnimation", () => {
+      this.container.classList.remove("is--tweening");
     });
   }
 
