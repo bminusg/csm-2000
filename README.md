@@ -66,13 +66,15 @@ new Creative({
 
 #### Options `Type: Object`
 
-|                 Name                 |    Type    |                 Default                 | Description                                   |
-| :----------------------------------: | :--------: | :-------------------------------------: | :-------------------------------------------- |
-|         **`options.offset`**         | `number[]` |                  [0,0]                  | adding/substract from mouse position [X,Y]    |
-|       **`options.maxOffset`**        |  `number`  |                   50                    | max pixel amount for moving                   |
-| **`options.crossSiteCommunication`** |  `Object`  |               undefinded                | dispatch custom crossSiteCommunictation event |
-|        **`options.viewport`**        | `number[]` | [window.innerWidth, window.innerHeight] | amount of viewport                            |
-|     **`options.parallaxRatios`**     | `number[]` |             [0.2, 0.6, 0.9]             | calculation parallax pixel ratios             |
+|                 Name                 |       Type        |     Default     | Description                                           |
+| :----------------------------------: | :---------------: | :-------------: | :---------------------------------------------------- |
+|   **`options.viewportModifier.x`**   | `Function:number` |   undefinded    | get viewport width as arguments and returns a number  |
+|   **`options.viewportModifier.y`**   | `Function:number` |   undefinded    | get viewport height as arguments and returns a number |
+|    **`options.offsetModifier.x`**    | `Function:number` |   undefinded    | get viewport width as arguments and returns a number  |
+|    **`options.offsetModifier.y`**    | `Function:number` |   undefinded    | get viewport height as arguments and returns a number |
+|       **`options.maxOffset`**        |     `number`      |       50        | max pixel amount for moving area                      |
+| **`options.crossSiteCommunication`** |     `Boolean`     |      false      | dispatch custom crossSiteCommunictation event         |
+|     **`options.parallaxRatios`**     |    `number[]`     | [0.2, 0.6, 0.9] | calculation parallax pixel ratios                     |
 
 ### Video Player
 
