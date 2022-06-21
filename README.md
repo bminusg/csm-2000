@@ -16,8 +16,8 @@ The Creative Solution Manager 2000 provides a working environment for your Adver
 
 - `npm run develop` Runs local web development server on your machine
 - `npm run bundle` run CLI helper for bundling your final static creative files
-- `npm run create-project` run CLI helper for creating a new project and his templates
-- `npm run update-project` run CLI helper for updating an excisting project
+- `npm run create` run CLI helper for creating a new project and his templates
+- `npm run update` run CLI helper for updating an excisting project
 
 ## Getting started
 
@@ -31,14 +31,9 @@ Furthermore, this file defines all the Modules that you need for example Styles 
 ```JS
 import Creative from "src/creative";  // Init Creative Object
 import "./markup.html"                // Your Creative Markup
-import "./sass/main.sass"             // Your Style files
+import "./sass/main.sass"             
 
-new Creative({
-  brand: "[YOUR BRAND NAME]",
-  campaign: "[YOUR CAMPAIGN NAME]",
-  format: "[YOUR FORMAT SLUG]",
-  features: []
-});
+const creative = new Creative();
 
 ```
 
@@ -127,14 +122,13 @@ new Creative({
 
 #### Options `Type: Object`
 
-|             Name              |        Type         |  Default  | Description                                                                                                                                                                                                                                                                                                                                 |
-| :---------------------------: | :-----------------: | :-------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-|   **`options.connectWith`**   |   `Array[String]`   | undefined | Required. String concatenation from your Creative frame ID's which you want to connect.                                                                                                                                                                                                                                                     |
-|     **`options.timeout`**     |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.                                                                                                                                                                                                                                                 |
-|     **`options.methods`**     | `Object{functions}` | undefined | On this property, you can define your custom methods that are executable from external creatives.                                                                                                                                                                                                                                           |
-| **`options.hasDefaultEvent`** |      `Boolean`      |   false   | This option delivers the opportunity for cross-site communication. If this option is true, it will append a custom event listener to the creative container. Dispatching this event will trigger the method on your target creative. If the data option is not defined, the event will try to get all datasets from the creative container. |
+|           Name            |        Type         |  Default  | Description                                                                                       |
+| :-----------------------: | :-----------------: | :-------: | :------------------------------------------------------------------------------------------------ |
+| **`options.connectWith`** |   `Array[String]`   | undefined | Required. String concatenation from your Creative frame ID's which you want to connect.           |
+|   **`options.timeout`**   |      `Number`       |   3000    | Define a Millisecond value for how long the Creative is allowed to search for a connection.       |
+|   **`options.methods`**   | `Object{functions}` | undefined | On this property, you can define your custom methods that are executable from external creatives. |
 
-##### hasDefaultEvent documentation
+##### How to send data to other site
 
 ```JS
 // ----- CREATIVE A
@@ -221,22 +215,19 @@ new Creative({
 
 #### Options `Type: Object`
 
-|           Name           |                         Type                          |  Default  | Description                                                                                                                                                                                                                                                                                                                 |
-| :----------------------: | :---------------------------------------------------: | :-------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|  **`options.triggers`**  |                       `String`                        | undefined | Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.                                                                                                                   |
-| **`options.slideCount`** |                       `Number`                        |   null    | If no HTML Element Triggers are needed you need only to define a number of slides                                                                                                                                                                                                                                           |
-|   **`options.action`**   | `function(trigger: nodeElement, target: nodeElement)` | undefined | This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS. |
-|   **`options.target`**   |                       `String`                        |  "body"   | The target nodeElement can change Styling via data-attribute stages                                                                                                                                                                                                                                                         |
-| **`options.maxRounds`**  |                       `Number`                        |     0     | The number of loop rounds. 0 means infinite loop                                                                                                                                                                                                                                                                            |
-|  **`options.loopTime`**  |                   `Array: [Number]`                   |  [2500]   |
-
-Defining the offset time between every trigger change. It is number of milliseconds in an array. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]`
-|
-|**`options.autoRotate`**|`Boolean`|false|If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`|
-|**`options.delay`**|`Number`|600|Wait time before auto rotate will be initiated|
-|**`options.mouseoverEvent`**|`Boolean`|true|
-Append a mouseover event listener to every trigger element|
-|**`options.clickControllers`**|`String`|""|If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous || next"` to the node element|
+|                            Name                            |                         Type                          |  Default  | Description                                                                                                                                                                                                                                                                                                                                                                                           |
+| :--------------------------------------------------------: | :---------------------------------------------------: | :-------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --- | -------------------------- |
+|                   **`options.triggers`**                   |                       `String`                        | undefined | Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.                                                                                                                                                                                             |
+|                  **`options.slideCount`**                  |                       `Number`                        |   null    | If no HTML Element Triggers are needed you need only to define a number of slides                                                                                                                                                                                                                                                                                                                     |
+|                    **`options.action`**                    | `function(trigger: nodeElement, target: nodeElement)` | undefined | This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS.                                                                           |
+|                    **`options.target`**                    |                       `String`                        |  "body"   | The target nodeElement can change Styling via data-attribute stages                                                                                                                                                                                                                                                                                                                                   |
+|                  **`options.maxRounds`**                   |                       `Number`                        |     0     | The number of loop rounds. 0 means infinite loop                                                                                                                                                                                                                                                                                                                                                      |
+|                   **`options.loopTime`**                   |                   `Array: [Number]`                   |  [2500]   | Defining the offset time between every trigger change. It is number of milliseconds in an array. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]` |
+|                  **`options.autoRotate`**                  |                       `Boolean`                       |   false   | If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`                                                                                                                                                                                                                                                                                               |
+|                    **`options.delay`**                     |                       `Number`                        |    600    | Wait time before auto rotate will be initiated                                                                                                                                                                                                                                                                                                                                                        |
+|                **`options.mouseoverEvent`**                |                       `Boolean`                       |   true    |
+| Append a mouseover event listener to every trigger element |
+|               **`options.clickControllers`**               |                       `String`                        |    ""     | If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous                                                                |     | next"` to the node element |
 
 ## Ideation
 
