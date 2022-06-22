@@ -125,7 +125,7 @@
   },
   {
     "name": "Mobile Leaderboard",
-    "slug": "ml",
+    "slug": "lead",
     "type": "RichMedia",
     "options": {
       "Default": {
@@ -168,18 +168,6 @@
     }
   },
   {
-    "name": "Videowall",
-    "slug": "videowall",
-    "type": "RichMedia",
-    "options": {
-      "Default": {
-        "width": 0,
-        "height": 0,
-        "admark": ""
-      }
-    }
-  },
-  {
     "name": "Mobile Interscroller",
     "slug": "mi",
     "type": "RichMedia",
@@ -192,15 +180,58 @@
     }
   },
   {
-    "name": "Big Stage",
-    "slug": "bigstage",
-    "type": "RichMedia",
+    "name": "Video",
+    "slug": "video",
+    "type": "Video",
     "options": {
       "Default": {
         "width": 0,
         "height": 0,
         "admark": ""
       }
+    }
+  },
+  {
+    "name": "Big Stage",
+    "slug": "bigstage",
+    "type": "RichMedia Composite",
+    "options": {
+      "welt": ["Video", "Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
+    }
+  },
+  {
+    "name": "Videowall",
+    "slug": "videowall",
+    "type": "RichMedia Composite",
+    "options": {
+      "welt": ["Video", "Billboard", "Billboard"]
+    }
+  },
+  {
+    "name": "Double Dynamic Sitebar",
+    "slug": "dds",
+    "type": "RichMedia Composite",
+    "options": {
+      "Default": ["Sitebar.Dynamic", "Sitebar.Dynamic"]
+    }
+  },
+  {
+    "name": "Double Dynamic Sitebar + Billboard",
+    "slug": "ddsb",
+    "type": "RichMedia Composite",
+    "options": {
+      "welt": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
+      "bild": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
+    }
+  },
+  {
+    "name": "Bridge Ad",
+    "slug": "bridgead",
+    "type": "RichMedia Composite",
+    "options": {
+      "bild": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
+      "aubi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
+      "cobi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"]
     }
   }
 ]

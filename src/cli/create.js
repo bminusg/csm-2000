@@ -10,7 +10,6 @@ const exec = util.promisify(require("child_process").exec);
 const project = require("../data/models/Project");
 const brand = require("../data/models/Brand");
 const format = require("../data/models/Format");
-const creative = require("../data/models/Creative");
 
 // READ DATA
 let brandData = brand.read();
@@ -96,14 +95,76 @@ inquirer
           creatives.push(new inquirer.Separator(creative.name));
 
           for (const option in creative.options) {
+            const caption = encodeURIComponent(answers.caption);
+            const formatOptions = creative.options[option];
+            const components = [];
+
+            if (creative.type === "RichMedia Composite") {
+              for (let componentInput of formatOptions) {
+                const componentName = componentInput.split(".")[0];
+                const component = format.read({ name: componentName });
+
+                if (!component)
+                  throw new Error(
+                    "Can't find component of " +
+                      creative.name +
+                      " RichMedia Composite: " +
+                      componentName
+                  );
+
+                const formatOptionFallback = componentInput.split(".")[1]
+                  ? componentInput.split(".")[1]
+                  : "Default";
+
+                const componentOptions = component.options[option]
+                  ? component.options[option]
+                  : component.options[formatOptionFallback];
+
+                if (!componentOptions)
+                  throw new Error(
+                    "Can't find component options of " + creative.name,
+                    component.options[option],
+                    formatOptionFallback,
+                    component.options[formatOptionFallback],
+                    component
+                  );
+
+                components.push({
+                  caption: caption,
+                  format: {
+                    name: component.name,
+                    slug: component.slug,
+                    type: component.type,
+                    ...componentOptions,
+                  },
+                });
+              }
+
+              creatives.push({
+                name: option,
+                value: {
+                  caption: caption,
+                  format: {
+                    name: creative.name,
+                    slug: creative.slug,
+                    type: creative.type,
+                  },
+                  components: components,
+                },
+              });
+
+              continue;
+            }
+
             creatives.push({
               name: option,
               value: {
-                caption: encodeURIComponent(answers.caption),
+                caption: caption,
                 format: {
                   name: creative.name,
                   slug: creative.slug,
-                  ...creative.options[option],
+                  type: creative.type,
+                  ...formatOptions,
                 },
               },
             });
@@ -125,6 +186,7 @@ inquirer
   })
   .then(async (project) => {
     const creativeIDs = project.creatives
+      .filter((creative) => creative.format.type !== "RichMedia Composite")
       .map((creative) => creative.id)
       .join(",");
 

@@ -9,7 +9,7 @@ class Creative {
       options.format.width > 0
         ? `${options.format.width}x${options.format.height}`
         : "";
-    const version = options.version ? ("0" + options.version).slice(-2) : "01";
+    const version = this.defineVersion(project.creatives, options);
 
     const creative = {
       id: uuidv4(),
@@ -24,14 +24,29 @@ class Creative {
             protect: [project.brand.slug, options.format.slug, version],
           }
         ),
-      version: options.version || 1,
+      version: parseInt(version),
       adserver: options.adserver || "",
       state: options.state || "",
       trackings: {},
       format: options.format,
     };
 
+    if (options.components) Object.assign(creative, { components: [] });
+
     return creative;
+  }
+
+  defineVersion(projectCreatives, options) {
+    const previousFormats = projectCreatives.filter(
+      (creative) =>
+        creative.id &&
+        creative.format.name === options.format.name &&
+        creative.format.width === options.format.width &&
+        creative.format.height === options.format.height
+    );
+    const version = 1 + previousFormats.length;
+
+    return ("0" + version).slice(-2);
   }
 }
 

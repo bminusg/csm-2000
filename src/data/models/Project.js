@@ -62,7 +62,19 @@ class Project extends Services {
 
     for (const [index, creativeItem] of input.creatives.entries()) {
       if (creativeItem.id) continue;
+
       input.creatives[index] = creative.create(newProject, creativeItem);
+
+      if (creativeItem.format.type !== "RichMedia Composite") continue;
+
+      if (!creativeItem.components || creativeItem.components.length < 1)
+        throw new Error("Invalid composition input for RichMedia Composite");
+
+      creativeItem.components.forEach((component, componentIndex) => {
+        component = creative.create(newProject, component);
+        input.creatives[index].components[componentIndex] = component.id;
+        input.creatives.push(component);
+      });
     }
 
     this.data.push(newProject);
