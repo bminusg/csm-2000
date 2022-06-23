@@ -135,6 +135,7 @@ inquirer
                     name: component.name,
                     slug: component.slug,
                     type: component.type,
+                    isComponent: true,
                     ...componentOptions,
                   },
                 });

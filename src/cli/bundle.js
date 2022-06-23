@@ -24,60 +24,29 @@ inquirer
           .map((path) => path.split("/").splice(-2, 1)[0]);
 
         for (const project of projectData) {
-          // CHECK FOR COMPONENTS
-          // MATCH WITH LOCAL VERSIONS
+          // DEFINE CLI OPTIONS
 
-          const creatives = [];
-          const globalComponents = [];
-
-          for (const creative of project.creatives) {
-            if (creative.components) {
-              const components = [];
-
-              creative.components.forEach((componentID) => {
-                const componentCreative = project.creatives.find(
-                  (creative) =>
-                    creative.id === componentID &&
-                    creative.format.type === "RichMedia" &&
-                    localCreativeSlugs.indexOf(creative.slug)
-                );
-
-                if (!componentCreative) return;
-
-                components.push(componentID);
-                globalComponents.push(componentID);
-              });
-
-              creatives.push({
-                name: "[" + creative.version + "] - " + creative.format.name,
-                value: components,
-              });
-
-              continue;
+          for (const [index, creative] of project.creatives.entries()) {
+            if (index === 0) {
+              creativeOptions.push(
+                new inquirer.Separator(
+                  project.brand.name + " | " + project.campaign.name
+                )
+              );
             }
 
             if (
-              creative.format.type === "Video" ||
-              localCreativeSlugs.indexOf(creative.slug) < 0 ||
-              globalComponents.indexOf(creative.id) > -1
+              creative.format.isComponent ||
+              (localCreativeSlugs.indexOf(creative.slug) < 0 &&
+                !creative.components)
             )
               continue;
 
-            creatives.push({
+            creativeOptions.push({
               name: "[" + creative.version + "] - " + creative.format.name,
-              value: creative.id,
+              value: creative.components ? creative.components : creative.id,
             });
           }
-
-          if (creatives.length < 1) continue;
-
-          creativeOptions.push(
-            new inquirer.Separator(
-              project.brand.name + " | " + project.campaign.name
-            )
-          );
-
-          creatives.forEach((creative) => creativeOptions.push(creative));
         }
 
         creativeOptions.push(new inquirer.Separator());
