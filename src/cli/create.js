@@ -11,6 +11,9 @@ const project = require("../data/models/Project");
 const brand = require("../data/models/Brand");
 const format = require("../data/models/Format");
 
+// HELPERS
+const componentBuilder = require("./helpers/componentBuilder");
+
 // READ DATA
 let brandData = brand.read();
 let formatData = format.read();
@@ -97,49 +100,10 @@ inquirer
           for (const option in creative.options) {
             const caption = encodeURIComponent(answers.caption);
             const formatOptions = creative.options[option];
-            const components = [];
+            let components = [];
 
             if (creative.type === "RichMedia Composite") {
-              for (let componentInput of formatOptions) {
-                const componentName = componentInput.split(".")[0];
-                const component = format.read({ name: componentName });
-
-                if (!component)
-                  throw new Error(
-                    "Can't find component of " +
-                      creative.name +
-                      " RichMedia Composite: " +
-                      componentName
-                  );
-
-                const formatOptionFallback = componentInput.split(".")[1]
-                  ? componentInput.split(".")[1]
-                  : "Default";
-
-                const componentOptions = component.options[option]
-                  ? component.options[option]
-                  : component.options[formatOptionFallback];
-
-                if (!componentOptions)
-                  throw new Error(
-                    "Can't find component options of " + creative.name,
-                    component.options[option],
-                    formatOptionFallback,
-                    component.options[formatOptionFallback],
-                    component
-                  );
-
-                components.push({
-                  caption: caption,
-                  format: {
-                    name: component.name,
-                    slug: component.slug,
-                    type: component.type,
-                    isComponent: true,
-                    ...componentOptions,
-                  },
-                });
-              }
+              components = componentBuilder(option, formatOptions);
 
               creatives.push({
                 name: option,

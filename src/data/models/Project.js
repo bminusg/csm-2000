@@ -34,6 +34,8 @@ class Project extends Services {
 
     const newProject = {
       id: uuidv4(),
+      created_at: date,
+      updated_at: date,
       brand: input.brand,
       campaign: {
         name: input.campaign.name,

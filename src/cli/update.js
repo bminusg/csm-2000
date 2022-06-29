@@ -9,9 +9,12 @@ const creative = require("../data/models/Creative");
 const format = require("../data/models/Format");
 const project = require("../data/models/Project");
 
+// HELPERS
+const componentBuilder = require("./helpers/componentBuilder");
+
 // SESSION DATA
-let projects = [];
-let formats = [];
+const projects = project.read();
+const formats = format.read();
 
 inquirer
   .prompt([
@@ -21,7 +24,6 @@ inquirer
       name: "project",
       choices: async () => {
         const choices = [];
-        projects = project.read();
 
         for (const project of projects) {
           choices.push({
@@ -43,64 +45,48 @@ inquirer
       type: "checkbox",
       message: "Choose your update options",
       name: "creatives",
+      when: (answers) => answers.intention === "addCreative",
       choices: async (answers) => {
-        formats = format.read();
-
-        const project = answers.project;
         const choices = [];
-        const definedFormats = [];
-        let caption = "";
-
-        if (project.creatives.length > 0) {
-          choices.push(new inquirer.Separator());
-          choices.push(new inquirer.Separator("Create a new version from"));
-
-          for (const creative of project.creatives) {
-            const format = JSON.stringify(creative.format);
-            const choice = {
-              name: creative.slug,
-              value: creative,
-            };
-
-            const choiceFormatExcist = choices.findIndex(
-              (choice) =>
-                choice.value && JSON.stringify(choice.value.format) === format
-            );
-
-            // SHOW ONLY LAST VERSION ITEMS
-            if (choiceFormatExcist > -1) {
-              choices[choiceFormatExcist] = choice;
-            } else {
-              choices.push(choice);
-              definedFormats.push(creative.format);
-              caption = creative.caption;
-            }
-          }
-        }
-
-        choices.push(new inquirer.Separator());
-        choices.push(new inquirer.Separator("Create a new format"));
+        const caption = answers.project.creatives.find(
+          (creative) => creative.caption
+        ).caption;
+        const projectFormats = answers.project.creatives.map(
+          (creative) => creative.format
+        );
 
         for (const format of formats) {
-          choices.push(new inquirer.Separator(format.name));
+          choices.push(
+            new inquirer.Separator("++++++++++++++++ " + format.name)
+          );
 
           for (const option in format.options) {
-            const options = format.options[option];
-            const formatExcist = definedFormats.find(
+            let options = format.options[option];
+            const formatExcist = projectFormats.find(
               (duplicate) =>
                 duplicate.slug === format.slug &&
                 duplicate.width === options.width &&
                 duplicate.height === options.height
             );
 
+            // SWITCH FOR COMPOSITE TYPE
+            if (format.type === "RichMedia Composite") {
+              const components = componentBuilder(option, options);
+
+              options = {};
+              Object.assign(options, { components });
+            }
+
             choices.push({
-              name: option,
-              disabled: formatExcist ? true : false,
+              name: formatExcist
+                ? "Create a new " + option + " version"
+                : option,
               value: {
                 caption: caption,
                 format: {
                   name: format.name,
                   slug: format.slug,
+                  type: format.type,
                   ...options,
                 },
               },
@@ -110,24 +96,15 @@ inquirer
 
         return choices;
       },
-      when: (answers) => answers.intention === "addCreative",
     },
   ])
   .then(async (answers) => {
-
-    // CREATE NEW CREATIVES
+    // ADDING NEW CREATIVES
     if (answers.creatives) {
       const newVersions = [];
 
       for (const creativeItem of answers.creatives) {
-        let options = { ...creativeItem };
-        options.version = parseInt(options.version) + 1;
-
-        delete options.id;
-        delete options.slug;
-        delete options.tracking;
-
-        const newCreative = creative.create(answers.project, options);
+        const newCreative = creative.create(answers.project, creativeItem);
         newVersions.push(newCreative);
       }
 
@@ -140,6 +117,7 @@ inquirer
   })
   .then(async (project) => {
     const creativeIDs = project.creatives
+      .filter((creative) => creative.format.type === "RichMedia")
       .map((creative) => creative.id)
       .join(",");
 
