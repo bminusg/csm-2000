@@ -5,16 +5,16 @@ class Creative {
   constructor() {}
 
   create(project = {}, options) {
+    const version = this.defineVersion(project.creatives, options);
     const size =
       options.format.width > 0
         ? `${options.format.width}x${options.format.height}`
         : "";
-    const version = this.defineVersion(project.creatives, options);
 
     const creative = {
       id: uuidv4(),
       projectID: project.id,
-      caption: options.caption,
+      caption: options.caption || this.defineCaption(project),
       slug:
         options.slug ||
         shortme(
@@ -33,7 +33,26 @@ class Creative {
 
     if (options.components) Object.assign(creative, { components: [] });
 
+    project.creatives.push(creative);
     return creative;
+  }
+
+  createComposite(project, compositeOptions) {
+    const composite = this.create(project, compositeOptions);
+    const components = [];
+
+    for (const component of compositeOptions.format.components) {
+      if (component.format.type !== "RichMedia") continue;
+
+      const creative = this.create(project, component);
+      components.push(creative);
+    }
+
+    delete composite.format.components;
+    composite.components = components.map((component) => component.id);
+
+    components.push(composite);
+    return components;
   }
 
   defineVersion(projectCreatives, options) {
@@ -47,6 +66,11 @@ class Creative {
     const version = 1 + previousFormats.length;
 
     return ("0" + version).slice(-2);
+  }
+
+  defineCaption(project) {
+    const captions = project.creatives.map((creative) => creative.caption);
+    return captions[0];
   }
 }
 

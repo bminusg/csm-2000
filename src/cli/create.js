@@ -113,8 +113,9 @@ inquirer
                     name: creative.name,
                     slug: creative.slug,
                     type: creative.type,
+                    components: components,
                   },
-                  components: components,
+                  components: [],
                 },
               });
 

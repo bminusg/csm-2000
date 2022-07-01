@@ -32,7 +32,7 @@ class Project extends Services {
   create(input) {
     const date = new Date();
 
-    const newProject = {
+    let newProject = {
       id: uuidv4(),
       created_at: date,
       updated_at: date,
@@ -59,24 +59,13 @@ class Project extends Services {
         styleguide: "",
         description: "",
       },
-      creatives: input.creatives || [],
+      creatives: [],
     };
 
-    for (const [index, creativeItem] of input.creatives.entries()) {
-      if (creativeItem.id) continue;
-
-      input.creatives[index] = creative.create(newProject, creativeItem);
-
-      if (creativeItem.format.type !== "RichMedia Composite") continue;
-
-      if (!creativeItem.components || creativeItem.components.length < 1)
-        throw new Error("Invalid composition input for RichMedia Composite");
-
-      creativeItem.components.forEach((component, componentIndex) => {
-        component = creative.create(newProject, component);
-        input.creatives[index].components[componentIndex] = component.id;
-        input.creatives.push(component);
-      });
+    for (const creativeItem of input.creatives) {
+      const newCreativeItems = creativeItem.format.components
+        ? creative.createComposite(newProject, creativeItem)
+        : creative.create(newProject, creativeItem);
     }
 
     this.data.push(newProject);
@@ -88,8 +77,6 @@ class Project extends Services {
   defineEntrypoints() {
     this.entrypoints = {};
     const localCreativeSlugs = glob.sync("./projects/**/main.js");
-
-    //console.log("DEFINE ENTRYPOINTS", localCreativeSlugs);
 
     for (const path of localCreativeSlugs) {
       const slug = path.split("/").splice(-2)[0];

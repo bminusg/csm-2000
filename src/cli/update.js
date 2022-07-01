@@ -101,18 +101,14 @@ inquirer
   .then(async (answers) => {
     // ADDING NEW CREATIVES
     if (answers.creatives) {
-      const newVersions = [];
-
       for (const creativeItem of answers.creatives) {
-        const newCreative = creative.create(answers.project, creativeItem);
-        newVersions.push(newCreative);
+        const newCreativeVersion = creativeItem.format.components
+          ? creative.createComposite(answers.project, creativeItem)
+          : creative.create(answers.project, creativeItem);
       }
 
-      const updatedProject = project.update(answers.project.id, {
-        creatives: newVersions,
-      });
-
-      return updatedProject;
+      project.save();
+      return answers.project;
     }
   })
   .then(async (project) => {
