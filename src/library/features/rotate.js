@@ -28,7 +28,7 @@ class Rotate {
     // RETURN IF NO MARKUP TRIGGERS DEFINED
     if (!this.slideCount && this.triggers.length === 0) {
       console.error(
-        "Required fields are missing. Please provide at leat one of this options: slideCount or triggerClassName"
+        "Required fields are missing. Please provide at leat one of this options: slideCount or triggers"
       );
       return;
     }
@@ -64,6 +64,8 @@ class Rotate {
     }
 
     if (this.IDX < 0) this.IDX = this.slideCount - 1;
+
+    if (this.IDX > this.slideCount) this.IDX = 0;
 
     this.update();
   }
