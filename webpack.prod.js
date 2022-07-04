@@ -120,6 +120,8 @@ module.exports = async (env) => {
       (projectCreative) => projectCreative.id === creativeID
     );
 
+    if (creative.format.type === "Video") continue;
+
     const creativeConfig = {
       name: creative.slug,
       entry: { [creative.slug]: project.entrypoints[creative.slug] },

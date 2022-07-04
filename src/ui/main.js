@@ -16,6 +16,9 @@ window.addEventListener("load", () => {
     const creatives = project.creatives;
 
     for (const creative of creatives) {
+      if (creative.format.type === "Video") continue;
+      if (creative.format.isComponent) continue;
+
       const component = document.createElement("creative-item");
 
       component.project = project;

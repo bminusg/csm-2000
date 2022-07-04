@@ -1,6 +1,25 @@
 import sticky from "./sticky.js";
 
-class WidgetServices {
+class Widget {
+  constructor(options = {}) {
+    this.container = options.container;
+    this.type = options.type;
+    this.position = options.position;
+    this.source = options.source;
+    this.year = options.year;
+    this.filename = options.filename || undefined;
+
+    this.isActive = false;
+    this.isSticky = options.isSticky || false;
+
+    this.clicktag = "https://www.example.com/#clicktag";
+
+    if (this.source) this.setRedirect();
+    if (this.isSticky) sticky(this.container);
+
+    this.container.classList.add("widget--" + this.type);
+  }
+
   loadIframe() {
     this.iframe = document.createElement("iframe");
     const classNames = "widget--" + this.type + "-iframe";
@@ -57,28 +76,6 @@ class WidgetServices {
 
   openClicktag() {
     window.open(this.clicktag, "_blank").focus();
-  }
-}
-
-class Widget extends WidgetServices {
-  constructor(options = {}) {
-    super();
-    this.container = options.container;
-    this.type = options.type;
-    this.position = options.position;
-    this.source = options.source;
-    this.year = options.year;
-    this.filename = options.filename || undefined;
-
-    this.isActive = false;
-    this.isSticky = options.isSticky || false;
-
-    this.clicktag = "https://www.example.com/#clicktag";
-
-    if (this.source) this.setRedirect();
-    if (this.isSticky) sticky(this.container);
-
-    this.container.classList.add("widget--" + this.type);
   }
 }
 

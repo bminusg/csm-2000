@@ -1,5 +1,6 @@
 .widget
     &[data-widget-type="bigstage"]
+        display: block
         background-color: #000
         position: absolute
         width: 100%
@@ -16,11 +17,26 @@
             width: 100%
             height: 100%
 
-[data-ad-compilation="Big Stage"]
-.widget
-    &--interstitial
-        cursor: pointer
-    &--bigstage
-        display: block
-    &--billboard
-        display: block
+        &-button
+            position: absolute
+            right: 40px
+            top: 40px
+            max-height: 40px
+
+            &__close
+                background-image: url("../../img/welt--close.png")
+                background-size: contain
+                display: inline-block
+                width: 40px
+                height: 40px
+
+            &__mute
+                background-image: url("../../img/btn--unmute.png")
+                background-color: rgba(0,0,0,0.5)
+                display: inline-block
+                width: 40px
+                height: 40px
+                margin-left: 10px
+
+                &.is--active
+                    background-image: url("../../img/btn--mute.png")

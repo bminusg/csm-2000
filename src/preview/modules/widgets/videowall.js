@@ -3,15 +3,14 @@ import "../../sass/widgets/videowall.sass";
 
 export default {
   init(widgets, params) {
-    if (!params.billboard)
-      throw new Error("Billboard component is missing", "error");
+    if (!params.bb) throw new Error("Billboard component is missing", "error");
 
-    if (params.billboard.length < 2)
+    if (params.bb.length < 2)
       throw new Error("Billboard reminder component is missing", "error");
 
     this.videowall = widgets.find((widget) => widget.type === "videowall");
-    this.billboard = widgets.find((widget) => widget.type === "billboard");
-    this.billboardReminderSource = params.billboard[1];
+    this.billboard = widgets.find((widget) => widget.type === "bb");
+    this.billboardReminderSource = params.bb[1];
 
     this.video = new Video({
       parentContainer: document.querySelector(
