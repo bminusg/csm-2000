@@ -18,6 +18,9 @@ class Project extends Services {
   async loadData() {
     try {
       const data = require("../json/projects.json");
+      this.localCreativeSlugs = glob
+        .sync("./projects/**/main.js")
+        .map((path) => path.split("/").splice(-2, 1)[0]);
 
       if (!data) throw new Error();
       this.data = data;
@@ -103,6 +106,30 @@ class Project extends Services {
         },
       });
     }
+  }
+
+  hasLocalEntrypoints(creative) {
+    let hasLocalEntrypoint = false;
+
+    if (creative.components) {
+      const project = this.read({ id: creative.projectID });
+
+      for (const componentID of creative.components) {
+        const componentCreative = project.creatives.find(
+          (projectCreative) => projectCreative.id === componentID
+        );
+
+        if (componentCreative.format.type !== "RichMedia") continue;
+
+        if (!this.hasLocalEntrypoints(componentCreative)) return false;
+      }
+
+      return true;
+    } else if (this.localCreativeSlugs.indexOf(creative.slug) > -1) {
+      return true;
+    }
+
+    return false;
   }
 
   defineHTMLPlugins() {
