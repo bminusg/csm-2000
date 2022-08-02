@@ -8,16 +8,12 @@ const creative = require("./Creative");
 class Project extends Services {
   constructor() {
     super();
-
-    this.entrypoints = {};
-    this.pluginHTMLOptions = [];
-
     this.loadData();
   }
 
   async loadData() {
     try {
-      const data = require("../json/projects.json");
+      const data = require("./json/projects.json");
       this.localCreativeSlugs = glob
         .sync("./projects/**/main.js")
         .map((path) => path.split("/").splice(-2, 1)[0]);
@@ -28,8 +24,6 @@ class Project extends Services {
       console.log(error);
       this.data = null;
     }
-
-    this.defineEntrypoints();
   }
 
   create(input) {
@@ -78,39 +72,21 @@ class Project extends Services {
   }
 
   defineEntrypoints() {
-    this.entrypoints = {};
-    const localCreativeSlugs = glob.sync("./projects/**/main.js");
+    const entrypoints = {};
+    const filteredProjects = this.getLocalProjectData();
+    const creatives = filteredProjects
+      .map((project) => project.creatives)
+      .flat();
 
-    for (const path of localCreativeSlugs) {
-      const slug = path.split("/").splice(-2)[0];
-      const project = this.read({ "creatives.slug": slug });
-
-      if (!project) continue;
-
-      Object.assign(this.entrypoints, { [slug]: path });
-
-      const creative = project.creatives.find(
-        (creative) => creative.slug === slug
-      );
-
-      this.pluginHTMLOptions.push({
-        filename: slug + "/index.html",
-        hash: true,
-        chunks: [slug],
-        template: "./src/template/hbs/index.html.hbs",
-        templateParameters: {
-          environment: "development",
-          project: project,
-          creative: creative,
-          markup: `<h1>CSS is awesome</h1>`,
-        },
-      });
+    for (const creative of creatives) {
+      const path = glob.sync("./projects/**/" + creative.slug + "/main.js")[0];
+      Object.assign(entrypoints, { [creative.slug]: path });
     }
+
+    return entrypoints;
   }
 
   hasLocalEntrypoints(creative) {
-    let hasLocalEntrypoint = false;
-
     if (creative.components) {
       const project = this.read({ id: creative.projectID });
 
@@ -134,11 +110,61 @@ class Project extends Services {
 
   defineHTMLPlugins() {
     const plugins = [];
-    this.pluginHTMLOptions.forEach((option) => {
-      plugins.push(new HtmlWebpackPlugin(option));
-    });
+    const filteredProjects = this.getLocalProjectData();
+
+    for (const project of filteredProjects) {
+      for (const creative of project.creatives) {
+        const option = {
+          filename: creative.slug + "/index.html",
+          hash: true,
+          chunks: [creative.slug],
+          template: "./src/template/hbs/index.html.hbs",
+          templateParameters: {
+            environment: "development",
+            project: project,
+            creative: creative,
+            markup: `<h1>CSS is awesome</h1>`,
+          },
+        };
+
+        plugins.push(new HtmlWebpackPlugin(option));
+      }
+    }
 
     return plugins;
+  }
+
+  /**
+   * Return filtered project data which is locally accessable
+   * @return {Array} Array of project data and filtered creatives
+   */
+  getLocalProjectData() {
+    const localProjectData = [];
+    const localCreativePaths = glob.sync("./projects/**/main.js");
+    const localCreativeSlugs = localCreativePaths.map(
+      (path) => path.split("/").splice(-2)[0]
+    );
+
+    for (const slug of localCreativeSlugs) {
+      const localCreativeData = localProjectData
+        .map((project) => project.creatives)
+        .flat()
+        .map((creative) => creative.slug);
+
+      if (localCreativeData.indexOf(slug) > -1) continue;
+
+      let project = this.read({ "creatives.slug": slug });
+      if (!project) continue;
+
+      const filteredCreatives = project.creatives.filter(
+        (creative) => localCreativeSlugs.indexOf(creative.slug) > -1
+      );
+
+      project.creatives = filteredCreatives;
+      localProjectData.push(project);
+    }
+
+    return localProjectData;
   }
 }
 

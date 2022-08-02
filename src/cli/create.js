@@ -7,9 +7,9 @@ const shortme = require("shortme");
 const exec = util.promisify(require("child_process").exec);
 
 // GET DATA MODELS
-const project = require("../data/models/Project");
-const brand = require("../data/models/Brand");
-const format = require("../data/models/Format");
+const project = require("../data/Project");
+const brand = require("../data/Brand");
+const format = require("../data/Format");
 
 // HELPERS
 const componentBuilder = require("./helpers/componentBuilder");

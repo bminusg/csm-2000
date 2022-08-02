@@ -1,30 +1,34 @@
 "use strict";
 
 // NODE MODULES
-const { merge } = require("webpack-merge");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { merge } = require("webpack-merge");
 
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common");
 
 // DATA MODEL
-const project = require("./src/data/models/Project");
+const project = require("./src/data/Project");
+
+// PLUGINS
+let plugins = [];
 
 let devConfig = {
   mode: "development",
   entry: () => {
-    project.defineEntrypoints();
+    const entrypoints = project.defineEntrypoints();
+    plugins = project.defineHTMLPlugins();
 
     return {
       ui: "./src/ui/main.js",
       preview: "./src/preview/main.js",
-      ...project.entrypoints,
+      ...entrypoints,
     };
   },
   devServer: {
     watchFiles: ["projects/**/*", "src/**/*"],
     port: 8080,
-    //open: true,
+    open: true,
     client: {
       overlay: true,
       progress: true,
@@ -57,7 +61,7 @@ let devConfig = {
       chunks: ["preview"],
       template: "./src/preview/index.html",
     }),
-    ...project.defineHTMLPlugins(),
+    ...project.defineHTMLPlugins([]),
   ],
   optimization: {
     runtimeChunk: "single",

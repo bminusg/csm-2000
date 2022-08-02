@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const commonConfig = require("./webpack.common.js");
 
 // DATA MODEL
-const project = require("./src/data/models/Project");
+const project = require("./src/data/Project");
 
 const productionConfig = {
   mode: "production",
@@ -86,6 +86,7 @@ const productionConfig = {
 };
 
 module.exports = async (env) => {
+  const entrypoints = project.defineEntrypoints();
   const creativeIDs = env && env.creatives ? env.creatives.split(",") : [];
   const creativeConfigs = [];
 
@@ -97,8 +98,9 @@ module.exports = async (env) => {
         output: {
           path: path.resolve(process.cwd(), "upload", "preview"),
           filename: "main.js",
+          publicPath: "./",
           chunkFilename: "js/[name].chunk.js",
-          assetModuleFilename: "img/[name][ext]",
+          assetModuleFilename: "img/[name].[hash][ext]",
           clean: true,
         },
         plugins: [
@@ -124,7 +126,7 @@ module.exports = async (env) => {
 
     const creativeConfig = {
       name: creative.slug,
-      entry: { [creative.slug]: project.entrypoints[creative.slug] },
+      entry: { [creative.slug]: entrypoints[creative.slug] },
       output: {
         path: path.resolve(
           process.cwd(),
@@ -137,7 +139,7 @@ module.exports = async (env) => {
         ),
         filename: "main.js",
         chunkFilename: "js/[name].chunk.js",
-        assetModuleFilename: "img/[name][ext]",
+        assetModuleFilename: "img/[name].[hash][ext]",
         clean: true,
       },
       plugins: [

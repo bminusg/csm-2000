@@ -7,7 +7,7 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 // DATA MODULES
-const projectModel = require("../data/models/Project");
+const projectModel = require("../data/Project");
 
 // RUN THE CLI
 inquirer

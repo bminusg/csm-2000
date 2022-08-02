@@ -5,9 +5,9 @@ const util = require("util");
 const exec = util.promisify(require("child_process").exec);
 
 // DATA HANDLER
-const creative = require("../data/models/Creative");
-const format = require("../data/models/Format");
-const project = require("../data/models/Project");
+const creative = require("../data/Creative");
+const format = require("../data/Format");
+const project = require("../data/Project");
 
 // HELPERS
 const componentBuilder = require("./helpers/componentBuilder");

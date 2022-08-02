@@ -1,4 +1,4 @@
-const format = require("../../data/models/Format");
+const format = require("../../data/Format");
 
 /**
  * @param {String} optionType - Type of option
