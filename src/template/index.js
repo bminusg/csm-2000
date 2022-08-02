@@ -6,7 +6,7 @@ const path = require("path");
 const Handlebars = require("handlebars");
 
 // DATA MODULE
-const project = require("../data/models/Project");
+const project = require("../data/Project");
 
 // REGISTER HELPERS
 Handlebars.registerHelper("equal", require("./helpers/equal"));
