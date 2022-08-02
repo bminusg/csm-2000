@@ -48,6 +48,9 @@ class Creative {
     // BRING FRAMEID TO FEATURES
     this.features.forEach((feat) => (feat.frameID = this.slug));
 
+    // CHECK IF FRAME IS TOPFRAME
+    if (window.top === window) return this.startAnimation();
+
     // INIT CROSS SITE COMMUNICATION
     const CSC = this.features.find(
       (feat) => feat.name === "CrossSiteConnection"
@@ -158,15 +161,6 @@ class Creative {
     });
   }
 
-  // RUN ANIMATION IF IT'S VISIBLE
-  checkVisibility(value) {
-    value = parseFloat(value);
-    if (this.container.classList.contains("is--tweening") || value !== 1)
-      return;
-
-    this.startAnimation();
-  }
-
   // ADDING EVENT LISTENERS
   defineEvents() {
     // MESSAGE LISTENERS
@@ -181,10 +175,7 @@ class Creative {
 
     // START ANIMATION EVENT
     this.container.addEventListener("startAnimation", () => {
-      // SWITCH isTWEENING
       this.isTweening = true;
-
-      // SETTING CLASS INSTEAD TO RUN CSS ANIMATIONS
       this.container.classList.add("is--tweening");
 
       // INIT FEATURES
@@ -195,7 +186,13 @@ class Creative {
 
     // RESET ANIMATION EVENT
     this.container.addEventListener("resetAnimation", () => {
+      this.isTweening = false;
       this.container.classList.remove("is--tweening");
+
+      // INIT FEATURES
+      this.features.forEach((feature) => {
+        if (typeof feature.reset === "function") feature.reset();
+      });
     });
   }
 
@@ -203,6 +200,27 @@ class Creative {
   startAnimation(options) {
     const event = new CustomEvent("startAnimation", { detail: options });
     this.container.dispatchEvent(event);
+  }
+
+  // RESET ANIMATION
+  resetAnimation() {
+    const event = new CustomEvent("resetAnimation");
+    this.container.dispatchEvent(event);
+  }
+
+  // RUN ANIMATION IF IT'S VISIBLE
+  checkVisibility(value) {
+    value = parseFloat(value);
+    const isTweening = this.container.classList.contains("is--tweening");
+
+    if (value === 1) {
+      if (isTweening) return;
+
+      this.startAnimation();
+      return;
+    }
+
+    this.resetAnimation();
   }
 }
 
