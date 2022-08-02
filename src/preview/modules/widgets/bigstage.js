@@ -8,6 +8,8 @@ export default {
     this.sitebars = widgets.filter((widget) => widget.type === "sitebar");
 
     // VALIDATE
+    if (!this.bigstage)
+      throw new Error("Big Stage: Video Component is missing");
     if (!this.billboard)
       throw new Error("Big Stage: Billboard component is missing", "error");
 
@@ -30,6 +32,10 @@ export default {
       classNames: "widget--bigstage-video",
       isAutoplay: true,
     });
+
+    console.log("+++++++++++++++++ define VIDEO");
+
+    console.log(this.video);
 
     this.video.init();
 

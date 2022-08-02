@@ -1,25 +1,56 @@
-.publisher
-  position: relative
-  grid-area: PUBLISHER
-  z-index: 100
-  height: 100%
-  width: 100%
-
-  &--nav
-    background-color: #f2f2f2
-    background-repeat: no-repeat
-    background-position: top center
-    height: 150px
-    width: 100%
-    z-index: 1000
-
-  &--article
-    height: calc(100% - var(--publisher--nav--height, 0))
-
-.app[data-device="phone"]
+.app
   .publisher
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1)
-    overflow-y: auto
+    position: relative
+    grid-area: PUBLISHER
+    z-index: 100
+    height: 100%
+    width: 100%
+
+    &--nav
+      background-color: var(--publisher--nav-background, #f2f2f2)
+      height: var(--publisher--nav-height, 150px)
+      width: 100%
+      z-index: 1000
+      display: flex
+      justify-content: space-evenly
+
+      &-img
+        background-image: var(--publisher--nav-img, none)
+        background-repeat: no-repeat
+        background-position: center center
+        background-size: contain
+        flex: 1
+
+    &--logo
+      background-image: var(--publisher--logo-img, none)
+      background-repeat: no-repeat
+      background-position: center center
+      background-size: contain
+      flex: 0 1 var(--publisher--logo-width, 1)
+      height: 100%
 
     &--article
-      height: 100%
+      height: calc(100% - var(--publisher--nav-height, 0))
+
+  &[data-device="phone"]
+    .publisher
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1)
+      overflow-y: auto
+
+      &--logo
+        flex: 0 1 var(--publisher--mobile--logo-width, 1)
+        background-image: var(--publisher--mobile--logo-img, var(--publisher--logo-img), none)
+        background-size: var(--publisher--mobile--logo-size)
+
+      &--nav
+        position: sticky
+        height: var(--publisher--mobile--nav-height, 50px)
+        top: 0
+        left: 0
+
+        &-img
+          background-image: var(--publisher--mobile--nav-img, none)
+          background-position: var(--publisher--mobile--nav-position, center center)
+
+      &--article
+        height: 100%

@@ -32,6 +32,21 @@ class Widget {
     this.container.appendChild(this.iframe);
   }
 
+  scrollTo() {
+    let offsetTop = 0;
+    let container = this.container;
+    const scrollContainer = document.querySelector(".scroll")
+      ? document.querySelector(".scroll")
+      : document.querySelector("#app");
+
+    while (container !== scrollContainer) {
+      offsetTop += container.offsetTop;
+      container = container.offsetParent;
+    }
+
+    scrollContainer.scrollTo(0, offsetTop);
+  }
+
   setRedirect() {
     const host = window.location.host;
     const protocol = window.location.protocol;
@@ -70,8 +85,6 @@ class Widget {
 
     this.poster = `${protocol}//mics.bild.de/media/${this.year}/${brand}/${this.source}/poster_${this.source}.jpg`;
     this.redirect = uri;
-
-    console.log("VIDEO REDIRECT");
   }
 
   openClicktag() {
@@ -111,15 +124,8 @@ export default {
     return this.widgets;
   },
   async compositeCheck(params) {
-    const bigstageWidgetActive = this.widgets.find(
-      (widget) => widget.type === "bigstage" && widget.source
-    );
-    const videowallWidgetActive = this.widgets.find(
-      (widget) => widget.type === "videowall" && widget.source
-    );
-
     // BIG STAGE COMPOSITION
-    if (bigstageWidgetActive) {
+    if (this.isWidgetActive("bigstage")) {
       const bigstage = await import(
         /* webpackChunkName: "widget--bigstage" */ "./widgets/bigstage.js"
       );
@@ -129,7 +135,7 @@ export default {
     }
 
     // VIDEOWALL COMPOSITION
-    if (videowallWidgetActive) {
+    if (this.isWidgetActive("videowall")) {
       const videowall = await import(
         /* webpackChunkName: "widget--videowall" */ "./widgets/videowall.js"
       );
@@ -138,18 +144,6 @@ export default {
       return;
     }
 
-    /*
-    // BRIDGE AD
-    if (
-      widgetMap.get("sky")[0].redirect &&
-      widgetMap.get("superbanner")[0].redirect &&
-      widgetMap.get("billboard")[0].redirect
-    ) {
-      console.log("DYNAMIC BRIDGE AD IMPORT");
-      return;
-    }
-    */
-
     this.loadCreatives(this.widgets);
   },
   loadCreatives(widgets) {
@@ -157,6 +151,14 @@ export default {
       if (!widget.redirect) continue;
 
       widget.loadIframe();
+      if (widget.type === "interscroller") widget.scrollTo();
     }
+  },
+  isWidgetActive(type = "") {
+    const isWidgetActive = this.widgets.find(
+      (widget) => widget.type === type && widget.source
+    );
+
+    return isWidgetActive;
   },
 };

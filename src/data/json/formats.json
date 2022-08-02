@@ -3,6 +3,7 @@
     "name": "Medium Rectangle",
     "slug": "mrec",
     "type": "RichMedia",
+    "devices": ["phone", "tablet", "desktop"],
     "options": {
       "Default": {
         "width": 300,
@@ -15,6 +16,7 @@
     "name": "Billboard",
     "slug": "bb",
     "type": "RichMedia",
+    "devices": ["desktop"],
     "options": {
       "Default": {
         "width": 800,
@@ -62,6 +64,7 @@
     "name": "Sitebar",
     "slug": "sitebar",
     "type": "RichMedia",
+    "devices": ["desktop"],
     "options": {
       "Default": {
         "width": 300,
@@ -79,6 +82,7 @@
     "name": "Superbanner",
     "slug": "sb",
     "type": "RichMedia",
+    "devices": ["desktop"],
     "options": {
       "Default": {
         "width": 728,
@@ -91,6 +95,7 @@
     "name": "Wide Skyscraper",
     "slug": "wsky",
     "type": "RichMedia",
+    "devices": ["desktop"],
     "options": {
       "Default": {
         "width": 160,
@@ -103,6 +108,7 @@
     "name": "Skyscraper",
     "slug": "sky",
     "type": "RichMedia",
+    "devices": ["desktop"],
     "options": {
       "Default": {
         "width": 120,
@@ -115,6 +121,7 @@
     "name": "Halfpage Ad",
     "slug": "hp",
     "type": "RichMedia",
+    "devices": ["phone", "tablet", "desktop"],
     "options": {
       "Default": {
         "width": 300,
@@ -127,6 +134,7 @@
     "name": "Mobile Leaderboard",
     "slug": "lead",
     "type": "RichMedia",
+    "devices": ["phone"],
     "options": {
       "Default": {
         "width": 320,
@@ -153,24 +161,28 @@
       "Desktop": {
         "width": 800,
         "height": 250,
-        "admark": ""
+        "admark": "",
+        "devices": ["desktop"]
       },
       "Tablet": {
         "width": 500,
         "height": 250,
-        "admark": ""
+        "admark": "",
+        "devices": ["tablet"]
       },
       "Phone": {
         "width": 300,
         "height": 165,
-        "admark": ""
+        "admark": "",
+        "devices": ["phone"]
       }
     }
   },
   {
     "name": "Mobile Interscroller",
-    "slug": "mi",
+    "slug": "interscroller",
     "type": "RichMedia",
+    "devices": ["phone"],
     "options": {
       "Default": {
         "width": 320,
@@ -183,6 +195,7 @@
     "name": "Video",
     "slug": "video",
     "type": "Video",
+    "devices": ["phone", "tablet", "desktop"],
     "options": {
       "Default": {
         "width": 0,
@@ -195,6 +208,7 @@
     "name": "Big Stage",
     "slug": "bigstage",
     "type": "RichMedia Composite",
+    "devices": ["desktop"],
     "options": {
       "welt": ["Video", "Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
     }
@@ -203,6 +217,7 @@
     "name": "Videowall",
     "slug": "videowall",
     "type": "RichMedia Composite",
+    "devices": ["desktop"],
     "options": {
       "welt": ["Video", "Billboard", "Billboard"]
     }
@@ -211,6 +226,7 @@
     "name": "Double Dynamic Sitebar",
     "slug": "dds",
     "type": "RichMedia Composite",
+    "devices": ["desktop"],
     "options": {
       "Default": ["Sitebar.Dynamic", "Sitebar.Dynamic"]
     }
@@ -219,6 +235,7 @@
     "name": "Double Dynamic Sitebar + Billboard",
     "slug": "ddsb",
     "type": "RichMedia Composite",
+    "devices": ["desktop"],
     "options": {
       "welt": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
       "bild": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
@@ -228,6 +245,7 @@
     "name": "Bridge Ad",
     "slug": "bridgead",
     "type": "RichMedia Composite",
+    "devices": ["desktop"],
     "options": {
       "bild": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
       "aubi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],

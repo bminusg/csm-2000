@@ -1,3 +1,4 @@
+import Emulator from "./modules/emulator.js";
 import expandListener from "./modules/expand.js";
 import widgets from "./modules/widgets";
 import "./sass/main.sass";
@@ -5,6 +6,8 @@ import "./sass/main.sass";
 class Preview {
   constructor() {
     this.app = document.querySelector("#app");
+
+    // WIDGETS
     this.activeWidgets = [];
 
     window.addEventListener("DOMContentLoaded", this.init());
@@ -18,16 +21,16 @@ class Preview {
       // APPEND EXPAND LISTENER USING OVK STANDARDS
       expandListener();
 
-      // DEFINE CSS VARIABLES
-      this.defineCSSvars();
-
       // DISCLAIMER
       this.disclaimer();
+
+      // RESIZE LISTENER
+      window.addEventListener("resize", this.resize.bind(this));
     } catch (error) {
-      console.log("CATCH BLOG", error);
+      console.log("PREVIEW INIT CATCH BLOG", error);
     }
   }
-  async parameterSetup() {
+  parameterSetup() {
     const query = window.location.search.substring(1);
     const queryParams = query.length === 0 ? [] : query.split("&");
     this.params = {};
@@ -45,44 +48,14 @@ class Preview {
       this.params[key] = value.split(",");
     }
 
-    // DEFINE META SETUP - PUBLISHER
-    if (this.params.publisher) {
-      const publisher = await import(
-        /* webpackChunkName: "publisher--[request]" */ `./modules/publishers/${this.params.publisher}`
-      );
-
-      this.app.dataset.publisher = this.params.publisher;
-      publisher.default();
-    }
+    // INIT EMULATOR
+    this.emulator = new Emulator(this.params);
 
     // DEFINE WIDGET MAP
     this.widgets = widgets.init(this.params);
 
-    // EMULATE VIEWPORT
-    this.emulateViewport();
-  }
-  emulateViewport() {
-    const mobileFormats = ["interscroller"];
-    const activeWidgetTypes = this.widgets
-      .filter((widget) => widget.source)
-      .map((widget) => widget.type);
-
-    const matchingMobileWidget = activeWidgetTypes.filter((widget) =>
-      mobileFormats.includes(widget)
-    );
-
-    if (matchingMobileWidget.length < 1 || window.innerWidth < 415) return;
-    this.app.dataset.device = "phone";
-  }
-  defineCSSvars() {
-    const scrollDiv =
-      this.app.dataset.device === "phone"
-        ? document.querySelector(".publisher")
-        : document.querySelector(".app");
-    const scrollbwarWIDTH = scrollDiv.offsetWidth - scrollDiv.clientWidth;
-    const root = document.querySelector(":root");
-
-    root.style.setProperty("--scrollbar--width", scrollbwarWIDTH + "px");
+    // SCROLL LISTENER
+    this.scrollListener();
   }
   disclaimer() {
     const state = window.localStorage.getItem("--PREVIEW-DISCLAIMER");
@@ -100,10 +73,39 @@ class Preview {
       node.classList.remove("is--visible");
     });
   }
+  scrollListener() {
+    const scrollArea = document.querySelector(".scroll")
+      ? document.querySelector(".scroll")
+      : this.app;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          const iframe = entry.target.querySelector("iframe");
+          const message = "isVisible=";
+          const isVisible = entry.isIntersecting ? "1" : "0.5955";
+
+          if (!iframe) continue;
+
+          iframe.contentWindow.postMessage(message + isVisible);
+        }
+      },
+      {
+        root: scrollArea,
+        threshold: 0.5,
+      }
+    );
+
+    this.widgets.forEach((widget) => observer.observe(widget.container));
+  }
   toggleInterstitial() {
     const app = document.querySelector(".app");
     const toggledState = app.dataset.interstitial === "true" ? false : true;
     app.dataset.interstitial = toggledState;
+  }
+  resize(event) {
+    event.preventDefault();
+    this.emulator = new Emulator(this.params);
   }
 }
 

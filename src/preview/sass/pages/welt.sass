@@ -1,39 +1,47 @@
 :root
   --publisher--width: 970px
-  --publisher--nav--height: 150px
-  --publisher--nav--background: #003a5a
-  --publisher--button--close-image: url("../../img/welt--close.png")
+  --publisher--logo-img: url("../../img/welt/logo.png")
+  --publisher--nav-height: 150px
+  --publisher--nav-background: #003a5a
+  --publisher--nav-img: url("../../img/welt/nav.jpg")
+  --publisher--button--close-img: url("../../img/welt/welt--close.png")
 
+  // MOBILE
+  --publisher--mobile--nav-height: 50px
+  --publisher--mobile--nav-img: url("../../img/welt/nav--mobile.jpg")
+  --publisher--mobile--nav-position: right center
+  --publisher--mobile--logo-width: 120px
+  --publisher--mobile--logo-size: 72px auto
+
+  // WIDGET BILLBOARD
   --widget--billboard-width: 970px
   --widget--billboard-height: 250px
 
+  // WIDGET SUPERBANNER
   --widget--superbanner-width: 728px
   --widget--superbanner-height: 90px
 
-.app[data-publisher="welt"]
-  background-color: #f9f9f8
+.app
+  &[data-publisher="welt"]
+    background-color: #f9f9f8
 
-  .publisher
-    max-width: 970px
+    .publisher
+      max-width: 970px
 
-    &--nav
-      background-image: url("../../img/welt-nav.jpg")
-      width: 100%
+      &--article
+        background-color: #edece8
 
-    &--article
-      background-color: #edece8
+  &[data-device="phone"]
+    .publisher
+      &--nav
+        position: sticky
+        top: 0
+        left: 0
+        height: var(--publisher--mobile--nav-height)
+        background-image: none
 
-.app[data-device="phone"]
-  .publisher
-    &--nav
-      position: sticky
-      top: 0
-      left: 0
-      height: 50px
-      background-image: none
+      &--article
+        height: 100%
 
-    &--article
-      height: 100%
-
-      &:first-child
-        margin-bottom: 100%
+        &:first-child
+          margin-bottom: 100%

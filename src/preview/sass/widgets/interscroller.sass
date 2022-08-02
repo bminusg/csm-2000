@@ -1,0 +1,14 @@
+.widget
+    &[data-widget-type="interscroller"]
+        height: 100%
+        width: 100%
+        background: var(--widget--interscroller-background)
+        clip-path: inset(0)
+
+    .widget--interscroller-iframe
+        position: fixed
+        pointer-events: all
+        width: var(--widget--interscroller-width)
+        height: var(--widget--interscroller-height)
+        left: calc(50% - calc(var(--widget--interscroller-width, 160px) / 2) - calc(var(--scrollbar--width, 0) / 2))
+        top: calc(50% - calc( var(--widget--interscroller-height) / 2 ))

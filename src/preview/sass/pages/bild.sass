@@ -1,29 +1,57 @@
 :root
   --publisher--width: 1024px
-  --publisher--nav--height: 193px
+  --publisher--nav-height: 193px
+  --publisher--nav-background: #fff
+  --publisher--nav-img: url("../../img/bild/nav.jpg")
 
+  --publisher--logo-img: url("../../img/bild/logo.png")
+  --publisher--logo-width: 148px
+  --publisher--button--close-image: none
+
+  // MOBILE
+  --publisher--mobile--nav-height: 72px
+  --publisher--mobile--nav-img: url("../../img/bild/nav--mobile.jpg")
+  --publisher--mobile--nav-position: right center
+  --publisher--mobile--logo-width: 72px
+  --publisher--mobile--logo-size: 56px auto
+
+  // WIDGET BILLBOARD
   --widget--billboard-width: 1024px
+  --widget--billboard-height: 250px
 
-.app[data-publisher="bild"]
-  grid-template-columns: 1fr minmax(320px, 1024px) 1fr
-  background-color: #fff
+  // WIDGET SUPERBANNER
+  --widget--superbanner-width: 728px
+  --widget--superbanner-height: 90px
 
-  @media screen and (max-width: 1440px)
-    grid-template-columns: 0fr minmax(320px, 1024px) 1fr
+.app
+  &[data-publisher="bild"]
 
-  .publisher
-    background-color: #fff
+    // REMOVE LEFT SITEBAR
+    @media screen and (min-width: 728px) and (max-width: 1440px)
+      grid-template-columns: 0fr minmax(320px, 1024px) 1fr
 
-    &--nav
-      background-image: url("../../img/bild-nav.jpg")
-      height: 193px
-      width: 100%
+    .publisher
+      background-color: #fff
 
-  // COMPILATION ADS
-  &[data-ad-compilation="Bridge Ad"],
-  &[data-ad-compilation="Fireplace"]
-    .creative
-      &--sky
-        &-iframe
-          width: 120px
-          height: 954px
+      &--nav
+        &-img
+          margin: 0 12px
+
+  &[data-device="phone"]
+    //grid-template-columns: 1fr calc(360px + var(--scrollbar--width, 0)) 1fr
+
+    .publisher
+      &--nav
+        box-shadow: rgba(33, 37, 41, 0.25) 0px 0px 10px 0px
+
+        &-img
+          margin: 0
+
+      &--logo
+        background-size: var(--publisher--mobile--logo-size)
+
+      &--article
+        height: 100%
+
+        &:first-child
+          margin-bottom: 100%
