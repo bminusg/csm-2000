@@ -61,6 +61,29 @@
     }
   },
   {
+    "name": "Contentbar",
+    "slug": "cb",
+    "type": "RichMedia",
+    "devices": ["desktop"],
+    "options": {
+      "Default": {
+        "width": 976,
+        "height": 120,
+        "admark": "ANZEIGE"
+      },
+      "fitbook": {
+        "width": 971,
+        "height": 100,
+        "admark": "ANZEIGE"
+      },
+      "stylebook": {
+        "width": 964,
+        "height": 100,
+        "admark": "ANZEIGE"
+      }
+    }
+  },
+  {
     "name": "Sitebar",
     "slug": "sitebar",
     "type": "RichMedia",
