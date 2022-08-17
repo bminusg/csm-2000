@@ -1,0 +1,35 @@
+:root
+
+    // SLIDER CONTAINER
+
+    --slider-cluster: 40px
+    --slider-width: 100%
+    --slider-height: 100%
+
+    // BULLETS
+
+    --slider--bullets-gap: 0px
+    --slider--bullets-width: calc(var(--slider-cluster) * var(--slider-length))
+    --slider--bullets-height: var(--slider-cluster)
+    --slider--bullets-columns: repeat(var(--slider-length), 1fr)
+    --slider--bullets-rows: 1fr
+
+.slider
+    position: relative
+    width: var(--slider-width)
+    height: var(--slider-height)
+
+    &--item
+        position: absolute
+
+    &--bullets
+        position: absolute
+        width: var(--slider--bullets-width, 100%)
+        height: var(--slider--bullets-height)
+        display: grid
+        gap: var(--slider--bullets-gap, 0)
+        grid-template-columns: var(--slider--bullets-columns)
+        grid-template-areas: var(--slider--bullets-rows)
+
+        &-item
+            position: relative
