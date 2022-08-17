@@ -5,6 +5,7 @@
 $width: 100% !default
 $height: 100% !default
 $format: "" !default
+$defaultPosition: absolute !default
 
 .creative
     background-color: #fff
@@ -20,10 +21,10 @@ $format: "" !default
         position: relative
 
     *
-        position: absolute
         background-repeat: no-repeat
         background-position: center center
         background-size: contain
+        position: $defaultPosition
 
     // AD MARK
 
@@ -34,7 +35,6 @@ $format: "" !default
         color: #afafaf
         z-index: 100
         font-stretch: condensed
-        -webkit-font-smoothing: none
 
         @if $format == "sitebar" or $format == "sky"
             background-color: #d4d4d4
