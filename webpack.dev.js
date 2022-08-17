@@ -31,7 +31,6 @@ let devConfig = {
     open: true,
     client: {
       overlay: true,
-      progress: true,
     },
   },
   output: {
