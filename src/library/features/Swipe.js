@@ -68,7 +68,7 @@ class Swipe extends Slider {
 
         console.log("END");
       },
-      true
+      false
     );
   }
 }

@@ -1,4 +1,4 @@
-import "../sass/slider.sass";
+import "./sass/slider.sass";
 
 class Slider {
   constructor(config = {}) {

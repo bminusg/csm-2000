@@ -157,6 +157,7 @@ class Video {
   }
 
   trackEvent(event) {
+    return;
     console.log(
       "%c TRACK EVENT ",
       "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
