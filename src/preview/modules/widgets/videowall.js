@@ -18,7 +18,6 @@ export default {
       ),
       isAutoplay: true,
       isLooped: true,
-      poster: this.videowall.poster,
       fileURLs: [this.videowall.redirect],
       classNames: "widget--videowall-video",
     });
@@ -29,7 +28,7 @@ export default {
 
     // APPEND EVENT LISTENERS
     window.onload = () => {
-      const iframe = document.querySelector(".widget--billboard-iframe");
+      const iframe = document.querySelector(".widget--bb-iframe");
       const iframeAnchor =
         iframe.contentWindow.document.body.querySelector("a");
 
@@ -49,8 +48,6 @@ export default {
   expandVideowall() {
     const video = this.video.video;
 
-    console.log("EXPAND FUNCTION", this);
-
     this.video.isLooped = false;
     video.pause();
     video.muted = false;
@@ -61,6 +58,8 @@ export default {
       this.videowall.openClicktag();
       this.collapseVideowall();
     });
+
+    video.addEventListener("ended", () => this.collapseVideowall());
 
     const closeBtn = document.createElement("div");
     closeBtn.classList.add("widget--videowall-close");

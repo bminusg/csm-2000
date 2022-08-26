@@ -151,6 +151,7 @@ export default {
       if (!widget.redirect) continue;
 
       widget.loadIframe();
+
       if (widget.type === "interscroller") widget.scrollTo();
     }
   },

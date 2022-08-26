@@ -33,10 +33,6 @@ export default {
       isAutoplay: true,
     });
 
-    console.log("+++++++++++++++++ define VIDEO");
-
-    console.log(this.video);
-
     this.video.init();
 
     // APPEND EVENT LISTENERS

@@ -1,26 +1,38 @@
-.app[data-publisher="cobi"]
+:root
+  --publisher--width: 1010px
+  --publisher--nav-height: 134px
+  --publisher--nav-background: #fff
+  --publisher--nav-img: url("../../img/cobi/nav.jpg")
 
-  .publisher
-    padding: 5px
-    max-width: 1010px
+  --publisher--logo-img: url("../../img/cobi/logo.svg")
+  --publisher--logo-width: 242px
+  --publisher--button--close-image: none
 
-    &--nav
-      background-image: url("../../img/cobi-nav.jpg")
-      height: 153px
-      width: 100%
+  // MOBILE
+  --publisher--mobile--nav-height: 72px
+  --publisher--mobile--nav-img: url("../../img/bild/nav--mobile.jpg")
+  --publisher--mobile--nav-position: right center
+  --publisher--mobile--logo-width: 72px
+  --publisher--mobile--logo-size: 56px auto
 
-  // CUSTOM PUBLISHER BANNER SETTINGS
-  .creative
-    &--superbanner
-      width: 1020px
-      height: 120px
+  // WIDGET BILLBOARD
+  --widget--billboard-width: 1024px
+  --widget--billboard-height: 250px
 
-    &--billboard
-      width: 1020px
-      height: 250px
-      left: -4px
-      top: 5px
+  // WIDGET SUPERBANNER
+  --widget--superbanner-width: 728px
+  --widget--superbanner-height: 90px
 
-    &--sky
-      width: 120px
-      height: 954px
+.app
+  &[data-publisher="cobi"]
+
+    .publisher
+      background-color: #fff
+      padding: 5px
+
+      &--logo
+        padding: 0 15px
+        background-size: 192px auto
+
+      &--nav
+        border-bottom: 1px solid #e2e8f0
