@@ -1,5 +1,5 @@
 import Video from "src/library/features/Video";
-import "../../sass/widgets/videowall.sass";
+import "../sass/widgets/videowall.sass";
 
 export default {
   init(widgets, params) {

@@ -1,14 +1,12 @@
 import Emulator from "./modules/emulator.js";
 import expandListener from "./modules/expand.js";
-import widgets from "./modules/widgets";
+import Widget from "./widgets/widget.js";
 import "./sass/main.sass";
 
 class Preview {
   constructor() {
     this.app = document.querySelector("#app");
-
-    // WIDGETS
-    this.activeWidgets = [];
+    this.widgets = [];
 
     window.addEventListener("DOMContentLoaded", this.init());
   }
@@ -52,11 +50,83 @@ class Preview {
     this.emulator = new Emulator(this.params);
 
     // DEFINE WIDGET MAP
-    this.widgets = widgets.init(this.params);
+    this.defineWidgets();
 
     // SCROLL LISTENER
     this.scrollListener();
   }
+
+  defineWidgets() {
+    const widgetContainers = document.querySelectorAll(".widget");
+    const paramKeys = Object.keys(this.params);
+    const year = this.params.year
+      ? this.params.year[0]
+      : new Date().getFullYear();
+
+    for (const container of widgetContainers) {
+      const type = container.dataset.widgetType;
+      const isSticky = type === "sitebar" ? true : false;
+      const position = container.dataset.widgetPosition;
+      const source = paramKeys.includes(type)
+        ? this.params[type][position === "left" ? 1 : 0]
+        : null;
+
+      const widget = new Widget({
+        type,
+        position,
+        container,
+        source,
+        isSticky,
+        year,
+      });
+
+      this.widgets.push(widget);
+    }
+
+    this.compositeCheck(this.params);
+  }
+  async compositeCheck(params) {
+    // BIG STAGE COMPOSITION
+    if (this.isWidgetActive("bigstage")) {
+      const bigstage = await import(
+        /* webpackChunkName: "widget--bigstage" */ "./widgets/bigstage.js"
+      );
+
+      bigstage.default.init(this.widgets);
+      return;
+    }
+
+    // VIDEOWALL COMPOSITION
+    if (this.isWidgetActive("videowall")) {
+      const videowall = await import(
+        /* webpackChunkName: "widget--videowall" */ "./widgets/videowall.js"
+      );
+
+      videowall.default.init(this.widgets, params);
+      return;
+    }
+
+    this.loadCreatives(this.widgets);
+  }
+
+  loadCreatives(widgets) {
+    for (const widget of widgets) {
+      if (!widget.redirect) continue;
+
+      widget.loadIframe();
+
+      if (widget.type === "interscroller") widget.scrollTo();
+    }
+  }
+
+  isWidgetActive(type = "") {
+    const isWidgetActive = this.widgets.find(
+      (widget) => widget.type === type && widget.source
+    );
+
+    return isWidgetActive;
+  }
+
   disclaimer() {
     const state = window.localStorage.getItem("--PREVIEW-DISCLAIMER");
 

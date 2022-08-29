@@ -1,4 +1,4 @@
-import "../../sass/pages/bild.sass";
+import "../sass/pages/bild.sass";
 
 export default () => {
   const superbanner = document.querySelector(

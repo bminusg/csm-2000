@@ -1,5 +1,5 @@
 import Video from "src/library/features/Video";
-import "../../sass/widgets/bigstage.sass";
+import "../sass/widgets/bigstage.sass";
 
 export default {
   init(widgets) {

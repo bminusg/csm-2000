@@ -1,4 +1,4 @@
-import sticky from "./sticky.js";
+import sticky from "../modules/sticky.js";
 
 class Widget {
   constructor(options = {}) {
@@ -92,74 +92,4 @@ class Widget {
   }
 }
 
-export default {
-  init(params = {}) {
-    const widgetContainers = document.querySelectorAll(".widget");
-    const paramKeys = Object.keys(params);
-    const year = params.year ? params.year[0] : new Date().getFullYear();
-
-    this.widgets = [];
-
-    for (const container of widgetContainers) {
-      const type = container.dataset.widgetType;
-      const isSticky = type === "sitebar" ? true : false;
-      const position = container.dataset.widgetPosition;
-      const source = paramKeys.includes(type)
-        ? params[type][position === "left" ? 1 : 0]
-        : null;
-
-      const widget = new Widget({
-        type,
-        position,
-        container,
-        source,
-        isSticky,
-        year,
-      });
-
-      this.widgets.push(widget);
-    }
-
-    this.compositeCheck(params);
-    return this.widgets;
-  },
-  async compositeCheck(params) {
-    // BIG STAGE COMPOSITION
-    if (this.isWidgetActive("bigstage")) {
-      const bigstage = await import(
-        /* webpackChunkName: "widget--bigstage" */ "./widgets/bigstage.js"
-      );
-
-      bigstage.default.init(this.widgets);
-      return;
-    }
-
-    // VIDEOWALL COMPOSITION
-    if (this.isWidgetActive("videowall")) {
-      const videowall = await import(
-        /* webpackChunkName: "widget--videowall" */ "./widgets/videowall.js"
-      );
-
-      videowall.default.init(this.widgets, params);
-      return;
-    }
-
-    this.loadCreatives(this.widgets);
-  },
-  loadCreatives(widgets) {
-    for (const widget of widgets) {
-      if (!widget.redirect) continue;
-
-      widget.loadIframe();
-
-      if (widget.type === "interscroller") widget.scrollTo();
-    }
-  },
-  isWidgetActive(type = "") {
-    const isWidgetActive = this.widgets.find(
-      (widget) => widget.type === type && widget.source
-    );
-
-    return isWidgetActive;
-  },
-};
+export default Widget;

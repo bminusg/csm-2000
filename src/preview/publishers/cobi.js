@@ -1,4 +1,4 @@
-import "../../sass/pages/cobi.sass";
+import "../sass/pages/cobi.sass";
 
 export default () => {
   const superbanner = document.querySelector(

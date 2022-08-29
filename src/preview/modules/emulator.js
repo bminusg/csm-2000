@@ -39,7 +39,7 @@ class Emulator {
 
   async definePublisher() {
     const publisher = await import(
-      /* webpackChunkName: "publisher--[request]" */ `./publishers/${this.params.publisher}`
+      /* webpackChunkName: "publisher--[request]" */ `../publishers/${this.params.publisher}`
     );
 
     this.app.dataset.publisher = this.params.publisher;
