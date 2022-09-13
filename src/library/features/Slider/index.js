@@ -198,6 +198,13 @@ class Slider {
       slide.offsetHeight;
     });
   }
+
+  reset() {
+    clearTimeout(this.loop);
+    this.resetSlides();
+
+    this.IDX = -1;
+  }
 }
 
 export default Slider;
