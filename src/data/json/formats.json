@@ -71,6 +71,11 @@
         "height": 120,
         "admark": "ANZEIGE"
       },
+      "bild": {
+        "width": 970,
+        "height": 120,
+        "admark": "ANZEIGE"
+      },
       "fitbook": {
         "width": 971,
         "height": 100,
