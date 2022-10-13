@@ -10,6 +10,8 @@ const project = require("../data/Project");
 
 // REGISTER HELPERS
 Handlebars.registerHelper("equal", require("./helpers/equal"));
+Handlebars.registerHelper("getComponents", require("./helpers/getComponents"));
+
 
 /**
  *

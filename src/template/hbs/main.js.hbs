@@ -4,6 +4,7 @@ import "./sass/main.sass";
 import "./markup.html";
 {{else}}
 import Creative from "lib/creative"; 
+{{#if creative.format.isComponent}}import CrossSiteConnection from "lib/features/CrossSiteConnection"{{/if}}
 import "./sass/main.sass"; 
 import "./markup.html";
 
@@ -24,6 +25,7 @@ const creative = new Creative({
     name: "{{ creative.format.name }}",
     slug: "{{ creative.format.slug }}",
   },
+  features: [{{#if creative.format.isComponent}}new CrossSiteConnection({ connectWith: [{{#getComponents creative.id project }}{{/getComponents}}],}){{/if}}]
 });
 
 {{/equal}}
