@@ -197,17 +197,17 @@ new Creative({
 
 ```
 
-### Rotate
+### Slider
 
 This feature uses markup trigger items that call your custom action on autorotate or mouseover interaction. Use cases can be something like Interaction Points on your Creative to show different product features. If one of your triggers is activated you can call your custom function
 
 ```JS
-import Rotate from "lib/features/Rotate";
+import Slider from "lib/features/Slider";
 
 new Creative({
   features: [
-    new Rotate({
-      triggers: ".creative--triggers",
+    new Slider({
+      slides: ".slider--item",
   ]
 });
 
@@ -215,18 +215,43 @@ new Creative({
 
 #### Options `Type: Object`
 
-|              Name              |                         Type                          |  Default  | Description                                                                                                                                                                                                                                                                                                                                                                                           |
-| :----------------------------: | :---------------------------------------------------: | :-------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|     **`options.triggers`**     |                       `String`                        | undefined | Query selector of markup node elements. The number of these elements will define the loop length and get `.is--active` on active state. It is recommended to use data-attributes on the trigger elements.                                                                                                                                                                                             |
-|    **`options.slideCount`**    |                       `Number`                        |   null    | If no HTML Element Triggers are needed you need only to define a number of slides                                                                                                                                                                                                                                                                                                                     |
-|      **`options.action`**      | `function(trigger: nodeElement, target: nodeElement)` | undefined | This action is called on every rotate update. As parameter you will get the active trigger element and your target node element. You have the possibillity to access the data attributes from your trigger element and can change data attributes on your target element. This will help to different slide stages via CSS.                                                                           |
-|      **`options.target`**      |                       `String`                        |  "body"   | The target nodeElement can change Styling via data-attribute stages                                                                                                                                                                                                                                                                                                                                   |
-|    **`options.maxRounds`**     |                       `Number`                        |     0     | The number of loop rounds. 0 means infinite loop                                                                                                                                                                                                                                                                                                                                                      |
-|     **`options.loopTime`**     |                   `Array: [Number]`                   |  [2500]   | Defining the offset time between every trigger change. It is number of milliseconds in an array. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]` |
-|    **`options.autoRotate`**    |                       `Boolean`                       |   false   | If the rotate should not be initiated by the user and start autmaticly you can set autoRotate on `true`                                                                                                                                                                                                                                                                                               |
-|      **`options.delay`**       |                       `Number`                        |    600    | Wait time before auto rotate will be initiated                                                                                                                                                                                                                                                                                                                                                        |
-|  **`options.mouseoverEvent`**  |                       `Boolean`                       |   true    | Append a mouseover event listener to every trigger element                                                                                                                                                                                                                                                                                                                                            |
-| **`options.clickControllers`** |                       `String`                        |    ""     | If you want to controll the rotate with click controller, you need to define your query selector of your node elements. On default, the rotate directions is defined from the markup order. If you click on the first element the direction will be backwards. You can change the default order by setting a `data-direction="previous // next"` to the node element                                  |
+| Name                           | Type                                       | Default           | Description                                                                                                                                                                                                                                                                                                                                                               |
+| ------------------------------ | ------------------------------------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **`options.container`**        | `CSS selector string`                      | ".slider"         | Define parent container from slide elments                                                                                                                                                                                                                                                                                                                                |
+| **`options.stage`**            | `CSS selector string`                      | "body"            | The stage element gets updating data-attributes depending on Slider states                                                                                                                                                                                                                                                                                                |
+| **`options.slides`**           | `CSS selector string`                      | undefined         | Define Slider item HTMLElements                                                                                                                                                                                                                                                                                                                                           |
+| **`options.maxSlides`**        | `number`                                   | null              | If no Slider items defined you can pass a number for Slide item amout                                                                                                                                                                                                                                                                                                     |
+| **`options.showBullets`**      | `boolean`                                  | false             | Activate bullet container logic                                                                                                                                                                                                                                                                                                                                           |
+| **`options.bulletsClassName`** | `string`                                   | "slider--bullets" | Define class names on bullet container                                                                                                                                                                                                                                                                                                                                    |
+| **`options.bulletsContainer`** | `CSS selector string`                      | undefined         | Append bullet container logic to your custom container                                                                                                                                                                                                                                                                                                                    |
+| **`options.navItems`**         | `CSS selector string`                      | []                | Define your navigation items for Slider navigation                                                                                                                                                                                                                                                                                                                        |
+| **`options.maxRounds`**        | `number`                                   | 0                 | The number of loop rounds. 0 means infinite loop                                                                                                                                                                                                                                                                                                                          |
+| **`options.autoRotate`**       | `boolean`                                  | true              | Define if the Slider should be initiated by the user or should start automaticly                                                                                                                                                                                                                                                                                          |
+| **`options.loopTimes`**        | `array[number]`                            | [2500]            | Define the offset time in milliseconds between every trigger change. If only one number is defined in the array it will be used for every trigger element. You can define different times for every trigger by concatning numbers in order of your trigger elements. For example if the second trigger wait time should be 4 seconds you can use `loopTime: [2500, 4000]` |
+| **`options.delay`**            | `number`                                   | 600               | Wait time before auto rotate will be initiated                                                                                                                                                                                                                                                                                                                            |
+| **`options.customAction`**     | `function(IDX: number, IDXbefore: number)` | undefined         | custom function is called every time Slider changed.                                                                                                                                                                                                                                                                                                                      |
+
+### Visible
+
+This feature is listening on the message event listener and will trigger animation if creative is visible.
+
+```JS
+import Visible from "lib/features/Visible";
+
+new Creative({
+  features: [
+    new Visible({
+      horizon: 0.5,
+  ]
+});
+
+```
+
+#### Options `Type: Object`
+
+| Name                  | Type     | Default | Description                                                                                   |
+| --------------------- | -------- | ------- | --------------------------------------------------------------------------------------------- |
+| **`options.horizon`** | `number` | 0.5     | If incoming value is higher/equal then the horizon value the animation event will be triggerd |
 
 ## Ideation
 

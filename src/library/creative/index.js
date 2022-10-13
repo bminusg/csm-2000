@@ -19,6 +19,9 @@ class Creative {
         : document.querySelector(".creative");
     this.slug = typeof options.slug === "string" ? options.slug : undefined;
 
+    // STATES
+    this.isTweening = false;
+
     // TRACKING
     this.macros = {};
     this.params = getURIparams();
@@ -28,9 +31,9 @@ class Creative {
     this.features = options.features || [];
 
     // DEFINE EVENTS
-    this.visibilityListener = options.visibilityListener || false;
     this.defineEvents();
 
+    // INIT CREATIVE
     window.addEventListener("DOMContentLoaded", this.init());
   }
 
@@ -48,18 +51,9 @@ class Creative {
     // BRING FRAMEID TO FEATURES
     this.features.forEach((feat) => (feat.frameID = this.slug));
 
-    // CHECK IF FRAME IS TOPFRAME
-    if (window.top === window) return this.startAnimation();
-
-    // INIT CROSS SITE COMMUNICATION
-    const CSC = this.features.find(
-      (feat) => feat.name === "CrossSiteConnection"
-    );
-
-    if (CSC) return CSC.load();
-
-    // PREVENT DEFAULT ANIMATION INIT
-    if (this.visibilityListener) return;
+    // PREVENT DEFAULT LOAD BY FEATURE
+    const preventDefaultLoad = this.features.find((feat) => feat.load);
+    if (preventDefaultLoad) return preventDefaultLoad.load(this);
 
     // START ANIMATION
     this.startAnimation();
@@ -163,16 +157,6 @@ class Creative {
 
   // ADDING EVENT LISTENERS
   defineEvents() {
-    // MESSAGE LISTENERS
-    window.addEventListener("message", (event) => {
-      const data = event.data;
-      const dataStringValuePair =
-        typeof data === "string" ? data.split("=") : [];
-
-      if (dataStringValuePair[0] === "isVisible")
-        this.checkVisibility(dataStringValuePair[1]);
-    });
-
     // START ANIMATION EVENT
     this.container.addEventListener("startAnimation", () => {
       this.isTweening = true;
@@ -206,21 +190,6 @@ class Creative {
   resetAnimation() {
     const event = new CustomEvent("resetAnimation");
     this.container.dispatchEvent(event);
-  }
-
-  // RUN ANIMATION IF IT'S VISIBLE
-  checkVisibility(value) {
-    value = parseFloat(value);
-    const isTweening = this.container.classList.contains("is--tweening");
-
-    if (value === 1) {
-      if (isTweening) return;
-
-      this.startAnimation();
-      return;
-    }
-
-    this.resetAnimation();
   }
 }
 
