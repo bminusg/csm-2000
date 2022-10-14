@@ -21,8 +21,7 @@ class Project extends Services {
       if (!data) throw new Error();
       this.data = data;
     } catch (error) {
-      console.log(error);
-      this.data = null;
+      this.data = [];
     }
   }
 
