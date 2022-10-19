@@ -11,6 +11,15 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.csv$/,
+        loader: "csv-loader",
+        options: {
+          dynamicTyping: true,
+          header: true,
+          skipEmptyLines: true,
+        },
+      },
+      {
         test: /\.mp4$/,
         type: "asset/resource",
         generator: {
