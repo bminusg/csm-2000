@@ -109,14 +109,14 @@ class Swiper {
     if (offset < 100) return false;
 
     this.IDX = this.IDX - direction;
-    console.log("SWITCH TO", this.IDX);
+    //console.log("SWITCH TO", this.IDX);
     return true;
   }
 
   dragging(X) {
     this.isDragging = true;
     const isSwitch = this.switchCheck(X);
-    console.log("IS SWITCH", isSwitch);
+    // console.log("IS SWITCH", isSwitch);
     if (isSwitch) this.lock();
   }
 
@@ -130,9 +130,9 @@ class Swiper {
     if (this.IDX < 0) this.IDX = 0;
     if (this.IDX > maxItems) this.IDX = maxItems;
 
-    console.log("LOCK", this.IDX);
-    console.log("LOCK", this.fixPoints);
-    console.log("LOCK", this.fixPoints[this.IDX]);
+    // console.log("LOCK", this.IDX);
+    // console.log("LOCK", this.fixPoints);
+    // console.log("LOCK", this.fixPoints[this.IDX]);
 
     root.style.setProperty("--swiper-x", this.fixPoints[this.IDX] * -1);
   }
