@@ -22,7 +22,7 @@
     "css-loader": "^6.7.1",
     "glob": "^8.0.3",
     "handlebars": "^4.7.7",
-    "handlebars-loader": "^1.7.2",
+    "handlebars-loader": "^1.7.3",
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.0",
     "image-webpack-loader": "^8.0.1",
