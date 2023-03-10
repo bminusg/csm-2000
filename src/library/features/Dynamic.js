@@ -5,41 +5,42 @@ class Dynamic {
     this.delimiterChar = config.delimiterChar || ";";
     this.mapConfig = config.mapConfig || false;
     this.isTimeMapping = config.isTimeMapping || false;
-  }
-
-  async load() {
-    try {
-      if (this.data.length < 1) {
-        const dataType = this.feed.substring(this.feed.lastIndexOf(".") + 1);
-        const uri =
-          process.env.NODE_ENV === "development"
-            ? "/" + this.feed
-            : this.buildLocalFeedUri(this.feed);
-
-        console.log("URI", uri);
-
-        const query = await fetch(uri, {
-          method: "get",
-          headers: {
-            "content-type": "text/csv;charset=UTF-8",
-          },
-        });
-        const text = await query.text();
-
-        console.log("query", query);
-
-        if (!text) throw new Error("Can't fetch data");
-        // this.data = this.parse(text);
-        this.CSVToArray(text);
-      } else {
-        window.Creative.startAnimation();
-      }
-    } catch (error) {
-      console.log("ERROR", error);
+    this.queryOptions = {
+      method: "get",
+      headers: {
+        "content-type": "text/csv;charset=UTF-8",
+      },
     }
   }
 
+  
+  load() {
+    if (!this.feed) throw new Error("Feed URI is missing")
+
+    this.getFeedData()
+  }
+
+  async getFeedData() {
+
+    try {
+      const URI = this.buildLocalFeedUri();
+      const response = await fetch(URI, this.queryOptions);
+
+      if (!response.ok) throw Error(response.statusText);
+      
+      const content = await response.text();      
+      this.CSVToArray(content, this.delimiterChar);
+
+    } catch (error) {
+      console.error("[DYNAMIC]", error)
+    }
+
+
+  }  
+
   buildLocalFeedUri(subpath) {
+    if (process.env.NODE_ENV === "development") return "/" + this.feed
+
     const path = location.protocol + "//" + location.host + location.pathname;
     return path.replace("index.html", "") + subpath;
   }
@@ -123,8 +124,6 @@ class Dynamic {
         strMatchedValue = arrMatches[3];
       }
 
-      console.log("STRMATCHED", strMatchedValue);
-
       // Now that we have our value string, let's add
       // it to the data array.
       arrData[arrData.length - 1].push(strMatchedValue);
@@ -137,7 +136,7 @@ class Dynamic {
     const emulateDate = window.Creative.params.dynamicDate;
     const now = emulateDate ? new Date(emulateDate) : new Date();
 
-    if (!this.mapConfig) return console.error("NO DATA MAPPING DEFINED");
+    if (!this.mapConfig) return console.error("NO DATA MAPPING CONFIG DEFINED");
 
     for (const feedRow of data) {
       const item = {};
