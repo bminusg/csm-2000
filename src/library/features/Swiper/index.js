@@ -166,7 +166,8 @@ class Swiper {
     const container = document.createElement("swiper");
     container.classList.add("swiper");
 
-    if (!data) return window.Creative.startAnimation();
+    if (!data.some((item) => item.swiper))
+      return window.Creative.startAnimation();
 
     function createContentElements(itemKey, itemInput, contentItem) {
       let element = document.createElement("swiper-content-" + itemKey);
@@ -208,7 +209,7 @@ class Swiper {
       itemElement.classList.add("swiper--item");
       contentItem.classList.add("swiper--content");
 
-      Object.entries(item).forEach(([itemKey, itemInput]) =>
+      Object.entries(item.swiper).forEach(([itemKey, itemInput]) =>
         createContentElements(itemKey, itemInput, contentItem)
       );
 
