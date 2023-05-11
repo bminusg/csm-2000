@@ -11,6 +11,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.csv$/,
+        type: "asset/resource",
+        generator: {
+          filename: "data/[name][ext]",
+        },
+      },
+      {
         test: /\.mp4$/,
         type: "asset/resource",
         generator: {

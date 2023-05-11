@@ -23,6 +23,8 @@ class Creative {
     this.isTweening = false;
 
     // TRACKING
+    this.preventDefaultClicktracking =
+      options.preventDefaultClicktracking || false;
     this.macros = {};
     this.params = getURIparams();
     this.clicktags = options.clicktags || [];
@@ -113,6 +115,10 @@ class Creative {
     const anchorTag = document.querySelector("a");
     const anchors = document.querySelectorAll(".creative--clicktag");
 
+    // PREVENT DEFAULT CLICKTRACKING
+    if (this.preventDefaultClicktracking)
+      return anchorTag.removeAttribute("href");
+
     // INIT CAPTION
     if (this.caption) anchorTag.setAttribute("href", this.caption[0]);
 
@@ -121,9 +127,9 @@ class Creative {
       anchor.addEventListener(
         "mouseover",
         (event) => {
-          event.preventDefault();
-
           if (!this.caption) return;
+
+          event.preventDefault();
 
           let caption = anchor.dataset.caption
             ? this.caption[anchor.dataset.caption]
@@ -133,24 +139,25 @@ class Creative {
 
           anchorTag.setAttribute("href", caption);
         },
-        true
+        false
       );
 
       // SET CLICKTAG ON MOUSEDOWN
       anchor.addEventListener(
-        "mousedown",
+        "mouseup",
         (event) => {
           event.preventDefault();
 
           let clicktag = anchor.dataset.clicktag
             ? this.clicktags[anchor.dataset.clicktag]
             : this.clicktags[idx];
+
           if (!clicktag) clicktag = this.clicktags[0];
 
           anchorTag.setAttribute("href", clicktag);
           anchorTag.setAttribute("target", "_blank");
         },
-        true
+        false
       );
     });
   }
