@@ -57,6 +57,11 @@
         "width": 900,
         "height": 250,
         "admark": ""
+      },
+      "tonline": {
+        "width": 997,
+        "height": 250,
+        "admark": "ANZEIGE"
       }
     }
   },
@@ -266,7 +271,8 @@
     "devices": ["desktop"],
     "options": {
       "welt": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
-      "bild": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
+      "bild": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
+      "tonline": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
     }
   },
   {
@@ -278,6 +284,25 @@
       "bild": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
       "aubi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
       "cobi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"]
+    }
+  },
+  {
+    "name": "Brand Booster",
+    "slug": "bboost",
+    "type": "RichMedia",
+    "options": {
+      "Desktop": {
+        "width": 0,
+        "height": 0,
+        "admark": "Anzeige",
+        "devices": ["desktop"]
+      },
+      "Phone": {
+        "width": 0,
+        "height": 0,
+        "admark": "-w-",
+        "devices": ["phone"]
+      }
     }
   }
 ]
