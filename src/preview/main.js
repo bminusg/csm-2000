@@ -106,6 +106,16 @@ class Preview {
       return;
     }
 
+    // CHECK BRAND BOOST
+    if (this.isWidgetActive("bboost")) {
+      const brandboost = await import(
+        /* webpackChunkName: "widget--brandboost" */ "./widgets/brandboost.js"
+      );
+
+      brandboost.default.init(this.widgets, params);
+      return;
+    }
+
     this.loadCreatives(this.widgets);
   }
 

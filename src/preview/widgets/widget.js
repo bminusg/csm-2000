@@ -69,7 +69,7 @@ class Widget {
         : protocol +
           "//" +
           host +
-          "/media/" +
+          "/creatives/" +
           this.year +
           "/" +
           subfolder +

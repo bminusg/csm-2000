@@ -1,0 +1,57 @@
+@use "lib/sass/abstracts/easings" as ease 
+
+:root
+    --publisher--width: 100%
+    --publisher--nav-height: 120px
+    --publisher--nav-background: #fff
+    --publisher--nav-img: url("../../img/giga/nav--giga.png")
+
+    // --publisher--logo-img: url("../../img/cobi/logo.svg")
+    // --publisher--logo-width: 242px
+    --publisher--button--close-image: none
+
+    // MOBILE
+    --publisher--mobile--nav-height: 72px
+    --publisher--mobile--nav-img: url("../../img/bild/nav--mobile.jpg")
+    --publisher--mobile--nav-position: right center
+    --publisher--mobile--logo-width: 72px
+    --publisher--mobile--logo-size: 56px auto
+
+    // WIDGET BRAND BOOSTER
+    --publisher--widget--bboost-offset-top: calc(100vh - var(--publisher--nav-height) - 100px)
+    --publisher--widget--bboost-offset-nav: 120px
+
+    
+
+.app
+    &[data-publisher="giga"]
+        .publisher
+            pointer-events: none
+            
+            &--logo
+                padding: 0 15px
+                background-size: 192px auto 
+
+            &--nav        
+                background-image: linear-gradient(173deg, #145e3f, #19382f 50%, #24444f)
+                box-shadow: 0 0 2rem rgba(0,0,0,0.3)
+
+            &--article
+                background-color: #fff
+                max-width: 1000px
+                width: 100%
+                margin: 0 auto  
+                transition: transform 2s ease.$OutCubic
+
+                &.is--expand
+                    transform: translateY(var(--publisher--widget--bboost-offset-top))
+            
+            &--footer
+                background-color: #333
+                width: 100%
+                max-width: 1000px
+                height: 400px
+                margin: 100vh auto 0
+
+
+
