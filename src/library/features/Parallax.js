@@ -28,7 +28,8 @@ class Parallax {
   }
 
   init() {
-    this.assignCrossSiteMethods();
+    if (this.crossSiteCommunication) this.assignCrossSiteMethods();
+    else this.defineMetrics();
 
     // THROTTLE
     let throttlePause;
@@ -159,6 +160,8 @@ class Parallax {
 
     this.changePosition({ X: positionX, Y: positionY });
 
+    if (!this.crossSiteCommunication) return;
+
     const event = new CustomEvent("crossSiteCommunication", {
       detail: {
         method: "changePosition",
@@ -170,7 +173,6 @@ class Parallax {
   }
 
   changePosition({ X, Y }) {
-    // console.log("[" + this.frameID + "] --> CHANGE POSITION", X, Y);
     const offsetX = Math.ceil(X - this.vanishingPoints[0]);
     const offsetY = Math.ceil(Y - this.vanishingPoints[1]);
 
