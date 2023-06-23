@@ -7,7 +7,7 @@ const getURIparams = () => {
 
   params.forEach((paramString) => {
     const param = paramString.split("=");
-    paramObject[param[0]] = decodeURIComponent(param[1]);
+    paramObject[param[0].toLowerCase()] = decodeURIComponent(param[1]);
   });
 
   return paramObject;
