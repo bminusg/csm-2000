@@ -2,7 +2,7 @@ import "./sass/swiper.sass";
 
 class Swiper {
   constructor(config = {}) {
-    this.IDX = 0;
+    this.IDX = -1;
     this.isDragging = false;
     this.isAutoRotate = true;
     this.breakpoints = [];
@@ -15,17 +15,13 @@ class Swiper {
     this.start = { x: null, y: null };
     this.end = { x: null, y: null };
     this.offset = { x: null, y: null };
-
-    if (!this.isAutoRotate) return;
-
-    setTimeout(this.autoRotate.bind(this), 3500);
   }
 
   init() {
     this.container = document.querySelector("swiper");
 
     if (!this.container) this.defineContainer();
-    this.defineGestureEvents();
+    else this.defineGestureEvents();
   }
 
   autoRotate() {
@@ -45,11 +41,12 @@ class Swiper {
     this.moveEvent = this.isTouchDevice ? "touchmove" : "mousemove";
     this.endEvent = this.isTouchDevice ? "touchend" : "mouseup";
 
+    this.calcFixPoints();
+    this.autoRotate();
     this.initEventListeners();
   }
 
   initEventListeners() {
-    this.calcFixPoints();
     const anchor = document.querySelector("a");
 
     anchor.addEventListener(
@@ -92,9 +89,8 @@ class Swiper {
 
         this.lock();
 
-        if (this.start.x === this.end.x) {
-          console.log("CLICKOUT");
-          anchor.innerText = "CLICKOUT";
+        if (Math.abs(this.start.x - this.end.x) < 20) {
+          window.open(window.Creative.clicktags[this.IDX], "blank");
         }
       },
       false
@@ -147,7 +143,6 @@ class Swiper {
 
   lock() {
     const root = document.querySelector(":root");
-    console.log("LOCK", this.offset.x);
 
     if (this.offset.x) {
       const closest = this.fixPoints.reduce((prev, curr) =>
@@ -163,11 +158,11 @@ class Swiper {
 
   defineContainer() {
     const data = window.Creative.data;
-    const container = document.createElement("swiper");
-    container.classList.add("swiper");
+    const swiper = document.createElement("swiper");
+    swiper.classList.add("swiper");
 
-    if (!data.some((item) => item.swiper))
-      return window.Creative.startAnimation();
+    // if (!data.some((item) => item.swiper))
+    //   return window.Creative.startAnimation();
 
     function createContentElements(itemKey, itemInput, contentItem) {
       let element = document.createElement("swiper-content-" + itemKey);
@@ -180,25 +175,12 @@ class Swiper {
         Object.entries(itemInput).forEach(([innerKey, innerInput]) =>
           createContentElements(innerKey, innerInput, element)
         );
-      } else if (itemKey === "href") {
-        const href = window.Creative.clicktags[0]
-          ? window.Creative.clicktags[0]
-          : window.Creative.caption[0];
-
-        element = document.createElement("a");
-        element.setAttribute("href", href + "?redir=" + itemInput);
-        element.setAttribute("target", "_blank");
-        element.classList.add(
-          "swiper--content-item",
-          "swiper--content-" + itemKey
-        );
       } else if (itemKey === "image") {
         element.style.backgroundImage = "url(" + itemInput + ")";
       } else {
         element.innerHTML = itemInput;
       }
 
-      element.setAttribute("draggable", false);
       contentItem.appendChild(element);
     }
 
@@ -214,13 +196,13 @@ class Swiper {
       );
 
       itemElement.appendChild(contentItem);
-      container.appendChild(itemElement);
+      swiper.appendChild(itemElement);
     }
 
-    this.container = container;
-    this.rootContainer.append(container);
+    this.container = swiper;
+    this.rootContainer.append(swiper);
 
-    window.Creative.startAnimation();
+    this.defineGestureEvents();
   }
 }
 
