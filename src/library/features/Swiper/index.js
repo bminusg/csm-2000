@@ -2,22 +2,35 @@ import "./sass/swiper.sass";
 
 class Swiper {
   constructor(config = {}) {
-    this.IDX = 0;
+    this.IDX = -1;
+    this.isDragging = false;
+    this.isAutoRotate = true;
     this.breakpoints = [];
 
-    this.isDragging = false;
-    this.moveXStart = null;
-    this.offsetX = null;
     this.itemWidth = config.itemWidth || undefined;
-    this.rootContainer =
-      config.rootContainer || document.querySelector(".creative");
+    this.rootContainer = document.querySelector(
+      config.rootContainer || ".creative"
+    );
+
+    this.start = { x: null, y: null };
+    this.end = { x: null, y: null };
+    this.offset = { x: null, y: null };
   }
 
   init() {
     this.container = document.querySelector("swiper");
 
     if (!this.container) this.defineContainer();
-    this.defineGestureEvents();
+    else this.defineGestureEvents();
+  }
+
+  autoRotate() {
+    if (this.IDX === this.fixPoints.length - 1) return;
+
+    this.IDX++;
+    this.lock();
+
+    setTimeout(this.autoRotate.bind(this), 3500);
   }
 
   defineGestureEvents() {
@@ -28,21 +41,24 @@ class Swiper {
     this.moveEvent = this.isTouchDevice ? "touchmove" : "mousemove";
     this.endEvent = this.isTouchDevice ? "touchend" : "mouseup";
 
+    this.calcFixPoints();
+    this.autoRotate();
     this.initEventListeners();
   }
 
   initEventListeners() {
-    this.calcFixPoints();
+    const anchor = document.querySelector("a");
 
-    this.container.addEventListener(
+    anchor.addEventListener(
       this.startEvent,
       (event) => {
+        event.preventDefault();
+        if (this.isDragging) return;
+
         this.container.classList.add("is--dragging");
         this.isDragging = true;
-
-        this.moveXStart = this.isTouchDevice
-          ? event.targetTouches[0].clientX
-          : event.clientX;
+        this.start.x = event.touches ? event.touches[0].clientX : event.clientX;
+        this.end.x = null;
       },
       false
     );
@@ -51,25 +67,39 @@ class Swiper {
       this.moveEvent,
       (event) => {
         event.preventDefault();
-
         if (!this.isDragging) return;
 
-        const moveX = this.isTouchDevice
-          ? event.targetTouches[0].clientX
-          : event.clientX;
-
-        this.dragging(moveX);
+        this.dragging(event.touches ? event.touches[0].clientX : event.clientX);
       },
       false
     );
 
-    this.container.addEventListener(
+    anchor.addEventListener(
       this.endEvent,
       (event) => {
         event.preventDefault();
-
         if (!this.isDragging) return;
+
+        this.container.classList.remove("is--dragging");
+        this.isDragging = false;
+
+        this.end.x = event.touches
+          ? event.changedTouches[0].clientX
+          : event.clientX;
+
         this.lock();
+
+        if (Math.abs(this.start.x - this.end.x) < 20) {
+          window.open(window.Creative.clicktags[this.IDX], "blank");
+        }
+      },
+      false
+    );
+
+    anchor.addEventListener(
+      "click",
+      (event) => {
+        event.preventDefault();
       },
       false
     );
@@ -80,6 +110,9 @@ class Swiper {
         event.preventDefault();
 
         if (!this.isDragging) return;
+
+        this.container.classList.remove("is--dragging");
+        this.isDragging = false;
         this.lock();
       },
       false
@@ -97,52 +130,39 @@ class Swiper {
       this.fixPoints.push(containerWidth * i);
   }
 
-  switchCheck(X) {
+  dragging(X) {
     const root = document.querySelector(":root");
-    const startX = this.moveXStart;
+    const startX = this.start.x;
     const direction = startX <= X ? 1 : -1;
     const offset = Math.abs(startX - X);
     const cssOffset = offset * direction + this.fixPoints[this.IDX] * -1;
 
     root.style.setProperty("--swiper-x", cssOffset);
-
-    if (offset < 100) return false;
-
-    this.IDX = this.IDX - direction;
-    //console.log("SWITCH TO", this.IDX);
-    return true;
-  }
-
-  dragging(X) {
-    this.isDragging = true;
-    const isSwitch = this.switchCheck(X);
-    // console.log("IS SWITCH", isSwitch);
-    if (isSwitch) this.lock();
+    this.offset.x = cssOffset * -1;
   }
 
   lock() {
-    this.container.classList.remove("is--dragging");
-    this.isDragging = false;
-
     const root = document.querySelector(":root");
-    const maxItems = this.fixPoints.length - 1;
 
-    if (this.IDX < 0) this.IDX = 0;
-    if (this.IDX > maxItems) this.IDX = maxItems;
-
-    // console.log("LOCK", this.IDX);
-    // console.log("LOCK", this.fixPoints);
-    // console.log("LOCK", this.fixPoints[this.IDX]);
+    if (this.offset.x) {
+      const closest = this.fixPoints.reduce((prev, curr) =>
+        Math.abs(curr - this.offset.x) < Math.abs(prev - this.offset.x)
+          ? curr
+          : prev
+      );
+      this.IDX = this.fixPoints.indexOf(closest);
+    }
 
     root.style.setProperty("--swiper-x", this.fixPoints[this.IDX] * -1);
   }
 
   defineContainer() {
     const data = window.Creative.data;
-    const container = document.createElement("swiper");
-    container.classList.add("swiper");
+    const swiper = document.createElement("swiper");
+    swiper.classList.add("swiper");
 
-    if (!data) return window.Creative.startAnimation();
+    // if (!data.some((item) => item.swiper))
+    //   return window.Creative.startAnimation();
 
     function createContentElements(itemKey, itemInput, contentItem) {
       let element = document.createElement("swiper-content-" + itemKey);
@@ -154,18 +174,6 @@ class Swiper {
       if (typeof itemInput === "object") {
         Object.entries(itemInput).forEach(([innerKey, innerInput]) =>
           createContentElements(innerKey, innerInput, element)
-        );
-      } else if (itemKey === "href") {
-        const href = window.Creative.clicktags[0]
-          ? window.Creative.clicktags[0]
-          : window.Creative.caption[0];
-
-        element = document.createElement("a");
-        element.setAttribute("href", href + "?redir=" + itemInput);
-        element.setAttribute("target", "_blank");
-        element.classList.add(
-          "swiper--content-item",
-          "swiper--content-" + itemKey
         );
       } else if (itemKey === "image") {
         element.style.backgroundImage = "url(" + itemInput + ")";
@@ -183,56 +191,18 @@ class Swiper {
       itemElement.classList.add("swiper--item");
       contentItem.classList.add("swiper--content");
 
-      console.log("DATA ITEM", item);
-
-      Object.entries(item).forEach(([itemKey, itemInput]) =>
+      Object.entries(item.swiper).forEach(([itemKey, itemInput]) =>
         createContentElements(itemKey, itemInput, contentItem)
       );
 
-      /*
-      for (const [itemKey, itemInput] of Object.entries(item)) {
-        if (typeof itemInput === "object") {
-          const element = document.createElement("swiper-content-" + itemKey);
-          element.appendChild(createDynamicContentElements(itemInput))
-          contentItem.appendChild(element);
-        } else if (itemKey === "href") {
-          const element = document.createElement("a");
-          const href = window.Creative.clicktags[0]
-            ? window.Creative.clicktags[0]
-            : window.Creative.caption[0];
-  
-          element.setAttribute("href", href + "?redir=" + itemInput);
-          element.setAttribute("target", "_blank");
-          element.classList.add(
-            "swiper--content-item",
-            "swiper--content-" + itemKey
-          );
-  
-          contentItem.appendChild(element);
-        } else if (itemKey === "image") {
-          const element = document.createElement("swiper-content-" + itemKey);
-          element.style.backgroundImage = "url(" + itemInput + ")";
-        } else {
-          const element = document.createElement("swiper-content-" + itemKey);
-          element.classList.add(
-            "swiper--content-item",
-            "swiper--content-" + itemKey
-          );
-          
-          element.innerHTML = itemInput;
-          contentItem.appendChild(element);
-        }
-      }
-      */
-
       itemElement.appendChild(contentItem);
-      container.appendChild(itemElement);
+      swiper.appendChild(itemElement);
     }
 
-    this.container = container;
-    this.rootContainer.append(container);
+    this.container = swiper;
+    this.rootContainer.append(swiper);
 
-    window.Creative.startAnimation();
+    this.defineGestureEvents();
   }
 }
 
