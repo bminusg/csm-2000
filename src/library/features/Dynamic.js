@@ -10,36 +10,30 @@ class Dynamic {
       headers: {
         "content-type": "text/csv;charset=UTF-8",
       },
-    }
+    };
   }
 
-  
   load() {
-    if (!this.feed) throw new Error("Feed URI is missing")
-
-    this.getFeedData()
+    if (!this.feed) throw new Error("Feed URI is missing");
+    this.getFeedData();
   }
 
   async getFeedData() {
-
     try {
-      const URI = this.buildLocalFeedUri();
+      const URI = this.buildLocalFeedUri(this.feed);
       const response = await fetch(URI, this.queryOptions);
 
       if (!response.ok) throw Error(response.statusText);
-      
-      const content = await response.text();      
+
+      const content = await response.text();
       this.CSVToArray(content, this.delimiterChar);
-
     } catch (error) {
-      console.error("[DYNAMIC]", error)
+      console.error("[DYNAMIC]", error);
     }
-
-
-  }  
+  }
 
   buildLocalFeedUri(subpath) {
-    if (process.env.NODE_ENV === "development") return "/" + this.feed
+    if (process.env.NODE_ENV === "development") return "/" + this.feed;
 
     const path = location.protocol + "//" + location.host + location.pathname;
     return path.replace("index.html", "") + subpath;
@@ -161,6 +155,9 @@ class Dynamic {
       this.data.push(item);
     }
 
+    const hasDynamicClicktag = this.data.some((item) => item.clicktag);
+    if (hasDynamicClicktag) this.mapClicktags();
+
     window.Creative.data = this.data;
     window.Creative.startAnimation();
   }
@@ -181,6 +178,18 @@ class Dynamic {
     }
 
     return item;
+  }
+
+  mapClicktags() {
+    const clicktag = window.Creative.params.clicktag
+      ? window.Creative.params.clicktag
+      : "";
+
+    window.Creative.clicktags = this.data.map((item) =>
+      clicktag
+        ? clicktag + "?redir=" + encodeURIComponent(item.clicktag)
+        : item.clicktag
+    );
   }
 
   validate(key, value, map = []) {
