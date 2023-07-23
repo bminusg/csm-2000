@@ -24,8 +24,9 @@ const productionConfig = {
         type: "asset",
       },
       {
-        test: /\.(jpg|png|gif|svg|webp)$/,
+        test: /\.(jpe?g|png|gif|svg|webp)$/,
         enforce: "pre",
+        type: "asset/resource",
         use: {
           loader: "image-webpack-loader",
           options: {

@@ -1,2 +1,64 @@
+@use "lib/sass/abstracts/easings" as ease 
+
+$color: white !default
+$closeFill: $color !default
+$closeWidth: 40px !default
+$closeHeight: 40px !default
+$btnBackgroundColor: rgba(0,0,0,0.25) !default
+
 :root
     --safezone-height: 80vh
+
+.bboost
+
+    &[data-publisher="t-online"]
+        --safezone-height: 70vh
+
+    &--btn
+        background-color: $btnBackgroundColor
+        border-radius: 6px
+        display: flex
+        justify-content: center
+        align-items: center
+        cursor: pointer
+        opacity: 0.75
+        transition: opacity 0.4s ease.$InCubic
+
+        &:hover
+            opacity: 1
+
+        &-close
+            position: absolute
+            width: $closeWidth
+            height: $closeHeight
+            right: 10px
+            top: 10px
+            z-index: 10000
+            display: none
+
+            svg
+                width: calc(100% - 30px)
+                height: calc(100% - 30px)
+                fill: $closeFill
+
+    &[data-state="active"]
+        .bboost
+            &--btn
+                &-close
+                    display: flex
+
+.creative
+    cursor: pointer
+    position: absolute
+
+    &--grid
+        width: 100%
+        height: 100%
+        display: grid
+        grid-template-columns: 1fr minmax(auto, 1000px) 1fr
+
+        > *
+            position: relative
+
+        &-main
+            height: var(--safezone-height)

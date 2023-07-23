@@ -3,15 +3,16 @@
 @use "lib/sass/formats/ra.sass" as * with ($width: {{creative.format.width}}px, $height: {{creative.format.height}}px)
 @use "tween-sass" as * with ($parent: "#flyTarget", $activeClass: ".flyContentActive")
 @use "lib/sass/abstracts/easings" as ease 
-
-// CUSTOM CSS
-#pFA
-
-
+{{/equal}}
+{{#equal creative.format.slug "bboost"}}
+// IMPORTS 
+@use "lib/sass/components/creative" with ($width:100%, $height:100%, $format:"bboost")
+@use "lib/sass/formats/bboost" as *
+@use "lib/sass/abstracts/easings" as ease 
+@use "tween-sass" as * 
 {{else}}
 // IMPORTS 
 @use "lib/sass/components/creative" with ($width:{{#if creative.format.width}}{{creative.format.width}}px{{else}}100%{{/if}}, $height:{{#if creative.format.height}}{{creative.format.height}}px{{else}}100%{{/if}}, $format:"{{creative.format.slug}}")
 @use "lib/sass/abstracts/easings" as ease 
 @use "tween-sass" as * 
-
 {{/equal}}

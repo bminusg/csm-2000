@@ -21,7 +21,7 @@ module.exports = {
         test: /\.mp4$/,
         type: "asset/resource",
         generator: {
-          filename: "video/[name][ext]",
+          filename: "video/[name].[hash][ext]",
         },
       },
       {

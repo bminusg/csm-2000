@@ -1,0 +1,35 @@
+.creative
+    &--btn
+        // UNMUTE TRIGGER BTN
+        &-muted
+            width: 35px
+            height: 35px
+            display: flex
+            gap: 3px
+            padding: 2px 4px
+
+            &__wrapper
+                width: 16px
+                height: 16px
+                display: flex
+                gap: 3px
+
+            span
+                position: relative
+                flex: 1
+                background-color: $color
+                clip-path: inset(100% 0 0 0)
+                animation: sound 1s ease.$InOutCubic 0.4s infinite
+
+                &:first-child
+                    animation: sound 1s ease.$InOutCubic 0.2s infinite
+
+                &:last-child
+                    animation: sound 1s ease.$InOutCubic 0.8s infinite
+
+                @keyframes sound
+                    0%,
+                    100%
+                        clip-path: inset(100% 0 0 0)
+                    50%
+                        clip-path: inset(0 0 0 0)

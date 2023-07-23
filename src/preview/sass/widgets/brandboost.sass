@@ -1,3 +1,28 @@
+@use "lib/sass/abstracts/easings" as ease 
+:root
+    --publisher--width: 100%
+
+    // WIDGET BRAND BOOSTER
+    --publisher--widget--bboost-offset-top: calc(100vh - var(--publisher--nav-height) - 100px)
+    --publisher--widget--bboost-offset-nav: 120px
+
+.publisher
+    pointer-events: none
+
+    &--article
+        pointer-events: all
+        background-color: #fff
+        max-width: 1000px
+        width: 100%
+        margin: 0 auto
+        transition: transform 2s ease.$OutCubic
+
+        &.is--expand
+            transform: translateY(var(--publisher--widget--bboost-offset-top))
+
+    &--footer
+        margin: 100vh auto 0
+
 .widget
     &--bboost
         position: fixed
