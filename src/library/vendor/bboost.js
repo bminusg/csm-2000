@@ -14,7 +14,7 @@ class BrandBooster {
     this.targetUrls = this.hashParameters.slice(0, 2);
     this.trackingZones = this.hashParameters.slice(-5);
     this.videoTrackingAvailable =
-      this.hashParameters.length > 5 && "0" !== trackingZones[0];
+      this.hashParameters.length > 5 && "0" !== this.trackingZones[0];
 
     // DEFAULT BUTTONS
 
@@ -222,21 +222,22 @@ class BrandBooster {
   }
 
   loadVideoTracking() {
-    const e = docuemnt.querySelector(".bboost--btn-close");
-    const a = docuemnt.querySelector(".bboost--btn-play");
+    const e = document.querySelector(".bboost--btn-close");
+    const a = document.querySelector(".bboost--btn-play");
     let o = {};
 
     let s = !1;
 
     for (let e = 0; e < 5; e++)
       o[25 * e] = {
-        src: `https://smbad.de/www/delivery/avw.php?zoneid=${trackingZones[e]}&amp;cb=`,
+        src: `https://smbad.de/www/delivery/avw.php?zoneid=${this.trackingZones[e]}&amp;cb=`,
         done: !1,
       };
 
     const d = (e) => {
       if (!o[e] || o[e].done || !s) return;
       o[e].done = !0;
+
       const a = document.createElement("img");
       (a.border = 0),
         (a.dataset.videoProgress = e),
@@ -264,7 +265,11 @@ class BrandBooster {
 
     this.videoElem.addEventListener("timeupdate", () => {
       if (!s) return;
-      const e = Math.floor((t.currentTime / t.duration) * 4);
+
+      const e = Math.floor(
+        (this.videoElem.currentTime / this.videoElem.duration) * 4
+      );
+
       d(25 * e);
     });
   }
