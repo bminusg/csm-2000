@@ -1,4 +1,4 @@
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("node:crypto");
 const shortme = require("shortme");
 
 class Creative {
@@ -12,7 +12,7 @@ class Creative {
         : "";
 
     const creative = {
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       projectID: project.id,
       caption: options.caption || this.defineCaption(project),
       slug:

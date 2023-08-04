@@ -1,5 +1,5 @@
 const glob = require("glob");
-const { v4: uuidv4 } = require("uuid");
+const crypto = require("node:crypto");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const Services = require("./helpers/Services");
@@ -29,7 +29,7 @@ class Project extends Services {
     const date = new Date();
 
     let newProject = {
-      id: uuidv4(),
+      id: crypto.randomUUID(),
       created_at: date,
       updated_at: date,
       brand: input.brand,
