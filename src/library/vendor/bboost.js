@@ -31,10 +31,16 @@ class BrandBooster {
     // CUSTOM EVENTS
 
     this.onScroll = config.onScroll ?? undefined;
+
+    // MISC
+
+    this.isMobile = config.isMobile || false;
   }
 
   init() {
     this.initEventListeners();
+
+    if (this.isMobile) this.determine();
   }
 
   initEventListeners() {
@@ -130,6 +136,8 @@ class BrandBooster {
   getMessage(e) {
     if (!this.messageSafety(e)) return;
 
+    const cmd = e.data.command;
+
     if (!this.container.dataset.publisher)
       this.container.dataset.origin = e.origin;
 
@@ -139,6 +147,10 @@ class BrandBooster {
     if (e.data.volume && this.isActive) return this.deactivate();
 
     if (e.data.pageHeight) return (this.pageHeight = e.data.pageHeight);
+
+    if (cmd && cmd === "determine") {
+      this.closeBtn.style.display = "flex";
+    }
 
     if (e.data.scrollTop)
       return this.throttle(this.handleScrollTop(e.data.scrollTop));
@@ -168,6 +180,15 @@ class BrandBooster {
     this.sendMessage(window.top, {
       sender: "brand-booster-slim",
       command: "expand",
+    });
+  }
+
+  determine() {
+    this.closeBtn.style.display = "none";
+
+    this.sendMessage(window.top, {
+      sender: "brand-booster-slim",
+      command: "determine",
     });
   }
 

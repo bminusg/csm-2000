@@ -5,13 +5,14 @@ $closeFill: $color !default
 $closeWidth: 40px !default
 $closeHeight: 40px !default
 $btnBackgroundColor: rgba(0,0,0,0.25) !default
+$defaultGrid: true !default
 
 :root
     --safezone-height: 80vh
 
 .bboost
 
-    &[data-publisher="t-online"]
+    &[data-origin="https://www.t-online.de"]
         --safezone-height: 70vh
 
     &--btn
@@ -51,14 +52,15 @@ $btnBackgroundColor: rgba(0,0,0,0.25) !default
     cursor: pointer
     position: absolute
 
-    &--grid
-        width: 100%
-        height: 100%
-        display: grid
-        grid-template-columns: 1fr minmax(auto, 1000px) 1fr
+    @if $defaultGrid
+        &--grid
+            width: 100%
+            height: 100%
+            display: grid
+            grid-template-columns: 1fr minmax(auto, 1000px) 1fr
 
-        > *
-            position: relative
+            > *
+                position: relative
 
-        &-main
-            height: var(--safezone-height)
+            &-main
+                height: var(--safezone-height)
