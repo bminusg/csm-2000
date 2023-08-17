@@ -304,5 +304,18 @@
         "devices": ["phone"]
       }
     }
+  },
+  {
+    "name": "Sitebranding XL",
+    "slug": "sitebrand",
+    "type": "RichMedia",
+    "options": {
+      "Default": {
+        "width": 0,
+        "height": 0,
+        "admark": "Anzeige",
+        "devices": ["desktop"]
+      }
+    }
   }
 ]
