@@ -205,6 +205,8 @@ class BrandBooster {
     e.stopPropagation();
 
     if (this.videoElem) {
+      this.container.dataset.state = "active video";
+      this.isActive = false;
       this.videoElem.currentTime = 0;
       this.videoElem.muted = false;
       this.videoElem.volume = 0.5;
@@ -239,7 +241,7 @@ class BrandBooster {
   }
 
   trailerEnded() {
-    this.deactivate();
+    this.activate();
   }
 
   loadVideoTracking() {
@@ -308,7 +310,7 @@ class BrandBooster {
 
   deactivate() {
     this.isActive = false;
-    this.container.dataset.state = "deactive";
+    this.container.dataset.state = "active";
 
     if (this.videoElem) {
       this.videoElem.muted = true;
@@ -325,7 +327,7 @@ class BrandBooster {
   closeClick(e) {
     e.stopPropagation();
 
-    this.deactivate();
+    if (this.videoElem && !this.videoElem.paused) return this.deactivate();
     this.collapse();
   }
 
