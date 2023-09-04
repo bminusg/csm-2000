@@ -28,6 +28,7 @@ class Creative {
     this.macros = {};
     this.params = getURIparams();
     this.clicktags = options.clicktags || [];
+    this.impressions = options.impressions || {};
 
     // FEATURES
     this.features = options.features || [];
@@ -160,6 +161,55 @@ class Creative {
         false
       );
     });
+
+    // APPEND IMPRESSION TRACKING
+    window.addEventListener("track", (event) => {
+      // TODO
+      // DEFINE FILTER METHOD TO PREVENT EXTERNAL ACCESS
+      if (this.impressions.firstEngagement) this.trackEvent("firstEngagement");
+
+      this.trackEvent(event.detail);
+    });
+  }
+
+  trackEvent(event) {
+    if (process.env.NODE_ENV === "development") {
+      console.log(
+        "%c TRACK EVENT ",
+        "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
+        event
+      );
+      console.log(
+        "%c TRACK PIXELS ",
+        "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
+        this.impressions[event]
+      );
+    } else {
+      this.appendImpressionPixel(event);
+    }
+
+    this.impressions[event] = undefined;
+  }
+
+  appendImpressionPixel(event) {
+    if (!this.impressions[event]) return;
+
+    const timestamp = new Date().getTime();
+    for (let src of this.impressions[event]) {
+      const img = document.createElement("img");
+
+      // REPLACE MACROS
+      src = src.replace(/\[timestamp\]/g, timestamp);
+
+      // SET ATTRIBUTES
+      img.setAttribute("src", src);
+      img.setAttribute("width", "1");
+      img.setAttribute("width", "1");
+      img.setAttribute("alt", "Impression Pixel Event: " + event);
+      img.style.display = "none";
+
+      document.body.appendChild(img);
+    }
   }
 
   // ADDING EVENT LISTENERS
