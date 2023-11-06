@@ -24,7 +24,7 @@
         "admark": ""
       },
       "aubi": {
-        "width": 1000,
+        "width": 1020,
         "height": 250,
         "admark": ""
       },
@@ -32,6 +32,11 @@
         "width": 1024,
         "height": 250,
         "admark": ""
+      },
+      "bild_ROS": {
+        "width": 992,
+        "height": 250,
+        "admark": "ANZEIGE"
       },
       "bz": {
         "width": 1024,
@@ -180,7 +185,7 @@
         "admark": "-w-"
       },
       "2-1": {
-        "width": 300,
+        "width": 320,
         "height": 150,
         "admark": "-w-"
       }
@@ -315,6 +320,21 @@
         "height": 0,
         "admark": "Anzeige",
         "devices": ["desktop"]
+      }
+    }
+  },
+  {
+    "name": "Mobile Sticky Ad",
+    "slug": "stickyad",
+    "type": "RichMedia",
+    "options": {
+      "6-1": {
+        "width": 320,
+        "height": 50
+      },
+      "2-1": {
+        "width": 320,
+        "height": 150
       }
     }
   }
