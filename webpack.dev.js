@@ -33,6 +33,9 @@ let devConfig = {
       overlay: true,
     },
   },
+  watchOptions: {
+    ignored: ["/node_modules/", "/projects/**/_material"],
+  },
   output: {
     filename: "[name]/main.js",
   },
