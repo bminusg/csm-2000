@@ -34,7 +34,7 @@ let devConfig = {
     },
   },
   watchOptions: {
-    ignored: ["/node_modules/", "/projects/**/_material"],
+    ignored: ["/node_modules/", "/projects/**/_*"],
   },
   output: {
     filename: "[name]/main.js",
