@@ -6,6 +6,7 @@ $closeWidth: 40px !default
 $closeHeight: 40px !default
 $btnBackgroundColor: rgba(0,0,0,0.25) !default
 $defaultGrid: true !default
+$defaultVideoSoundBtns: false !default
 
 :root
     --safezone-height: 80vh
@@ -42,6 +43,25 @@ $defaultGrid: true !default
                 height: calc(100% - 30px)
                 fill: $closeFill
 
+        @if $defaultVideoSoundBtns
+            &-muted
+                background-image: url("src/assets/icons/btn-volume-2.png")
+                right: 6px
+                top: 6px
+                width: 36px
+                height: 36px
+                border-radius: 3px
+                background-color: $btnBackgroundColor
+
+    &[data-muted="false"]
+        @if $defaultVideoSoundBtns
+            .bboost
+                &--btn
+                    &-muted
+                        background-image: url("src/assets/icons/btn-volume-x.png")
+
+
+
     &[data-state="active"],
     &[data-state*="video"]
         .bboost
@@ -64,4 +84,4 @@ $defaultGrid: true !default
                 position: relative
 
             &-main
-                height: var(--safezone-height)
+                height: var(--safezone-height)    
