@@ -1,9 +1,5 @@
 "use strict";
 
-// TODO
-// [   ] CHECK VIDEO TRACKING
-// [   ] FEATURE LIB COMPABILITY
-
 class BrandBooster {
   constructor(config = {}) {
     this.hashParameters = document.location.hash
@@ -48,7 +44,7 @@ class BrandBooster {
 
     this.container.addEventListener("click", this.containerClick.bind(this));
     this.playBtn &&
-      this.playBtn.addEventListener("click", this.playClick.bind(this));
+      this.playBtn.addEventListener("click", this.trailerClick.bind(this));
 
     this.closeBtn.addEventListener("click", this.closeClick.bind(this));
 
@@ -59,12 +55,8 @@ class BrandBooster {
 
       // VIDEO LOGIC
       if (this.videoConfig && this.videoElem) {
-        const source = document.createElement("source");
-        source.src = this.videoConfig.src;
-        source.type = "video/mp4";
-
         this.videoElem.setAttribute("poster", this.videoConfig.poster ?? "");
-        this.videoElem.appendChild(source);
+        this.videoElem.src = this.videoConfig.src;
 
         // VIDEO EVENTS
         if (this.videoElem) {
@@ -84,10 +76,9 @@ class BrandBooster {
             "play",
             () => (this.container.dataset.playstate = "playing")
           );
-          this.videoElem.addEventListener(
-            "volumechange",
-            () => (this.container.dataset.muted = this.videoElem.muted)
-          );
+          this.videoElem.addEventListener("volumechange", () => {
+            this.container.dataset.muted = this.videoElem.muted;
+          });
         }
 
         // VIDEO BTN EVENTS
@@ -150,6 +141,7 @@ class BrandBooster {
 
     if (cmd && cmd === "determine") {
       this.closeBtn.style.display = "flex";
+      this.container.classList.remove("mobile-splitter-active");
     }
 
     if (e.data.scrollTop)
@@ -204,20 +196,34 @@ class BrandBooster {
   playClick(e) {
     e.stopPropagation();
 
+    this.videoElem.loop = false;
+
+    if (this.videoElem.muted && this.videoConfig?.srcUnmuted) {
+      const source = document.createElement("source");
+      source.src = this.videoConfig.srcUnmuted;
+      source.type = "video/mp4";
+
+      if (this.videoElem.src !== this.videoConfig.srcUnmuted)
+        this.videoElem.src = this.videoConfig.srcUnmuted;
+      this.videoElem.load();
+    }
+
     if (this.videoElem) {
       this.container.dataset.state = "active video";
-      this.isActive = false;
+      this.isActive = true;
       this.videoElem.currentTime = 0;
       this.videoElem.muted = false;
       this.videoElem.volume = 0.5;
-      this.videoElem.play();
+
+      if (!this.videoElem.autoplay) this.videoElem.play();
     }
   }
 
   trailerClick(e) {
     e.stopPropagation();
+    const isFullscreen = this.videoElem.autoplay && this.videoElem.muted;
 
-    if (!this.videoElem.paused) this.videoElem.pause();
+    if (!isFullscreen && !this.videoElem.paused) this.trailerEnded();
     else this.playClick(e);
   }
 
@@ -241,7 +247,17 @@ class BrandBooster {
   }
 
   trailerEnded() {
-    this.activate();
+    if (this.isActive) {
+      const states = this.container.dataset.state.split(" ");
+      const state = states.filter((state) => state !== "video" || state === "");
+
+      this.videoElem.muted = true;
+
+      this.container.dataset.state = state.join(" ");
+      this.container.dataset.playstate = "ended";
+      this.container.dataset.muted = "true";
+      this.isActive = false;
+    }
   }
 
   loadVideoTracking() {
@@ -302,6 +318,11 @@ class BrandBooster {
     if (this.isActive === undefined)
       this.container.classList.add("is--tweening");
 
+    if (this.videoElem && this.videoElem.autoplay) {
+      this.videoElem.muted = true;
+      this.videoElem.play();
+    }
+
     this.isActive = true;
     this.container.dataset.state = this.isSplitterMode
       ? "active splitter"
@@ -344,256 +365,3 @@ class BrandBooster {
 }
 
 export default BrandBooster;
-
-export const mobile = () => {
-  const doc = document;
-  const win = window;
-  const qs = (s) => doc.querySelector(s);
-  const trailer = qs(".trailer");
-
-  const hashParameters = doc.location.hash
-    .slice(1)
-    .split("##")
-    .map(decodeURIComponent);
-  const targetUrls = hashParameters.slice(0, 2);
-  const trackingZones = hashParameters.slice(-5);
-  const videoTrackingAvailable =
-    qs(".tracking") &&
-    qs(".play") &&
-    qs(".close") &&
-    hashParameters.length > 5 &&
-    trackingZones[0] !== "0";
-  const openTargetUrl = (n = 0) => win.open(targetUrls[n]);
-  const sendMessage = (target, msg) => target.postMessage(msg, "*");
-
-  let isHeadFrame = false;
-
-  const messageSafety = (msg) => {
-    const hasSender = msg.data.sender;
-    if (!hasSender) return;
-
-    const safeSender = ~msg.data.sender.indexOf("brand-booster");
-    if (!safeSender) return;
-
-    return true;
-  };
-
-  const getMessage = (msg) => {
-    if (!messageSafety(msg)) return;
-
-    if (msg.data.scrollTop !== undefined) {
-      const hasScrolled = msg.data.scrollTop > win.innerHeight * 0.5;
-      const method = hasScrolled ? "add" : "remove";
-      container.classList[method]("scrolled");
-
-      try {
-        handleScrollTop(msg.data.scrollTop);
-      } catch (error) {
-        // handleScrollTop is not defined
-      }
-    }
-
-    // if (msg.data.volume !== undefined) {
-    //   try {
-    //     videoElem.volume = volume;
-    //     if (active && volume === 0.0001) deactivate();
-    //   } catch (error) {
-    //     // video, active, and/or deactivate are not defined
-    //   }
-    // }
-
-    const cmd = msg.data.command;
-    if (cmd) {
-      switch (cmd) {
-        case "determine":
-          isHeadFrame = true;
-          container.classList.remove("mobile-splitter-active");
-          minimize && minimize.classList.remove("hidden");
-          break;
-
-        case "playVideo":
-          if (isHeadFrame && !active) activate();
-          break;
-
-        case "stopVideo":
-          if (active) deactivate();
-          break;
-      }
-    }
-  };
-
-  const collapse = () => {
-    sendMessage(win.top, {
-      sender: "brand-booster-iframe",
-      command: "collapse",
-    });
-  };
-
-  const determine = () => {
-    sendMessage(win.top, {
-      sender: "brand-booster-slim",
-      command: "determine",
-    });
-  };
-
-  const expand = () => {
-    sendMessage(win.top, {
-      sender: "brand-booster-slim",
-      command: "expand",
-    });
-  };
-
-  const playVideo = () => {
-    const frames = win.parent.frames;
-
-    // a for of loop will create a cross-origin access dom exception here
-    for (let i = 0; i < frames.length; i++) {
-      sendMessage(frames[i], {
-        sender: "brand-booster-slim",
-        command: "activate",
-      });
-    }
-  };
-
-  determine();
-
-  win.addEventListener("message", getMessage);
-
-  const loadVideoTracking = () => {
-    const random = () => Math.round(Math.random() * 1e10);
-
-    const close = qs(".close");
-    const play = qs(".play");
-    const trackingVideo = qs(".tracking");
-    const trackingPixels = {};
-
-    let active = false;
-
-    // create tracking pixels
-    for (let i = 0; i < 5; i++) {
-      trackingPixels[i * 25] = {
-        src: `https://smbad.de/www/delivery/avw.php?zoneid=${trackingZones[i]}&amp;cb=`,
-        done: false,
-      };
-    }
-
-    const clearTrackingPixels = () => {
-      for (const t in trackingPixels) trackingPixels[t].done = false;
-    };
-
-    const loadTrackingPixel = (n) => {
-      if (!trackingPixels[n] || trackingPixels[n].done || !active) return;
-
-      trackingPixels[n].done = true;
-      const px = doc.createElement("img");
-      px.border = 0;
-      px.dataset.videoProgress = n;
-      px.setAttribute("style", "position: absolute; top: -1px; left: -1px");
-      px.alt = "";
-      px.src = `${trackingPixels[n].src + random()}`;
-      doc.body.appendChild(px);
-    };
-
-    const playClick = (e) => {
-      e.stopPropagation();
-      clearTrackingPixels();
-      active = true;
-    };
-
-    const closeClick = (e) => {
-      e.stopPropagation();
-      active = false;
-    };
-
-    const trackingVideoTimeupdate = () => {
-      if (!active) return;
-
-      const quarter = Math.floor(
-        (trackingVideo.currentTime / trackingVideo.duration) * 4
-      );
-
-      loadTrackingPixel(quarter * 25);
-    };
-
-    const trackingVideoEnded = () => {
-      if (!active) return;
-
-      loadTrackingPixel(100);
-      active = false;
-    };
-
-    play.addEventListener("click", playClick);
-    close.addEventListener("click", closeClick);
-    trackingVideo.addEventListener("ended", trackingVideoEnded);
-    trackingVideo.addEventListener("timeupdate", trackingVideoTimeupdate);
-  };
-
-  doc.addEventListener("DOMContentLoaded", () => {
-    doc.body.classList.remove("preload");
-
-    if (videoTrackingAvailable) loadVideoTracking();
-  });
-
-  var close = qs(".close");
-  var container = qs(".container");
-  var minimize = qs(".minimize");
-  var play = qs(".play");
-  var video = qs(".video");
-
-  var active = false;
-  var interval = void 0;
-  var runCount = 0;
-
-  var handleScrollTop = function handleScrollTop(scrollTop) {
-    // use scrollTop variable any way you want
-  };
-
-  var activate = function activate() {
-    active = true;
-    container.classList.add("active");
-    trailer.play();
-    trailer.muted = false;
-  };
-
-  var deactivate = function deactivate() {
-    active = false;
-    container.classList.remove("active");
-
-    //trailer.currentTime = 2.5;
-    trailer.muted = true;
-    trailer.pause();
-  };
-
-  var closeClick = function closeClick(e) {
-    e.stopPropagation();
-    active ? deactivate() : collapse();
-  };
-
-  var containerClick = function containerClick(e) {
-    e.stopPropagation();
-    openTargetUrl();
-  };
-
-  var minimizeClick = function minimizeClick(e) {
-    e.stopPropagation();
-    deactivate();
-    collapse();
-  };
-
-  var playClick = function playClick(e) {
-    e.stopPropagation();
-    activate();
-  };
-
-  var videoEnded = function videoEnded() {
-    deactivate();
-  };
-
-  close.addEventListener("click", closeClick);
-  container.addEventListener("click", containerClick);
-  minimize.addEventListener("click", minimizeClick);
-  play.addEventListener("click", playClick);
-  trailer.addEventListener("ended", videoEnded);
-  trailer.addEventListener("webkitendfullscreen", videoEnded);
-  //window.addEventListener("resize", resizeEvent);
-};
