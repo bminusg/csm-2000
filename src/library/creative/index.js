@@ -203,10 +203,8 @@ class Creative {
 
       // SET ATTRIBUTES
       img.setAttribute("src", src);
-      img.setAttribute("width", "1");
-      img.setAttribute("width", "1");
       img.setAttribute("alt", "Impression Pixel Event: " + event);
-      img.style.display = "none";
+      img.style.visibility = "hidden";
 
       document.body.appendChild(img);
     }
@@ -239,8 +237,10 @@ class Creative {
 
   // START ANIMATION
   startAnimation(options) {
-    const event = new CustomEvent("startAnimation", { detail: options });
-    this.container.dispatchEvent(event);
+    window.requestAnimationFrame(() => {
+      const event = new CustomEvent("startAnimation", { detail: options });
+      this.container.dispatchEvent(event);
+    });
   }
 
   // RESET ANIMATION
