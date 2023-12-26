@@ -31,6 +31,16 @@
       &--article
         background-color: #edece8
 
+    .widget
+      &[data-widget-type="sitebar"]
+        position: fixed
+        top: 0
+        height: 100%
+        width: calc(calc( 100vw - 970px ) / 2)
+
+        &[data-widget-position="right"]
+          right: 0
+
   &[data-device="phone"]
     .publisher
       &--nav

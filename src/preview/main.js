@@ -57,15 +57,19 @@ class Preview {
   }
 
   defineWidgets() {
+    let { publisher } = this.params;
     const widgetContainers = document.querySelectorAll(".widget");
     const paramKeys = Object.keys(this.params);
     const year = this.params.year
       ? this.params.year[0]
       : new Date().getFullYear();
 
+    if (!publisher) publisher = [];
+
     for (const container of widgetContainers) {
       const type = container.dataset.widgetType;
-      const isSticky = type === "sitebar" ? true : false;
+      const isSticky =
+        type === "sitebar" && !publisher.includes("welt") ? true : false;
       const position = container.dataset.widgetPosition;
       const source = paramKeys.includes(type)
         ? this.params[type][position === "left" ? 1 : 0]

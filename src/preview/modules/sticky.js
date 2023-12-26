@@ -10,7 +10,7 @@ export default (element) => {
       window.clearTimeout(isScrolling);
 
       isScrolling = setTimeout(() => {
-        const offset = app.scrollTop;
+        const offset = parseInt(window.scrollY);
         element.style.transform = "translateY(" + offset + "px)";
       }, 50);
     },
