@@ -54,7 +54,7 @@ class BrandBooster {
       if (!this.container) return;
 
       // VIDEO LOGIC
-      if (this.videoConfig && this.videoElem) {
+      if (this.videoConfig && this.videoConfig.src && this.videoElem) {
         this.videoElem.setAttribute("poster", this.videoConfig.poster ?? "");
         this.videoElem.src = this.videoConfig.src;
 
@@ -76,6 +76,7 @@ class BrandBooster {
             "play",
             () => (this.container.dataset.playstate = "playing")
           );
+
           this.videoElem.addEventListener("volumechange", () => {
             this.container.dataset.muted = this.videoElem.muted;
           });
@@ -217,14 +218,20 @@ class BrandBooster {
 
       if (!this.videoElem.autoplay) this.videoElem.play();
     }
+
+    this.isActive = true;
   }
 
   trailerClick(e) {
     e.stopPropagation();
     const isFullscreen = this.videoElem.autoplay && this.videoElem.muted;
+    const isPlaying = !this.videoElem.paused;
 
-    if (!isFullscreen && !this.videoElem.paused) this.trailerEnded();
-    else this.playClick(e);
+    if (!isFullscreen && isPlaying) {
+      this.videoElem.pause();
+      this.videoElem.currentTime = 0;
+      this.trailerEnded();
+    } else this.playClick(e);
   }
 
   trailerSound(e) {
