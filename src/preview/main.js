@@ -68,8 +68,7 @@ class Preview {
 
     for (const container of widgetContainers) {
       const type = container.dataset.widgetType;
-      const isSticky =
-        type === "sitebar" && !publisher.includes("welt") ? true : false;
+      const isSticky = type === "sitebar" ? true : false;
       const position = container.dataset.widgetPosition;
       const source = paramKeys.includes(type)
         ? this.params[type][position === "left" ? 1 : 0]

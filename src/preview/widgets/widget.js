@@ -81,9 +81,9 @@ class Widget {
 
   setVideoRedirect(brand) {
     const protocol = window.location.protocol;
-    const uri = `${protocol}//mics.bild.de/media/${this.year}/${brand}/${this.source}/${this.source}.mp4`;
+    const uri = `${protocol}//projects.bminusg.de/creatives/${this.year}/${brand}/${this.source}/${this.source}.mp4`;
 
-    this.poster = `${protocol}//mics.bild.de/media/${this.year}/${brand}/${this.source}/poster_${this.source}.jpg`;
+    this.poster = `${protocol}//projects.bminusg.de/creatives/${this.year}/${brand}/${this.source}/poster_${this.source}.jpg`;
     this.redirect = uri;
   }
 
