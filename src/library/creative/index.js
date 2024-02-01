@@ -33,6 +33,9 @@ class Creative {
     // FEATURES
     this.features = options.features || [];
 
+    // DYNAMIC DATA
+    this.data = options.data || [];
+
     // DEFINE EVENTS
     this.defineEvents();
 
@@ -117,8 +120,11 @@ class Creative {
     const anchors = document.querySelectorAll(".creative--clicktag");
 
     // PREVENT DEFAULT CLICKTRACKING
-    if (this.preventDefaultClicktracking)
-      return anchorTag.removeAttribute("href");
+    if (this.preventDefaultClicktracking) {
+      anchorTag.removeAttribute("href");
+      anchorTag.removeAttribute("target");
+      return;
+    }
 
     // INIT CAPTION
     if (this.caption) anchorTag.setAttribute("href", this.caption[0]);
