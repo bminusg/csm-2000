@@ -49,7 +49,7 @@
         "admark": ""
       },
       "cobi": {
-        "width": 1000,
+        "width": 1020,
         "height": 250,
         "admark": ""
       },
@@ -270,14 +270,17 @@
     }
   },
   {
-    "name": "Double Dynamic Sitebar + Billboard",
-    "slug": "ddsb",
+    "name": "Dynamic Fireplace",
+    "slug": "fireplace",
     "type": "RichMedia Composite",
     "devices": ["desktop"],
     "options": {
       "welt": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
       "bild": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
-      "tonline": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
+      "tonline": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
+      "businessinsider": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
+      "cobi": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"],
+      "aubi": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard"]
     }
   },
   {
