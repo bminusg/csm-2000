@@ -5,7 +5,7 @@ class Visible {
 
   load(creative) {
     // CHECK IF FRAME IS TOPFRAME
-    if (window.top === window) return this.startAnimation();
+    if (window.top === window) return window.Creative?.startAnimation();
 
     // MESSAGE LISTENERS
     window.addEventListener("message", (event) => {

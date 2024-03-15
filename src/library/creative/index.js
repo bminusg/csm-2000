@@ -254,6 +254,18 @@ class Creative {
     const event = new CustomEvent("resetAnimation");
     this.container.dispatchEvent(event);
   }
+
+  getClicktag(IDX = 0) {
+    return this.clicktags[IDX] ? this.clicktags[IDX] : this.clicktags[0];
+  }
+
+  getUTMs() {
+    return {
+      utm_source: this.slug,
+      utm_medium: this.format.slug,
+      utm_campaign: this.campaign.slug,
+    };
+  }
 }
 
 export default Creative;

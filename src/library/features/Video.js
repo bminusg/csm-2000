@@ -47,8 +47,12 @@ class Video {
       pause: options.btnPause || undefined,
       soundon: options.btnSoundOn || undefined,
       soundoff: options.btnSoundOff || undefined,
+      soundtoggle: options.btnSoundToggle || undefined,
       fullscreen: options.btnFullscreen || undefined,
     };
+
+    // EVENTS
+    this.onEnded = options.onEnded || undefined;
   }
 
   init() {
@@ -76,14 +80,12 @@ class Video {
     });
 
     // CAN PLAY
-    this.video.addEventListener("canplay", (e) => {
+    this.video.addEventListener("loadedmetadata", (e) => {
       const duration = this.video.duration;
 
       firstQuartile = duration / 4;
       midpoint = duration / 2;
       thirdQuartile = (duration / 4) * 3;
-
-      if (this.isAutoplay) this.video.play();
     });
 
     // CAN PLAY THROUGH
@@ -101,6 +103,7 @@ class Video {
     this.video.addEventListener("ended", (e) => {
       this.trackEvent("complete");
       if (this.isLooped) this.video.play();
+      if (this.onEnded) this.onEnded();
     });
 
     // VOLUME CHANGE
@@ -150,6 +153,10 @@ class Video {
           if (btn === "pause") this.video.pause();
           if (btn === "soundoff") this.video.muted = true;
           if (btn === "soundon") this.video.muted = false;
+          if (btn === "soundtoggle") {
+            this.video.muted = !this.video.muted;
+            if (this.video.pause && !this.video.muted) this.video.play();
+          }
         },
         true
       );
