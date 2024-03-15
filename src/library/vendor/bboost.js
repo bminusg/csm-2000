@@ -56,7 +56,9 @@ class BrandBooster {
       // VIDEO LOGIC
       if (this.videoConfig && this.videoConfig.src && this.videoElem) {
         this.videoElem.setAttribute("poster", this.videoConfig.poster ?? "");
-        this.videoElem.src = this.videoConfig.src;
+        this.videoElem.src = this.videoConfig.srcUnmuted
+          ? this.videoConfig.srcUnmuted
+          : this.videoConfig.src;
 
         // VIDEO EVENTS
         if (this.videoElem) {
@@ -204,8 +206,8 @@ class BrandBooster {
       source.src = this.videoConfig.srcUnmuted;
       source.type = "video/mp4";
 
-      if (this.videoElem.src !== this.videoConfig.srcUnmuted)
-        this.videoElem.src = this.videoConfig.srcUnmuted;
+      if (this.videoElem.src !== this.videoConfig.src)
+        this.videoElem.src = this.videoConfig.src;
       this.videoElem.load();
     }
 
@@ -254,17 +256,19 @@ class BrandBooster {
   }
 
   trailerEnded() {
-    if (this.isActive) {
-      const states = this.container.dataset.state.split(" ");
-      const state = states.filter((state) => state !== "video" || state === "");
+    const states = this.container.dataset.state.split(" ");
+    const state = states.filter((state) => state !== "video" || state === "");
 
-      this.videoElem.muted = true;
+    this.videoElem.muted = true;
 
-      this.container.dataset.state = state.join(" ");
-      this.container.dataset.playstate = "ended";
-      this.container.dataset.muted = "true";
-      this.isActive = false;
+    if (this.videoConfig.srcUnmuted) {
+      this.videoElem.src = this.videoConfig.srcUnmuted;
+      this.videoElem.loop = true;
     }
+
+    this.container.dataset.state = state.join(" ");
+    this.container.dataset.playstate = "ended";
+    this.container.dataset.muted = "true";
   }
 
   loadVideoTracking() {
@@ -322,6 +326,7 @@ class BrandBooster {
 
   activate() {
     if (this.isActive) return;
+
     if (this.isActive === undefined)
       this.container.classList.add("is--tweening");
 
@@ -340,22 +345,22 @@ class BrandBooster {
     this.isActive = false;
     this.container.dataset.state = "active";
 
-    if (this.videoElem) {
-      this.videoElem.muted = true;
-      this.videoElem.pause();
-    }
+    if (this.videoElem) this.trailerEnded();
   }
 
   scrolling() {
     if (this.isActive) this.deactivate();
+
     this.container.removeAttribute("data-playstate");
     this.container.dataset.state = "scrolling";
+
+    if (this.videoElem) this.videoElem.pause();
   }
 
   closeClick(e) {
     e.stopPropagation();
 
-    if (this.videoElem && !this.videoElem.paused) return this.deactivate();
+    if (this.isActive) return this.deactivate();
     this.collapse();
   }
 
