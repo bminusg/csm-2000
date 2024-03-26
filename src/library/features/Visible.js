@@ -16,10 +16,11 @@ class Visible {
       if (dataStringValuePair[0] === "isVisible") {
         const value = parseFloat(dataStringValuePair[1]);
 
-        if (value >= this.horizon) {
+        if (value > this.horizon) {
           if (creative.isTweening) return;
           creative.startAnimation();
         } else {
+          if (!creative.isTweening) return;
           creative.resetAnimation();
         }
       }

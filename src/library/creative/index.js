@@ -220,6 +220,8 @@ class Creative {
   defineEvents() {
     // START ANIMATION EVENT
     this.container.addEventListener("startAnimation", () => {
+      if (this.isTweening) return;
+
       this.isTweening = true;
       this.container.classList.add("is--tweening");
 
@@ -231,6 +233,8 @@ class Creative {
 
     // RESET ANIMATION EVENT
     this.container.addEventListener("resetAnimation", () => {
+      if (!this.isTweening) return;
+
       this.isTweening = false;
       this.container.classList.remove("is--tweening");
 
