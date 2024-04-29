@@ -28,6 +28,9 @@ class CrossSiteConnection {
 
     // CUSTOM METHODS
     this.methods = options.methods || {};
+
+    // CALC VIEWPORTS
+    this.viewports = {};
   }
 
   /**
@@ -47,10 +50,7 @@ class CrossSiteConnection {
     // DEFINE POST MESSAGE EVENT LISTNERS
     window.addEventListener("message", (event) => {
       try {
-        const type = event.data.type;
-        const origin = event.data.origin;
-        const method = event.data.method;
-        const data = event.data.data;
+        const { data, method, origin, type, viewport } = event.data;
 
         // DEFINING FRAMES
         if (type === "sayHello") this.defineFrames(origin, event.source);
@@ -66,9 +66,17 @@ class CrossSiteConnection {
 
         // EXEC CROSS ACTION METHODS
         if (type === "action") this.methods[method](data);
+
+        // SET VIEWPORT SIZES
+        if (viewport) this.setViewportVars(origin, viewport);
       } catch (error) {
         console.debug(error);
       }
+    });
+
+    window.addEventListener("resize", () => {
+      const viewports = this.frames.map((frame) => frame.viewport);
+      console.log("RESIZE");
     });
 
     // START WATCH JOB
@@ -193,6 +201,10 @@ class CrossSiteConnection {
         {
           type: "connectionSuccess",
           origin: this.frameID,
+          viewport: {
+            x: window.innerWidth,
+            y: window.innerHeight,
+          },
         },
         "*"
       )
@@ -204,8 +216,6 @@ class CrossSiteConnection {
    *
    */
   isConnected() {
-    // STOP WATCH-JOB
-
     // COLLECTING ALL CONNECTED VIEWPORTS
     let viewports = this.frames.map((frame) => frame.viewport);
     viewports.push(window);
@@ -300,6 +310,35 @@ class CrossSiteConnection {
     // START CUSTOM METHOD
     if (!this.methods || !this.methods.start) return;
     this.methods.start();
+  }
+
+  setViewportVars(origin, viewport) {
+    Object.assign(this.viewports, {
+      [this.frameID]: { x: window.innerWidth, y: window.innerHeight },
+      [origin]: viewport,
+    });
+
+    if (Object.keys(this.viewports).length === this.connectWith.length + 1) {
+      this.calcViewport();
+    }
+  }
+
+  calcViewport() {
+    const root = document.querySelector(":root");
+    const totalViewport = { x: 0, y: 0 };
+
+    for (const origin of Object.keys(this.viewports)) {
+      const { x, y } = this.viewports[origin];
+
+      totalViewport.x += x;
+      totalViewport.y = y > totalViewport.y ? y : totalViewport.y;
+
+      root.style.setProperty(`--${origin}-x`, x + "px");
+      root.style.setProperty(`--${origin}-y`, y + "px");
+    }
+
+    root.style.setProperty(`--viewport-x`, totalViewport.x + "px");
+    root.style.setProperty(`--viewport-y`, totalViewport.y + "px");
   }
 
   /**
