@@ -1,6 +1,6 @@
 "use strict";
 
-import getURIparams from "./modules/getURIparams";
+import getURIparams from "./utils/getURIparams";
 
 class Creative {
   constructor(options = {}) {
@@ -219,8 +219,11 @@ class Creative {
   // ADDING EVENT LISTENERS
   defineEvents() {
     // START ANIMATION EVENT
-    this.container.addEventListener("startAnimation", () => {
+    this.container.addEventListener("startAnimation", (event) => {
       if (this.isTweening) return;
+
+      if (event.detail?.isFallback)
+        this.container.classList.add("is--fallback");
 
       this.isTweening = true;
       this.container.classList.add("is--tweening");
@@ -236,7 +239,7 @@ class Creative {
       if (!this.isTweening) return;
 
       this.isTweening = false;
-      this.container.classList.remove("is--tweening");
+      this.container.classList.remove("is--tweening", "is--fallback");
 
       // INIT FEATURES
       this.features.forEach((feature) => {
@@ -247,6 +250,8 @@ class Creative {
 
   // START ANIMATION
   startAnimation(options) {
+    this.container.offsetHeight; // prevent CSS glitches
+
     window.requestAnimationFrame(() => {
       const event = new CustomEvent("startAnimation", { detail: options });
       this.container.dispatchEvent(event);
