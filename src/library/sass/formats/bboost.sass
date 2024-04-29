@@ -10,6 +10,7 @@ $defaultVideoSoundBtns: false !default
 
 :root
     --safezone-height: 80vh
+    --page-header-height: 0px
 
 .bboost
 
@@ -28,6 +29,20 @@ $defaultVideoSoundBtns: false !default
 
         &:hover
             opacity: 1
+
+        &-expand
+            position: absolute
+            width: $closeWidth
+            height: $closeHeight
+            right: 10px
+            top: 10px
+            z-index: 10000
+            display: none
+
+            svg
+                width: 24px
+                height: 24px
+                stroke: $closeFill
 
         &-close
             position: absolute
@@ -60,13 +75,12 @@ $defaultVideoSoundBtns: false !default
                     &-muted
                         background-image: url("src/assets/icons/btn-volume-x.png")
 
-
-
     &[data-state="active"],
     &[data-state*="video"]
         .bboost
             &--btn
-                &-close
+                &-close,
+                &-expand
                     display: flex
 
 .creative
@@ -76,7 +90,7 @@ $defaultVideoSoundBtns: false !default
     @if $defaultGrid
         &--grid
             width: 100%
-            height: 100%
+            height: calc(100% - var(--page-header-height))
             display: grid
             grid-template-columns: 1fr minmax(auto, 1000px) 1fr
 
@@ -84,4 +98,4 @@ $defaultVideoSoundBtns: false !default
                 position: relative
 
             &-main
-                height: var(--safezone-height)    
+                height: var(--safezone-height)

@@ -2,6 +2,7 @@
 
 // NODE MODULES
 const path = require("path");
+const fs = require("fs");
 const { merge } = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -125,6 +126,12 @@ module.exports = async (env) => {
 
     if (creative.format.type === "Video") continue;
 
+    const template = fs.existsSync(
+      "./src/template/hbs/" + creative.format.slug + ".html.hbs"
+    )
+      ? "./src/template/hbs/" + creative.format.slug + ".html.hbs"
+      : "./src/template/hbs/index.html.hbs";
+
     const creativeConfig = {
       name: creative.slug,
       entry: { [creative.slug]: entrypoints[creative.slug] },
@@ -148,7 +155,7 @@ module.exports = async (env) => {
           filename: "index.html",
           hash: true,
           chunks: [creative.slug],
-          template: "./src/template/hbs/index.html.hbs",
+          template,
           templateParameters: {
             environment: "production",
             project: projectItem,

@@ -1,4 +1,5 @@
 const glob = require("glob");
+const fs = require("fs");
 const crypto = require("node:crypto");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
@@ -113,11 +114,17 @@ class Project extends Services {
 
     for (const project of filteredProjects) {
       for (const creative of project.creatives) {
+        const template = fs.existsSync(
+          "./src/template/hbs/" + creative.format.slug + ".html.hbs"
+        )
+          ? "./src/template/hbs/" + creative.format.slug + ".html.hbs"
+          : "./src/template/hbs/index.html.hbs";
+
         const option = {
           filename: creative.slug + "/index.html",
           hash: true,
           chunks: [creative.slug],
-          template: "./src/template/hbs/index.html.hbs",
+          template,
           templateParameters: {
             environment: "development",
             project: project,

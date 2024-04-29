@@ -15,6 +15,7 @@ class BrandBooster {
     // DEFAULT BUTTONS
 
     this.closeBtn = document.querySelector(".bboost--btn-close");
+    this.expandBtn = document.querySelector(".bboost--btn-expand");
 
     // VIDEO CONFIG
 
@@ -31,6 +32,7 @@ class BrandBooster {
     // MISC
 
     this.isMobile = config.isMobile || false;
+    this.isSlim = config.isSlim || false;
   }
 
   init() {
@@ -43,10 +45,9 @@ class BrandBooster {
     document.addEventListener("keyup", this.documentKeyup.bind(this));
 
     this.container.addEventListener("click", this.containerClick.bind(this));
-    this.playBtn &&
-      this.playBtn.addEventListener("click", this.trailerClick.bind(this));
-
-    this.closeBtn.addEventListener("click", this.closeClick.bind(this));
+    this.playBtn?.addEventListener("click", this.playClick.bind(this));
+    this.closeBtn?.addEventListener("click", this.closeClick.bind(this));
+    this.expandBtn?.addEventListener("click", this.expandClick.bind(this));
 
     window.addEventListener("message", this.getMessage.bind(this));
 
@@ -66,14 +67,16 @@ class BrandBooster {
             "click",
             this.trailerClick.bind(this)
           );
+
           this.videoElem.addEventListener(
             "ended",
             this.trailerEnded.bind(this)
           );
-          this.videoElem.addEventListener(
-            "pause",
-            () => (this.container.dataset.playstate = "paused")
-          );
+
+          this.videoElem.addEventListener("pause", () => {
+            this.container.dataset.playstate = "paused";
+          });
+
           this.videoElem.addEventListener(
             "play",
             () => (this.container.dataset.playstate = "playing")
@@ -130,7 +133,8 @@ class BrandBooster {
   getMessage(e) {
     if (!this.messageSafety(e)) return;
 
-    const cmd = e.data.command;
+    const root = document.querySelector(":root");
+    let { volume, pageHeight, pageHeaderHeight, scrollTop, command } = e.data;
 
     if (!this.container.dataset.publisher)
       this.container.dataset.origin = e.origin;
@@ -138,17 +142,38 @@ class BrandBooster {
     if (Object.hasOwn(e.data, "visible"))
       return (this.isSplitterMode = e.data.visible);
 
-    if (e.data.volume && this.isActive) return this.deactivate();
+    if (volume !== undefined) {
+      this.videoElem.volume = volume;
+      if (this.isActive && volume === 0.0001) this.deactivate();
+    }
 
-    if (e.data.pageHeight) return (this.pageHeight = e.data.pageHeight);
+    if (pageHeight !== undefined) {
+      this.pageHeight = pageHeight;
+    }
 
-    if (cmd && cmd === "determine") {
-      this.closeBtn.style.display = "flex";
+    if (pageHeaderHeight !== undefined) {
+      this.pageHeaderHeight =
+        scrollTop !== undefined && scrollTop < pageHeaderHeight
+          ? pageHeaderHeight
+          : 0;
+
+      root.style.setProperty(
+        "--page-header-height",
+        this.pageHeaderHeight + "px"
+      );
+    }
+
+    if (command && command === "determine") {
+      if (this.closeBtn) this.closeBtn.style.display = "flex";
       this.container.classList.remove("mobile-splitter-active");
     }
 
-    if (e.data.scrollTop)
-      return this.throttle(this.handleScrollTop(e.data.scrollTop));
+    if (command && command === "play" && !this.isSlim) {
+      this.playVideo();
+    }
+
+    if (scrollTop !== undefined)
+      return this.throttle(this.handleScrollTop(scrollTop));
   }
 
   handleScrollTop(scrollTop) {
@@ -179,7 +204,7 @@ class BrandBooster {
   }
 
   determine() {
-    this.closeBtn.style.display = "none";
+    if (this.closeBtn) this.closeBtn.style.display = "none";
 
     this.sendMessage(window.top, {
       sender: "brand-booster-slim",
@@ -187,41 +212,25 @@ class BrandBooster {
     });
   }
 
-  playVideo() {
+  sendPlayVideo() {
     const e = window.parent.frames;
+
     for (let a = 0; a < e.length; a++)
       this.sendMessage(e[a], {
         sender: "brand-booster-slim",
-        command: "activate",
+        command: "play",
       });
   }
 
   playClick(e) {
     e.stopPropagation();
 
-    this.videoElem.loop = false;
-
-    if (this.videoElem.muted && this.videoConfig?.srcUnmuted) {
-      const source = document.createElement("source");
-      source.src = this.videoConfig.srcUnmuted;
-      source.type = "video/mp4";
-
-      if (this.videoElem.src !== this.videoConfig.src)
-        this.videoElem.src = this.videoConfig.src;
-      this.videoElem.load();
+    if (this.isSlim) {
+      this.expand();
+      this.sendPlayVideo();
     }
 
-    if (this.videoElem) {
-      this.container.dataset.state = "active video";
-      this.isActive = true;
-      this.videoElem.currentTime = 0;
-      this.videoElem.muted = false;
-      this.videoElem.volume = 0.5;
-
-      if (!this.videoElem.autoplay) this.videoElem.play();
-    }
-
-    this.isActive = true;
+    if (this.videoElem) this.playVideo();
   }
 
   trailerClick(e) {
@@ -233,26 +242,49 @@ class BrandBooster {
       this.videoElem.pause();
       this.videoElem.currentTime = 0;
       this.trailerEnded();
-    } else this.playClick(e);
+    } else {
+      this.playVideo();
+    }
   }
 
-  trailerSound(e) {
-    e.stopPropagation();
+  async playVideo() {
+    if (!this.videoElem) return console.error("No Video Element defined");
 
-    const isMutedToggle = !this.videoElem.muted;
-    const srcUnmuted = this.videoConfig.srcUnmuted;
-    const changeVideoSrc =
-      srcUnmuted && !isMutedToggle && this.videoElem.src !== srcUnmuted;
+    if (this.videoConfig.srcUnmuted) await this.changeMutedSrc();
 
-    if (changeVideoSrc) {
-      const currentTime = this.videoElem.currentTime;
-      this.videoElem.src = srcUnmuted;
-      this.videoElem.volume = 0.5;
-      this.videoElem.currentTime = currentTime;
-      this.videoElem.play();
+    this.isActive = true;
+    this.videoElem.loop = false;
+
+    this.container.dataset.state = "active video";
+    this.container.dataset.muted = "false";
+
+    this.videoElem.currentTime = 0;
+    this.videoElem.muted = false;
+    this.videoElem.volume = 0.5;
+    this.videoElem.play();
+  }
+
+  async changeMutedSrc() {
+    const { srcUnmuted, src } = this.videoConfig;
+    if (!srcUnmuted) return;
+
+    if (this.videoElem.src != src) {
+      this.videoElem.src = src;
+      this.videoElem.load();
     }
 
+    return;
+  }
+
+  async trailerSound(e) {
+    e.stopPropagation();
+
+    if (this.videoConfig.srcUnmuted) await this.changeMutedSrc();
+
+    const isMutedToggle = !this.videoElem.muted;
     this.videoElem.muted = isMutedToggle;
+
+    if (!isMutedToggle) this.playVideo();
   }
 
   trailerEnded() {
@@ -260,11 +292,6 @@ class BrandBooster {
     const state = states.filter((state) => state !== "video" || state === "");
 
     this.videoElem.muted = true;
-
-    if (this.videoConfig.srcUnmuted) {
-      this.videoElem.src = this.videoConfig.srcUnmuted;
-      this.videoElem.loop = true;
-    }
 
     this.container.dataset.state = state.join(" ");
     this.container.dataset.playstate = "ended";
@@ -345,7 +372,18 @@ class BrandBooster {
     this.isActive = false;
     this.container.dataset.state = "active";
 
-    if (this.videoElem) this.trailerEnded();
+    if (this.videoElem) {
+      this.videoElem.pause();
+      this.trailerEnded();
+    }
+  }
+
+  isVideoActive() {
+    if (!this.videoElem) return false;
+    if (this.videoElem.autoplay && this.videoElem.muted) return false;
+    if (this.videoElem.ended) return false;
+
+    return !this.videoElem.paused;
   }
 
   scrolling() {
@@ -360,8 +398,13 @@ class BrandBooster {
   closeClick(e) {
     e.stopPropagation();
 
-    if (this.isActive) return this.deactivate();
+    if (this.isVideoActive()) return this.deactivate();
     this.collapse();
+  }
+
+  expandClick(e) {
+    e.stopPropagation();
+    this.expand();
   }
 
   containerClick(e) {

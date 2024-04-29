@@ -314,6 +314,25 @@
     }
   },
   {
+    "name": "Brand Booster Slim",
+    "slug": "bboostslim",
+    "type": "RichMedia",
+    "options": {
+      "Desktop": {
+        "width": 0,
+        "height": 0,
+        "admark": "Anzeige",
+        "devices": ["desktop"]
+      },
+      "Phone": {
+        "width": 0,
+        "height": 0,
+        "admark": "-w-",
+        "devices": ["phone"]
+      }
+    }
+  },
+  {
     "name": "Sitebranding XL",
     "slug": "sitebrand",
     "type": "RichMedia",
