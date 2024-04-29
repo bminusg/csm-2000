@@ -13,13 +13,14 @@ class Swiper {
 
     this.data = [];
     this.root = config.root ?? document.querySelector(".creative");
-    this.itemWidth = config?.itemWidth ?? this.root.innerWidth;
+    this.itemWidth = config?.itemWidth ?? this.root.offsetWidth;
+
+    this.hasBullets = config.hasBullets ?? false;
   }
 
   init() {
     this.data = window.Creative?.data ?? [];
 
-    this.data = window.Creative.data;
     this.container = document.querySelector("swiper");
 
     if (!this.container) this.defineContainer();
@@ -48,6 +49,7 @@ class Swiper {
     this.isTouchDevice =
       "ontouchstart" in window || navigator.msMaxTouchPoints > 0 ? true : false;
 
+    if (this.hasBullets) this.appendBullets();
     this.calcFixPoints();
     this.initEventListeners();
   }
@@ -210,6 +212,8 @@ class Swiper {
       item.classList.remove("is--active");
       if (itemKey === this.IDX) item.classList.add("is--active");
     });
+
+    if (this.hasBullets) this.setBulletActice();
   }
 
   defineContainer() {
@@ -277,6 +281,36 @@ class Swiper {
     this.root.append(swiper);
 
     this.defineGestureEvents();
+  }
+
+  appendBullets() {
+    const bulletContainer = document.createElement("swiper-bullet");
+    bulletContainer.classList.add("swiper--bullet");
+
+    this.data.forEach((item, index) => {
+      const bulletItem = document.createElement("swiper-bullet-item");
+      bulletItem.classList.add("swiper--bullet-item");
+
+      bulletItem.addEventListener("mouseover", () => {
+        this.isAutoRotate = false;
+        this.IDX = index + 1;
+        this.lock();
+      });
+
+      bulletContainer.appendChild(bulletItem);
+    });
+
+    this.root?.appendChild(bulletContainer);
+  }
+
+  setBulletActice() {
+    const bullets = document.querySelectorAll("swiper-bullet-item");
+    const activeBullet = bullets[this.IDX];
+
+    if (!activeBullet) return;
+
+    bullets.forEach((item) => item.classList.remove("is--active"));
+    activeBullet.classList.add("is--active");
   }
 }
 
