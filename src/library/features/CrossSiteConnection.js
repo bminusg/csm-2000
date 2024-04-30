@@ -75,8 +75,7 @@ class CrossSiteConnection {
     });
 
     window.addEventListener("resize", () => {
-      const viewports = this.frames.map((frame) => frame.viewport);
-      console.log("RESIZE");
+      this.sendViewportDimensions();
     });
 
     // START WATCH JOB
@@ -195,20 +194,7 @@ class CrossSiteConnection {
     if (this.countConnect < this.maxCounts) return;
     clearInterval(this.watchJobInterval);
 
-    const viewports = this.frames.map((frame) => frame.viewport);
-    viewports.forEach((viewport) =>
-      viewport.postMessage(
-        {
-          type: "connectionSuccess",
-          origin: this.frameID,
-          viewport: {
-            x: window.innerWidth,
-            y: window.innerHeight,
-          },
-        },
-        "*"
-      )
-    );
+    this.sendViewportDimensions();
   }
 
   /**
@@ -339,6 +325,23 @@ class CrossSiteConnection {
 
     root.style.setProperty(`--viewport-x`, totalViewport.x + "px");
     root.style.setProperty(`--viewport-y`, totalViewport.y + "px");
+  }
+
+  sendViewportDimensions() {
+    const viewports = this.frames.map((frame) => frame.viewport);
+    viewports.forEach((viewport) =>
+      viewport.postMessage(
+        {
+          type: "connectionSuccess",
+          origin: this.frameID,
+          viewport: {
+            x: window.innerWidth,
+            y: window.innerHeight,
+          },
+        },
+        "*"
+      )
+    );
   }
 
   /**
