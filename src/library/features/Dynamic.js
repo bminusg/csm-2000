@@ -1,6 +1,9 @@
 class Dynamic {
   constructor(config = {}) {
-    this.feed = config.feed;
+    this.path = config.path;
+    this.feedID = config.feedID;
+
+    this.feed = config.feed || [];
     this.data = config.data || [];
     this.delimiterChar = config.delimiterChar || ";";
     this.mapConfig = config.mapConfig || false;
@@ -14,50 +17,95 @@ class Dynamic {
   }
 
   load() {
-    if (!this.feed) throw new Error("Feed URI is missing");
-    this.getFeedData();
+    // TODO FALLBACK CLICKTAG
+    this.feedUrl = this.defineFeedURL();
+
+    if (this.isDevMode()) this.parseJSON(window.Creative.data);
+    else this.fetchJSON();
   }
 
-  async getFeedData() {
+  isDevMode() {
+    return process.env.NODE_ENV === "development";
+  }
+
+  async fetchJSON() {
     try {
-      const URI = this.buildLocalFeedUri(this.feed);
-      const response = await fetch(URI, this.queryOptions);
+      const response = await fetch(this.feedUrl);
+      const json = await response.json();
 
-      if (!response.ok) throw Error(response.statusText);
-
-      const content = await response.text();
-      this.CSVToArray(content, this.delimiterChar);
+      this.parseJSON(json);
     } catch (error) {
-      console.error("[DYNAMIC]", error);
+      console.error("[DYNAMIC ERROR]", error);
     }
   }
 
-  buildLocalFeedUri(subpath) {
-    if (process.env.NODE_ENV === "development") return "/" + this.feed;
+  defineFeedURL() {
+    const origin = window.location.origin;
+    const feedID = window.Creative?.params?.feedid ?? this.feedID;
 
-    const path = location.protocol + "//" + location.host + location.pathname;
-    return path.replace("index.html", "") + subpath;
+    return `${origin}/feeds/${feedID}.json`;
   }
 
-  parse(input) {
-    const csvData = [];
-    const lines = input
-      .split("\n")
-      .map((line) => line.replace(/[\n\r\;\"]/g, ""))
-      .filter(
-        (line) =>
-          line !== "" &&
-          line.length > 1 &&
-          new Set(line.split(this.delimiterChar)).size > 1
-      );
+  parseJSON(json) {
+    const data = [];
+    const clicktags = [];
+    const now = window.Creative?.params?.date
+      ? new Date(window.Creative?.params?.date).getTime()
+      : new Date().getTime();
 
-    for (const [lineIDX, line] of lines.entries()) {
-      if (lineIDX === 0) continue;
-      csvData.push(line.split(this.delimiterChar));
+    if (!Array.isArray(json)) throw new Error("JSON Data is not an array type");
+
+    for (const row of json) {
+      const { start, end, clicktag } = row;
+
+      if (start && end) {
+        const startDate = new Date(start).getTime();
+        const endDate = new Date(end).getTime();
+
+        if (now < startDate) continue;
+        if (now > endDate) continue;
+      }
+
+      if (clicktag) clicktags.push(clicktag);
+
+      delete row.start;
+      delete row.end;
+      delete row.clicktag;
+      delete row.actions;
+      delete row.id;
+
+      data.push(row);
     }
 
-    console.table(csvData);
-    this.map(csvData);
+    const isFallback = data.length <= 0;
+    if (!isFallback) this.mapClicktags(clicktags);
+
+    window.Creative.data = data;
+    window.Creative.startAnimation({ isFallback });
+  }
+
+  mapClicktags(clicktags) {
+    const clicktag = window.Creative.params.clicktag
+      ? window.Creative.params.clicktag
+      : "";
+
+    window.Creative.clicktags = clicktags.map((item) =>
+      clicktag ? this.replaceClicktagTarget(clicktag, item) : item
+    );
+  }
+
+  replaceClicktagTarget(clicktag, item) {
+    const decoded = clicktag; //decodeURIComponent(clicktag);
+    const utms = window.Creative?.getUTMs() ?? {};
+
+    const mappedClicktags =
+      decoded.substring(0, decoded.indexOf("clickenc=")) +
+      `clickenc=${item}&${Object.keys(utms)
+        .map((utmKey) => `${utmKey}=${utms[utmKey]}`)
+        .join("&")}`;
+
+    //?clicktag=https%3A%2F%2Fams3-ib.adnxs.com%2Fclick2%3Fe%3DwqT_3QKIAfBViAAAAAMAxBkFAQjRnbipBhDv6cf3y_i9kGcY5bXGy96j98AcIJSEtgUojz0wjz04AEDurenfAVAAWgBoAHAAeACAAQCIAQGQAQGYAQOgAQCpAQAAAAABAwSxAQEGAQEAuRUKAMEVCjzJAQAAAAAAAAAA2AEA4AEB%2Fs%3D5b498c41f194aa8b208404e733b3dc7aac00744f%2Fbcr%3DAAAAAAAAAAA%3D%2Fbn%3D0%2Ftest%3D1%2Fclickenc%3Dhttps%3A%2F%2Fwww.bild.de&target=_blank&frameId=mrec_frame1
+    return mappedClicktags;
   }
 
   CSVToArray(strData, strDelimiter) {
@@ -126,42 +174,6 @@ class Dynamic {
     this.map(arrData.filter(([item, index]) => index > 0));
   }
 
-  map(data) {
-    const emulateDate = window.Creative.params.dynamicDate;
-    const now = emulateDate ? new Date(emulateDate) : new Date();
-
-    if (!this.mapConfig) return console.error("NO DATA MAPPING CONFIG DEFINED");
-
-    for (const feedRow of data) {
-      const item = {};
-
-      const startDate =
-        this.isTimeMapping && this.mapConfig.startDate
-          ? new Date(feedRow[this.mapConfig.startDate]).getTime()
-          : new Date().setHours(0, 0, 0);
-
-      const endDate =
-        this.isTimeMapping && this.mapConfig.startDate
-          ? new Date(feedRow[this.mapConfig.startDate]).getTime()
-          : new Date().setHours(23, 59, 59);
-
-      if (now.getTime() < startDate) continue;
-      if (now.getTime() > endDate) continue;
-
-      for (const [mapKey, mapIndex] of Object.entries(this.mapConfig)) {
-        Object.assign(item, this.recursiveMapping(mapKey, mapIndex, feedRow));
-      }
-
-      this.data.push(item);
-    }
-
-    const hasDynamicClicktag = this.data.some((item) => item.clicktag);
-    if (hasDynamicClicktag) this.mapClicktags();
-
-    window.Creative.data = this.data;
-    window.Creative.startAnimation();
-  }
-
   recursiveMapping(key, value, dataMap) {
     const item = {};
     const isValid = this.validate(key, value, dataMap);
@@ -178,18 +190,6 @@ class Dynamic {
     }
 
     return item;
-  }
-
-  mapClicktags() {
-    const clicktag = window.Creative.params.clicktag
-      ? window.Creative.params.clicktag
-      : "";
-
-    window.Creative.clicktags = this.data.map((item) =>
-      clicktag
-        ? clicktag + "?redir=" + encodeURIComponent(item.clicktag)
-        : item.clicktag
-    );
   }
 
   validate(key, value, map = []) {
