@@ -6,6 +6,7 @@ const fs = require("fs");
 const { merge } = require("webpack-merge");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const FontminPlugin = require("fontmin-webpack");
 
 // BUNDLER MODULES
 const commonConfig = require("./webpack.common.js");
@@ -80,6 +81,9 @@ const productionConfig = {
     new MiniCssExtractPlugin({
       filename: "style.css",
       chunkFilename: "css/[name].chunk.css",
+    }),
+    new FontminPlugin({
+      autodetect: true, // automatically pull unicode characters from CSS
     }),
   ],
   optimization: {
