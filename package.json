@@ -22,7 +22,7 @@
     "css-loader": "^6.9.1",
     "csv-loader": "^3.0.5",
     "fontmin-webpack": "^4.0.0",
-    "glob": "^8.0.3",
+    "glob": "^10.4.2",
     "handlebars": "^4.7.8",
     "handlebars-loader": "^1.7.3",
     "html-loader": "^4.2.0",
