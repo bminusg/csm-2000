@@ -15,6 +15,10 @@ class Swiper {
     this.root = config.root ?? document.querySelector(".creative");
     this.itemWidth = config?.itemWidth ?? this.root.offsetWidth;
 
+    this.template = config.template
+      ? document.getElementById(config.template)
+      : undefined;
+
     this.hasBullets = config.hasBullets ?? false;
   }
 
@@ -50,6 +54,7 @@ class Swiper {
       "ontouchstart" in window || navigator.msMaxTouchPoints > 0 ? true : false;
 
     if (this.hasBullets) this.appendBullets();
+
     this.calcFixPoints();
     this.initEventListeners();
   }
@@ -161,7 +166,7 @@ class Swiper {
 
   calcFixPoints() {
     const itemsCount = this.container.childElementCount;
-    const containerWidth = this.itemWidth || this.root.offsetWidth;
+    const containerWidth = this.root.offsetWidth;
 
     this.fixPoints = [];
 
@@ -190,6 +195,9 @@ class Swiper {
   }
 
   lock(isAutoRotate = false) {
+    console.log("LOCK");
+    this.calcFixPoints();
+
     const { x, y } = this.offset;
 
     if (x > 60 && !isAutoRotate) {
@@ -205,7 +213,7 @@ class Swiper {
     if (this.IDX < 0) this.IDX = this.fixPoints.length - 1;
 
     const root = document.querySelector(":root");
-    const items = document.querySelectorAll("swiper-item");
+    const items = Array.from(this.container.children);
 
     root.style.setProperty("--swiper-x", this.fixPoints[this.IDX] * -1);
     items?.forEach((item, itemKey) => {
@@ -220,6 +228,56 @@ class Swiper {
     const data = this.data;
     const swiper = document.createElement("swiper");
     swiper.classList.add("swiper");
+
+    function getColumn(key) {
+      const columns = window.Creative.dataColumns;
+      if (!columns) return {};
+
+      return columns.find((col) => col.key === key) ?? {};
+    }
+
+    const createTemplateElements = (item, itemIdx) => {
+      const clone = this.template.content.cloneNode(true);
+      const itemKeys = Object.keys(item);
+
+      const handleImage = (options, HTMLnode) => {
+        const { src } = options;
+
+        HTMLnode.setAttribute("src", src);
+        HTMLnode.setAttribute("draggable", false);
+
+        document
+          .querySelector(":root")
+          .style.setProperty("--image-src-" + itemIdx, `url(${src})`);
+      };
+
+      function handleEnum(key, value, HTMLnode) {
+        HTMLnode.dataset[key] = value;
+      }
+
+      for (const itemKey of itemKeys) {
+        const itemValue = item[itemKey];
+        const HTMLnode = clone.querySelector(`[key="${itemKey}"]`);
+
+        if (!HTMLnode) continue;
+
+        const { rules, key } = getColumn(itemKey);
+
+        if (rules.type === "image") {
+          handleImage(itemValue, HTMLnode);
+          continue;
+        }
+
+        if (rules.enum) {
+          handleEnum(key, itemValue, HTMLnode);
+          continue;
+        }
+
+        HTMLnode.textContent = itemValue;
+      }
+
+      return clone;
+    };
 
     function createContentElements(itemKey, itemInput, contentItem) {
       const skipTypes = ["clicktag", "id", "actions"];
@@ -251,6 +309,12 @@ class Swiper {
     }
 
     for (const [itemIndex, item] of data.entries()) {
+      if (this.template) {
+        const slide = createTemplateElements(item, itemIndex);
+        swiper.appendChild(slide);
+        continue;
+      }
+
       const itemElement = document.createElement("swiper-item");
       const contentItem = document.createElement("swiper-content");
 

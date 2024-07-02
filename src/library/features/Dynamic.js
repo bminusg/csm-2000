@@ -48,15 +48,24 @@ class Dynamic {
 
   parseJSON(json) {
     const data = [];
+    const dataColumns = [];
     const clicktags = [];
     const now = window.Creative?.params?.date
       ? new Date(window.Creative?.params?.date).getTime()
       : new Date().getTime();
 
-    if (!Array.isArray(json)) throw new Error("JSON Data is not an array type");
+    if (!Array.isArray(json)) {
+      const { data, columns } = json;
+
+      if (!data || !columns || !Array.isArray(data))
+        throw new Error("JSON Data isn't parseable");
+
+      json = data;
+      dataColumns.push(...columns);
+    }
 
     for (const row of json) {
-      const { start, end, clicktag } = row;
+      const { start, end, clickout } = row;
 
       if (start && end) {
         const startDate = new Date(start).getTime();
@@ -66,11 +75,11 @@ class Dynamic {
         if (now > endDate) continue;
       }
 
-      if (clicktag) clicktags.push(clicktag);
+      if (clickout) clicktags.push(clickout);
 
       delete row.start;
       delete row.end;
-      delete row.clicktag;
+      delete row.clickout;
       delete row.actions;
       delete row.id;
 
@@ -81,6 +90,7 @@ class Dynamic {
     if (!isFallback) this.mapClicktags(clicktags);
 
     window.Creative.data = data;
+    window.Creative.dataColumns = dataColumns;
     window.Creative.startAnimation({ isFallback });
   }
 
@@ -100,7 +110,7 @@ class Dynamic {
 
     const mappedClicktags =
       decoded.substring(0, decoded.indexOf("clickenc=")) +
-      `clickenc=${item}&${Object.keys(utms)
+      `clickenc=${item}?${Object.keys(utms)
         .map((utmKey) => `${utmKey}=${utms[utmKey]}`)
         .join("&")}`;
 
