@@ -16,7 +16,7 @@ class Project extends Services {
     try {
       const data = require("./json/projects.json");
       this.localCreativeSlugs = glob
-        .sync("./projects/**/main.js")
+        .sync("./projects/**/main.js", { posix: true, dotRelative: true })
         .map((path) => path.split("/").splice(-2, 1)[0]);
 
       if (!data) throw new Error();
@@ -79,7 +79,11 @@ class Project extends Services {
       .flat();
 
     for (const creative of creatives) {
-      const path = glob.sync("./projects/**/" + creative.slug + "/main.js")[0];
+      const path = glob.sync("./projects/**/" + creative.slug + "/main.js", {
+        posix: true,
+        dotRelative: true,
+      })[0];
+
       Object.assign(entrypoints, { [creative.slug]: path });
     }
 
@@ -146,7 +150,10 @@ class Project extends Services {
    */
   getLocalProjectData() {
     const localProjectData = [];
-    const localCreativePaths = glob.sync("./projects/**/main.js");
+    const localCreativePaths = glob.sync("./projects/**/main.js", {
+      posix: true,
+      dotRelative: true,
+    });
     const localCreativeSlugs = localCreativePaths.map(
       (path) => path.split("/").splice(-2)[0]
     );

@@ -1,6 +1,9 @@
 const glob = require("glob");
 const project = require("../../src/data/Project");
-const localCreativeSlugs = glob.sync("./projects/**/main.js");
+const localCreativeSlugs = glob.sync("./projects/**/main.js", {
+  posix: true,
+  dotRelative: true,
+});
 
 describe("PROJECT MODEL", () => {
   it("Data defined", () => {
