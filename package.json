@@ -19,7 +19,7 @@
     "@babel/core": "^7.24.3",
     "@babel/preset-env": "^7.24.7",
     "babel-loader": "^9.1.0",
-    "css-loader": "^6.9.1",
+    "css-loader": "^7.1.2",
     "csv-loader": "^3.0.5",
     "fontmin-webpack": "^4.0.0",
     "glob": "^10.4.3",
