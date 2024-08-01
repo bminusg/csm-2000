@@ -180,7 +180,7 @@ class BrandBooster {
     const initBreakpoint = window.innerHeight / 2;
     const isActiveMode = !this.isActive && scrollTop < initBreakpoint;
 
-    if (this.onScroll) this.onScroll(scrollTop); // TRIGGER CUSTOM EVENTS
+    if (this.onScroll) this.onScroll(scrollTop, scrollTop >= initBreakpoint); // TRIGGER CUSTOM EVENTS
 
     if (isActiveMode || this.isSplitterMode) {
       this.activate();
@@ -373,8 +373,9 @@ class BrandBooster {
     this.container.dataset.state = "active";
 
     if (this.videoElem) {
-      this.videoElem.pause();
-      this.trailerEnded();
+      this.videoElem.muted = true;
+
+      if (!this.videoConfig?.preventPauseOnScroll) this.videoElem.pause();
     }
   }
 
@@ -391,8 +392,6 @@ class BrandBooster {
 
     this.container.removeAttribute("data-playstate");
     this.container.dataset.state = "scrolling";
-
-    if (this.videoElem) this.videoElem.pause();
   }
 
   closeClick(e) {
