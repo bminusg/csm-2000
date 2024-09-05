@@ -95,6 +95,39 @@
         "width": 964,
         "height": 100,
         "admark": "ANZEIGE"
+      },
+      "premium": {
+        "width": 970,
+        "height": 172,
+        "admark": "ANZEIGE"
+      }
+    }
+  },
+  {
+    "name": "Content Ad",
+    "slug": "ca",
+    "type": "RichMedia",
+    "devices": ["phone"],
+    "options": {
+      "6:1": {
+        "width": 320,
+        "height": 50,
+        "admark": "-w-"
+      },
+      "4:1": {
+        "width": 320,
+        "height": 75,
+        "admark": "-w-"
+      },
+      "2:1": {
+        "width": 320,
+        "height": 150,
+        "admark": "-w-"
+      },
+      "1:1": {
+        "width": 300,
+        "height": 300,
+        "admark": "-w-"
       }
     }
   },
@@ -126,6 +159,14 @@
         "width": 728,
         "height": 90,
         "admark": ""
+      },
+      "bild": {
+        "width": 1024,
+        "height": 120
+      },
+      "welt": {
+        "width": 970,
+        "height": 90
       }
     }
   },
@@ -289,9 +330,25 @@
     "type": "RichMedia Composite",
     "devices": ["desktop"],
     "options": {
-      "bild": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
-      "aubi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"],
-      "cobi": ["Sitebar", "Sitebar", "Billboard", "Superbanner"]
+      "bild": [
+        "Sitebar.Dynamic",
+        "Sitebar.Dynamic",
+        "Billboard",
+        "Superbanner"
+      ],
+      "aubi": [
+        "Sitebar.Dynamic",
+        "Sitebar.Dynamic",
+        "Billboard",
+        "Superbanner"
+      ],
+      "cobi": [
+        "Sitebar.Dynamic",
+        "Sitebar.Dynamic",
+        "Billboard",
+        "Superbanner"
+      ],
+      "welt": ["Sitebar.Dynamic", "Sitebar.Dynamic", "Billboard", "Superbanner"]
     }
   },
   {
