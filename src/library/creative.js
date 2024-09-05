@@ -35,12 +35,13 @@ class Creative {
 
     // DYNAMIC DATA
     this.data = options.data || [];
+    this.dataColumns = options.dataColumns || [];
 
     // DEFINE EVENTS
     this.defineEvents();
 
     // INIT CREATIVE
-    window.addEventListener("DOMContentLoaded", this.init());
+    window.addEventListener("load", this.init());
   }
 
   // INIT CREATIVE
