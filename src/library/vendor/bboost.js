@@ -74,13 +74,14 @@ class BrandBooster {
           );
 
           this.videoElem.addEventListener("pause", () => {
+            if (this.videoConfig.onPause) this.videoConfig.onPause();
             this.container.dataset.playstate = "paused";
           });
 
-          this.videoElem.addEventListener(
-            "play",
-            () => (this.container.dataset.playstate = "playing")
-          );
+          this.videoElem.addEventListener("play", () => {
+            if (this.videoConfig.onPlay) this.videoConfig.onPlay();
+            this.container.dataset.playstate = "playing";
+          });
 
           this.videoElem.addEventListener("volumechange", () => {
             this.container.dataset.muted = this.videoElem.muted;
@@ -255,7 +256,11 @@ class BrandBooster {
     this.isActive = true;
     this.videoElem.loop = false;
 
-    this.container.dataset.state = "active video";
+    this.container.dataset.state = this.container.dataset.state.includes(
+      "scrolling"
+    )
+      ? this.container.dataset.state
+      : "active video";
     this.container.dataset.muted = "false";
 
     this.videoElem.currentTime = 0;

@@ -54,8 +54,8 @@ $defaultVideoSoundBtns: false !default
             display: none
 
             svg
-                width: calc(100% - 30px)
-                height: calc(100% - 30px)
+                width: calc(100% - 24px)
+                height: calc(100% - 24px)
                 fill: $closeFill
 
         @if $defaultVideoSoundBtns
@@ -90,9 +90,9 @@ $defaultVideoSoundBtns: false !default
     @if $defaultGrid
         &--grid
             width: 100%
-            height: calc(100% - var(--page-header-height))
+            height: 100%
             display: grid
-            grid-template-columns: 1fr minmax(auto, 1000px) 1fr
+            grid-template-columns: 1fr minmax(auto, 997px) 1fr
 
             > *
                 position: relative
