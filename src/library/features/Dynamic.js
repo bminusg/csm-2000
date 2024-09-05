@@ -14,13 +14,19 @@ class Dynamic {
         "content-type": "text/csv;charset=UTF-8",
       },
     };
+
+    this.isShuffleMode = config.isShuffleMode || false;
   }
 
   load() {
     // TODO FALLBACK CLICKTAG
     this.feedUrl = this.defineFeedURL();
 
-    if (this.isDevMode()) this.parseJSON(window.Creative.data);
+    if (this.isDevMode())
+      this.parseJSON({
+        data: window.Creative.data,
+        columns: window.Creative.dataColumns,
+      });
     else this.fetchJSON();
   }
 
@@ -47,8 +53,8 @@ class Dynamic {
   }
 
   parseJSON(json) {
-    const data = [];
-    const dataColumns = [];
+    let data = [];
+    let dataColumns = [];
     const clicktags = [];
     const now = window.Creative?.params?.date
       ? new Date(window.Creative?.params?.date).getTime()
@@ -88,6 +94,8 @@ class Dynamic {
 
     const isFallback = data.length <= 0;
     if (!isFallback) this.mapClicktags(clicktags);
+
+    if (this.isShuffleMode) data = this.shuffle(data);
 
     window.Creative.data = data;
     window.Creative.dataColumns = dataColumns;
@@ -200,6 +208,13 @@ class Dynamic {
     }
 
     return item;
+  }
+
+  shuffle(unshuffledArray) {
+    return unshuffledArray
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value);
   }
 
   validate(key, value, map = []) {
