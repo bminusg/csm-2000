@@ -65,6 +65,7 @@ class Swiper {
     // MOUSEVENTS
     anchor.addEventListener("mousedown", (event) => {
       anchor.removeAttribute("href");
+      anchor.removeAttribute("target");
       this.eventStart(event);
     });
 
@@ -81,6 +82,7 @@ class Swiper {
 
       if (this.isClick) {
         const clicktag = window.Creative.getClicktag(this.IDX);
+        anchor.setAttribute("target", "_blank");
         anchor.setAttribute("href", clicktag);
       }
     });
@@ -195,7 +197,6 @@ class Swiper {
   }
 
   lock(isAutoRotate = false) {
-    console.log("LOCK");
     this.calcFixPoints();
 
     const { x, y } = this.offset;
@@ -263,12 +264,12 @@ class Swiper {
 
         const { rules, key } = getColumn(itemKey);
 
-        if (rules.type === "image") {
+        if (rules?.type === "image") {
           handleImage(itemValue, HTMLnode);
           continue;
         }
 
-        if (rules.enum) {
+        if (rules?.enum) {
           handleEnum(key, itemValue, HTMLnode);
           continue;
         }
