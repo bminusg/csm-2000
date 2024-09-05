@@ -23,7 +23,8 @@ class CrossSiteConnection {
     this.frames = [];
     this.connected = false;
     this.countConnect = 0;
-    this.maxCounts = this.connectWith.length * (this.connectWith.length + 1);
+    this.exclude = options.exclude ?? [];
+    this.maxCounts = this.setMaxCounts();
     this.isConnectionSuccess = false;
 
     // CUSTOM METHODS
@@ -168,9 +169,11 @@ class CrossSiteConnection {
    */
   checkConnection() {
     const connectedFrames = this.frames.filter((frame) => frame.connected);
+    const targets = this.connectWith.filter(
+      (frameID) => !this.exclude.includes(frameID)
+    );
 
-    if (connectedFrames.length === this.connectWith.length) return true;
-    return false;
+    return connectedFrames.length === targets.length;
   }
 
   /**
@@ -188,13 +191,17 @@ class CrossSiteConnection {
     });
   }
 
-  countUpConnection(event) {
+  countUpConnection() {
     this.countConnect++;
-
     if (this.countConnect < this.maxCounts) return;
-    clearInterval(this.watchJobInterval);
 
+    clearInterval(this.watchJobInterval);
     this.sendViewportDimensions();
+  }
+
+  setMaxCounts() {
+    const { length } = this.connectWith;
+    return length * (length + 1);
   }
 
   /**
@@ -243,8 +250,10 @@ class CrossSiteConnection {
    * @desc Timeout Event
    */
   onTimeout() {
-    console.error("[" + this.frameID + "] is timeout");
+    console.error("[" + this.frameID + "] is timeout", this.frames);
     clearInterval(this.watchJobInterval);
+
+    this.sendViewportDimensions("timeout");
 
     // APPEND FALLBACK CLASS
     window.Creative.container.classList.add("is--timeout");
@@ -288,10 +297,13 @@ class CrossSiteConnection {
    */
   initFrames() {
     clearInterval(this.watchJobInterval);
+
     if (this.isConnectionSuccess) return;
     this.isConnectionSuccess = true;
 
-    window.Creative.startAnimation();
+    window.Creative.startAnimation({
+      isFallback: this.frames.length < this.connectWith.length,
+    });
 
     // START CUSTOM METHOD
     if (!this.methods || !this.methods.start) return;
@@ -304,9 +316,7 @@ class CrossSiteConnection {
       [origin]: viewport,
     });
 
-    if (Object.keys(this.viewports).length === this.connectWith.length + 1) {
-      this.calcViewport();
-    }
+    this.calcViewport();
   }
 
   calcViewport() {
@@ -314,6 +324,7 @@ class CrossSiteConnection {
     const totalViewport = { x: 0, y: 0 };
 
     for (const origin of Object.keys(this.viewports)) {
+      if (this.exclude.includes(origin)) continue;
       const { x, y } = this.viewports[origin];
 
       totalViewport.x += x;
@@ -327,12 +338,12 @@ class CrossSiteConnection {
     root.style.setProperty(`--viewport-y`, totalViewport.y + "px");
   }
 
-  sendViewportDimensions() {
+  sendViewportDimensions(type = "connectionSuccess") {
     const viewports = this.frames.map((frame) => frame.viewport);
     viewports.forEach((viewport) =>
       viewport.postMessage(
         {
-          type: "connectionSuccess",
+          type,
           origin: this.frameID,
           viewport: {
             x: window.innerWidth,
