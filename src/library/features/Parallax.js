@@ -25,37 +25,18 @@ class Parallax {
     this.parallaxRatios = options.parallaxRatios || [0.2, 0.6, 0.9];
     this.crossSiteCommunication = options.crossSiteCommunication || false;
     this.root = document.querySelector(":root");
+
+    this.throttlePause;
   }
 
   init() {
     if (this.crossSiteCommunication) this.assignCrossSiteMethods();
     else this.defineMetrics();
 
-    // THROTTLE
-    let throttlePause;
-
-    const throttle = (callback, time) => {
-      if (throttlePause) return;
-      throttlePause = true;
-
-      setTimeout(() => {
-        callback();
-        throttlePause = false;
-      }, time);
-    };
-
     // EVENT LISTENERS
-    document.addEventListener(
-      "mousemove",
-      (event) => {
-        event.preventDefault();
-
-        throttle(() => {
-          this.calcPosition(event.clientX, event.clientY);
-        }, 50);
-      },
-      true
-    );
+    this.reset();
+    this.onMouseMove = this.onMouseMove.bind(this);
+    window.addEventListener("mousemove", this.onMouseMove, true);
 
     window.addEventListener("resize", () => {
       if (!this.crossSiteCommunication) return;
@@ -63,6 +44,24 @@ class Parallax {
       this.viewport = { x: window.innerWidth, y: window.innerHeight };
       this.defineMetrics();
     });
+  }
+
+  throttle(callback, time) {
+    if (this.throttlePause) return;
+    this.throttlePause = true;
+
+    setTimeout(() => {
+      callback();
+      this.throttlePause = false;
+    }, time);
+  }
+
+  onMouseMove(event) {
+    event.preventDefault();
+
+    this.throttle(() => {
+      this.calcPosition(event.clientX, event.clientY);
+    }, 50);
   }
 
   assignCrossSiteMethods() {
@@ -182,6 +181,15 @@ class Parallax {
 
       this.root.style.setProperty("--parallax-0" + index + "-x", moveX);
       this.root.style.setProperty("--parallax-0" + index + "-y", moveY);
+    });
+  }
+
+  reset() {
+    window.removeEventListener("mousemove", this.onMouseMove, true);
+
+    this.parallaxRatios.forEach((ratio, index) => {
+      this.root.style.setProperty("--parallax-0" + index + "-x", 0);
+      this.root.style.setProperty("--parallax-0" + index + "-y", 0);
     });
   }
 }
