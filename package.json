@@ -37,7 +37,7 @@
     "shortme": "^1.2.1",
     "style-loader": "^4.0.0",
     "tween-sass": "^0.5.4",
-    "webpack": "^5.94.0",
+    "webpack": "^5.96.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^5.1.0"
   }
