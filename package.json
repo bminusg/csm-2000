@@ -33,7 +33,7 @@
     "jest": "^29.4.3",
     "mini-css-extract-plugin": "^2.9.1",
     "sass": "^1.78.0",
-    "sass-loader": "^16.0.1",
+    "sass-loader": "^16.0.4",
     "shortme": "^1.2.1",
     "style-loader": "^4.0.0",
     "tween-sass": "^0.5.4",
