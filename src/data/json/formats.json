@@ -67,6 +67,10 @@
         "width": 997,
         "height": 250,
         "admark": "ANZEIGE"
+      },
+      "watson": {
+        "width": 970,
+        "height": 250
       }
     }
   },
@@ -198,7 +202,7 @@
   },
   {
     "name": "Halfpage Ad",
-    "slug": "hp",
+    "slug": "hpa",
     "type": "RichMedia",
     "devices": ["phone", "tablet", "desktop"],
     "options": {
@@ -407,13 +411,25 @@
     "slug": "stickyad",
     "type": "RichMedia",
     "options": {
-      "6-1": {
+      "Default": {
         "width": 320,
         "height": 50
       },
       "2-1": {
         "width": 320,
         "height": 150
+      }
+    }
+  },
+  {
+    "name": "Flow Ad",
+    "slug": "flowad",
+    "type": "RichMedia",
+    "devices": ["phone"],
+    "options": {
+      "Default": {
+        "width": 0,
+        "height": 0
       }
     }
   }

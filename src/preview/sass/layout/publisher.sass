@@ -1,5 +1,17 @@
+@use "sass:math"
+
 :root
+  --publisher--background-color: #fff
   --publisher--nav-height: 120px
+  --publisher--mobile--nav-height: 64px
+  --publisher--txt-500: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAABYCAYAAADfoya1AAAD10lEQVQokWJcu3XvfwYGBgYAAAAA//9iAhEMDAwMAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4IwGBgYAAAAAP//gjAYGBgAAAAA//+CMBgYGAAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//4JgBgYGAAAAAP//gmAGBgYAAAAA//+CYAYGBgAAAAD//wMAm1wDnhq2FzYAAAAASUVORK5CYII=')
+
+@mixin font-size($size: 1rem)
+  background-size: auto $size
+
+  &::after
+    height: $size
+    width: math.percentage(math.random() - 0.25)
 
 .app
   .publisher
@@ -10,7 +22,7 @@
     width: 100%
 
     &--nav
-      background-color: var(--publisher--nav-background, #f2f2f2)
+      background-color: var(--publisher--nav-background, var(--color-grey-400))
       height: var(--publisher--nav-height, 120px)
       width: 100%
       z-index: 1000
@@ -33,7 +45,55 @@
       height: 100%
 
     &--article
-      height: calc(100% - var(--publisher--nav-height, 0))
+      padding: 2rem
+
+      &-txt
+        background-image: var(--publisher--txt-500)
+        background-repeat: repeat
+        position: relative
+
+        &::after
+          content: ''
+          height: 100%
+          background-color: var(--publisher--background-color)
+          display: inline-block
+          position: absolute
+          bottom: 0
+          right: 0
+
+      &-teaser
+        flex: 1 1 300px
+
+        &-img
+          background-color: var(--color-grey-500)
+          display: block
+          overflow: hidden
+          height: 0
+          padding-top: 56.25%
+          margin: 0 0 20px 0
+
+      h1
+        height: 6rem
+        margin: 0 0 2.5rem 0
+        @include font-size($size: 3rem)
+
+      h2
+        height: 4rem
+        margin: 0 0 2rem 0
+        @include font-size($size: 2rem)
+
+      h3
+        height: 3rem
+        margin: 0 0 2rem 0
+        @include font-size($size: 1.5rem)
+
+      p
+        height: 10rem
+        margin: 0 0 2rem 0
+        @include font-size($size: 1rem)
+
+        &:nth-of-type(even)::after
+          width: math.percentage(math.random() - 0.25)
 
   &[data-device="phone"]
     .publisher
@@ -47,13 +107,10 @@
 
       &--nav
         position: sticky
-        height: var(--publisher--mobile--nav-height, 50px)
+        height: var(--publisher--mobile--nav-height)
         top: 0
         left: 0
 
         &-img
           background-image: var(--publisher--mobile--nav-img, none)
           background-position: var(--publisher--mobile--nav-position, center center)
-
-      &--article
-        height: 100%

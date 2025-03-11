@@ -1,0 +1,13 @@
+.widget
+    --offset-y: var(--publisher--mobile--nav-height, 50px)
+
+    &--flowad
+        width: calc( 100% + 4rem)
+        height: 300vh
+        left: -2rem
+        margin-bottom: 2rem
+
+        &-iframe
+            position: sticky
+            top: var(--offset-y)
+            height: calc( 100vh - var(--offset-y) )

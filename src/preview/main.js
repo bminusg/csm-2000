@@ -119,6 +119,16 @@ class Preview {
       return;
     }
 
+    // CHECK FLOW AD
+    if (this.isWidgetActive("flowad")) {
+      const brandboost = await import(
+        /* webpackChunkName: "widget--flowad" */ "./widgets/flowad.js"
+      );
+
+      brandboost.default.init(this.widgets, params);
+      return;
+    }
+
     this.loadCreatives(this.widgets);
   }
 
@@ -128,7 +138,7 @@ class Preview {
 
       widget.loadIframe();
 
-      if (widget.type === "interscroller") widget.scrollTo();
+      if (["interscroller", "hpa"].includes(widget.type)) widget.scrollTo();
     }
   }
 
