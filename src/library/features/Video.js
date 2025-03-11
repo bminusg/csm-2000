@@ -14,6 +14,7 @@ class Video {
 
     // MEDIA
     this.fileURLs = options.fileURLs || [];
+    this.fileHiRes = options.fileHiRes || undefined;
     this.poster =
       options.poster ||
       "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
@@ -45,6 +46,7 @@ class Video {
     this.btns = {
       play: options.btnPlay || undefined,
       pause: options.btnPause || undefined,
+      playToggle: document.querySelector(options.btnPlayToggle),
       soundon: options.btnSoundOn || undefined,
       soundoff: options.btnSoundOff || undefined,
       soundtoggle: options.btnSoundToggle || undefined,
@@ -109,10 +111,9 @@ class Video {
     // VOLUME CHANGE
     this.video.addEventListener("volumechange", (e) => {
       const isMute = this.video.muted;
-      container.dataset.muted = isMute ? 0 : 1;
+      container.dataset.muted = isMute ? 1 : 0;
 
       if (isMute) this.trackEvent("mute");
-
       if (!isMute) this.trackEvent("unmute");
     });
 
@@ -145,6 +146,8 @@ class Video {
         (e) => {
           e.preventDefault();
 
+          if (btn === "playToggle") this.playToggle();
+
           if (btn === "play") {
             this.video.muted = false;
             this.video.play();
@@ -154,6 +157,8 @@ class Video {
           if (btn === "soundoff") this.video.muted = true;
           if (btn === "soundon") this.video.muted = false;
           if (btn === "soundtoggle") {
+            this.replaceHighRes();
+
             this.video.muted = !this.video.muted;
             if (this.video.pause && !this.video.muted) this.video.play();
           }
@@ -164,7 +169,6 @@ class Video {
   }
 
   trackEvent(event) {
-    return;
     console.log(
       "%c TRACK EVENT ",
       "color: #01ffaa; background-color: #2F3338; border-radius: 4px;",
@@ -254,6 +258,22 @@ class Video {
 
       this.video[engine]();
     });
+  }
+
+  replaceHighRes() {
+    const { src } = this.video;
+
+    if (!this.fileHiRes) return;
+    if (src === this.fileHiRes) return;
+
+    this.video.src = this.fileHiRes;
+  }
+
+  playToggle() {
+    this.video.muted = !this.video.muted;
+
+    if (this.video.paused) this.video.play();
+    else this.video.pause();
   }
 }
 

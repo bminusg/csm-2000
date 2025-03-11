@@ -6,15 +6,13 @@ class Visible {
   }
 
   load(creative) {
-    // CHECK IF FRAME IS TOPFRAME
     if (window.top === window) return window.Creative?.startAnimation();
 
-    // MESSAGE LISTENERS
     window.addEventListener("message", this.debounceCheck());
   }
 
   debounceCheck() {
-    return debounce(this.check.bind(this), 300); // Adjust the delay as needed (200ms in this example)
+    return debounce(this.check.bind(this), 200);
   }
 
   check(event) {
